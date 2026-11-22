@@ -99,13 +99,6 @@
       "skillPath": "skills/engineering/improve-codebase-architecture/SKILL.md",
       "computedHash": "f0820b18426a7d9a6c823a890988ba0ac70bf0fd596d30d7ef07c88558728c23"
     },
-    "macos-menubar-tuist-app": {
-      "source": "Dimillian/Skills",
-      "commit": "05ba982bfeb0d77d3c97d4542b0ee15034d05f84",
-      "sourceType": "github",
-      "skillPath": "macos-menubar-tuist-app/SKILL.md",
-      "computedHash": "1446640d3000f0e71787055a96d751e25233f78a0f431923e116f9a22f537dad"
-    },
     "prototype": {
       "source": "mattpocock/skills",
       "commit": "abeeaf95660ba9e8b7c753eb38f441ca707a8823",
@@ -148,13 +141,6 @@
       "skillPath": "skills/engineering/setup-matt-pocock-skills/SKILL.md",
       "computedHash": "9659e7025d4cf1c0a0b40ddff32ed4b8debb87a4b20d7a52ff89c506a638df69"
     },
-    "swift-architecture-skill": {
-      "source": "efremidze/swift-architecture-skill",
-      "commit": "60e177612f4ed9dc7799b3674830e594c76fa00c",
-      "sourceType": "github",
-      "skillPath": "swift-architecture-skill/SKILL.md",
-      "computedHash": "c04eb49b731b942c56af2c32d106c8932dc5a9e1278ca8ff70a0647afb2b97aa"
-    },
     "swift-format-style": {
       "source": "n0an/Swift-FormatStyle-Agent-Skill",
       "commit": "5cda783ac709f26893bbbfb61b31c930c1e6a300",
@@ -162,26 +148,12 @@
       "skillPath": "swift-format-style/SKILL.md",
       "computedHash": "5e7247f0b4c70ab3d568cd0c5ef374afda6933597a015d0c845dc5a30d828164"
     },
-    "swift-testing": {
-      "source": "bocato/swift-testing-agent-skill",
-      "commit": "c2dd1b051c8359fa29acdbf0ceb0c6b0e8341a1c",
-      "sourceType": "github",
-      "skillPath": "swift-testing/SKILL.md",
-      "computedHash": "4fde81899a00146929fbc3418ec823563ab8a53456745a63095968e314399a75"
-    },
     "swift-testing-expert": {
       "source": "AvdLee/Swift-Testing-Agent-Skill",
       "commit": "798e9b1a2bcac164d4f0c781908199e754f0bab6",
       "sourceType": "github",
       "skillPath": "swift-testing-expert/SKILL.md",
       "computedHash": "d21b78b1a320b96748144693762293ae9557a82ec574ab40f7037c58b5d6b339"
-    },
-    "swift-testing-pro": {
-      "source": "twostraws/Swift-Testing-Agent-Skill",
-      "commit": "2d6bba14a3c8bf3694f218b92fffe617c41ae43e",
-      "sourceType": "github",
-      "skillPath": "swift-testing-pro/SKILL.md",
-      "computedHash": "9b4907e1b8fe535b8626a2bf40e7b2857d76f61cec9b2e112e186f62d4a05e20"
     },
     "swiftui-design-principles": {
       "source": "arjitj2/swiftui-design-principles",
@@ -196,20 +168,6 @@
       "sourceType": "github",
       "skillPath": "swiftui-pro/SKILL.md",
       "computedHash": "5ae476da16f2b0af60385b856cdcb121a4f4675ddc06c27e81259f12e987aeb1"
-    },
-    "swiftui-ui-patterns": {
-      "source": "Dimillian/Skills",
-      "commit": "05ba982bfeb0d77d3c97d4542b0ee15034d05f84",
-      "sourceType": "github",
-      "skillPath": "swiftui-ui-patterns/SKILL.md",
-      "computedHash": "e23fe9ebf7353b70408a9582c90b7bb2eb8ccdf1ed53e704aff00af45add9986"
-    },
-    "swiftui-view-refactor": {
-      "source": "Dimillian/Skills",
-      "commit": "05ba982bfeb0d77d3c97d4542b0ee15034d05f84",
-      "sourceType": "github",
-      "skillPath": "swiftui-view-refactor/SKILL.md",
-      "computedHash": "a8b2e2e01272490bd3d177c5095b25cd6cc8ceeed8805a0a2a5aa575436d6edd"
     },
     "tdd": {
       "source": "mattpocock/skills",

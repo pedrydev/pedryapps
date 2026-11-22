@@ -54,13 +54,16 @@ Single-context (`GLOSSARY.md` + `docs/adr/`, plus per-mini-app glossaries under 
 
 ## Workflow
 
-Use only the skills vendored in `.agents/skills/`. Do not load skills from `~/.claude/skills`, `~/.config/opencode/skills`, or `~/.agents/skills`. If a global config names a skill that is not vendored here, this list takes precedence.
+Use only the skills vendored in `.agents/skills/`. Do not load skills from `~/.claude/skills`, `~/.config/opencode/skills`, or `~/.agents/skills`. If a global config names a skill that is not vendored here, this list takes precedence. Treat vendored skills as read-only: skill updates overwrite local edits. This file overrides any conflicting skill instruction, including `implement`'s default to commit.
 
+- Sequence: **make it work**, then **make it work well**. Bank quality ideas during implementation; apply them in the quality pass.
 - Requirements and design: `grilling` or `grill-with-docs` for the decision tree; `domain-modeling` for terminology (`docs/GLOSSARY-MAP.md`, global and per-mini-app glossaries) and ADRs.
 - Specs and tickets: `to-spec` and `to-tickets` when the work needs tracking; otherwise go straight from decisions to implementation.
-- Implementation: `implement-spec` when working from a spec or ticket, `implement` otherwise. Use `tdd` where logic can be written test-first.
+- Implementation: `implement-spec` when working from a spec or ticket, `implement` otherwise. Speed first: smallest change that compiles and passes tests; build for feedback, full verification once at the end. Use `tdd` where logic can be written test-first.
 - Work too large for one session: `wayfinder` for the decision map, then resolve tickets one at a time; `handoff` when context needs transferring.
-- Bugs: `diagnosing-bugs`. Review: `code-review` against the originating spec, ADR, or request.
+- Bugs: `diagnosing-bugs`.
+- Review: `code-review` against the originating spec, ADR, or request.
+- Quality pass: after review, load the vendored Swift skills that match the diff — `write-swift`, `swiftui-pro`, `swift-testing-expert`, `swift-format-style`, `swiftui-design-principles`, plus `app-intents` / `background-execution` / `widgets` when those frameworks are touched — apply their improvements to changed files only, report them under `## Swift quality`, and re-run verification.
 - Optional: `prototype` to sanity-check state or UI, `research` for primary-source fact-finding, `codebase-design` when designing a module interface.
 
 ## Verification
