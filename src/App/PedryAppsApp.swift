@@ -5,6 +5,8 @@ import SwiftUI
 struct PedryAppsApp: App {
     @NSApplicationDelegateAdaptor(MenuBarAppDelegate.self) private var appDelegate
 
+    private let todosSettingsStore = TodosSettingsStore()
+
     init() {
         HotkeyManager.shared.register(.showWindow) {
             NotificationCenter.default.post(name: .openMainWindow, object: nil)
@@ -20,7 +22,7 @@ struct PedryAppsApp: App {
         }
 
         Settings {
-            SettingsView()
+            SettingsView(todosSettingsStore: todosSettingsStore)
         }
     }
 }

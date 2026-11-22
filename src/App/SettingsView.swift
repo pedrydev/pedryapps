@@ -1,9 +1,11 @@
 import SwiftUI
 
 struct SettingsView: View {
+    let todosSettingsStore: TodosSettingsStore
+
     var body: some View {
         TabView {
-            TodosSettingsView()
+            TodosSettingsView(store: todosSettingsStore)
                 .tabItem {
                     Label("Todos", systemImage: "checkmark.circle")
                 }
