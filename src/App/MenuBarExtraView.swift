@@ -1,8 +1,9 @@
 import AppKit
 import SwiftUI
+import UserNotifications
 
 @MainActor
-final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
+final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUserNotificationCenterDelegate {
     let store = TodosStore()
     let todosSettingsStore = TodosSettingsStore()
 
@@ -11,6 +12,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
     private var statusItem: NSStatusItem?
     private var menu: NSMenu?
     private var openWindow: OpenWindowAction?
+    private var openMainWindowHandler: ((String) -> Void)?
     private var openSettings: OpenSettingsAction?
     private var clockTimer: Timer?
     private var openWindowObserver: NSObjectProtocol?
@@ -24,6 +26,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
     )
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        UNUserNotificationCenter.current().delegate = self
         let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let image = NSImage(systemSymbolName: "checklist", accessibilityDescription: "PedryApps") {
             image.isTemplate = true
@@ -49,6 +52,32 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
         dueNotificationCoordinator.start()
     }
 
+    func handleNotificationResponse(actionIdentifier: String) {
+        guard actionIdentifier == UNNotificationDefaultActionIdentifier else { return }
+        openMainWindow()
+    }
+
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping @Sendable () -> Void
+    ) {
+        let actionIdentifier = response.actionIdentifier
+        let completion = completionHandler
+        Task { @MainActor in
+            self.handleNotificationResponse(actionIdentifier: actionIdentifier)
+            completion()
+        }
+    }
+
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([.banner, .list, .sound])
+    }
+
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         false
     }
@@ -59,6 +88,11 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
 
     func registerOpenWindow(_ action: OpenWindowAction) {
         openWindow = action
+        openMainWindowHandler = { action(id: $0) }
+    }
+
+    func registerOpenMainWindowHandler(_ handler: @escaping (String) -> Void) {
+        openMainWindowHandler = handler
     }
 
     func registerOpenSettings(_ action: OpenSettingsAction) {
@@ -98,7 +132,11 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
 
     private func openMainWindow() {
         NSApp.activate(ignoringOtherApps: true)
-        openWindow?(id: "main")
+        if let openMainWindowHandler {
+            openMainWindowHandler("main")
+        } else {
+            openWindow?(id: "main")
+        }
     }
 
     private func rebuildMenu(_ menu: NSMenu) {
