@@ -42,7 +42,7 @@ Decided: macOS-only native app.
 
 ### Issue tracker
 
-Local markdown in `.scratch/<feature>/`. See `docs/agents/issue-tracker.md`.
+GitHub Issues in `pedrydev/pedryapps`. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 
