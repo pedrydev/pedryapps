@@ -40,6 +40,9 @@
 		A000000000000000000000BE /* TodoDueNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000BF /* TodoDueNotification.swift */; };
 		A000000000000000000000C0 /* TodoDueNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000C1 /* TodoDueNotificationCenter.swift */; };
 		A000000000000000000000C2 /* TodosDueNotificationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000C3 /* TodosDueNotificationCoordinator.swift */; };
+		A000000000000000000000D1 /* TodosDueCheckState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D0 /* TodosDueCheckState.swift */; };
+		A000000000000000000000D3 /* TodosDueCheckStateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D2 /* TodosDueCheckStateStore.swift */; };
+		A000000000000000000000D5 /* DueCheckWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D4 /* DueCheckWindow.swift */; };
 		A000000000000000000000C4 /* TodosDueNotificationCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000C5 /* TodosDueNotificationCoordinatorTests.swift */; };
 		A000000000000000000000C6 /* SystemTodoDueNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000C7 /* SystemTodoDueNotificationCenter.swift */; };
 		A000000000000000000000C8 /* TimerDueNotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000C9 /* TimerDueNotificationScheduler.swift */; };
@@ -98,6 +101,9 @@
 		A000000000000000000000C7 /* SystemTodoDueNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemTodoDueNotificationCenter.swift; sourceTree = "<group>"; };
 		A000000000000000000000C9 /* TimerDueNotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerDueNotificationScheduler.swift; sourceTree = "<group>"; };
 		A000000000000000000000CD /* MenuBarAppDelegateNotificationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarAppDelegateNotificationTests.swift; sourceTree = "<group>"; };
+		A000000000000000000000D0 /* TodosDueCheckState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosDueCheckState.swift; sourceTree = "<group>"; };
+		A000000000000000000000D2 /* TodosDueCheckStateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosDueCheckStateStore.swift; sourceTree = "<group>"; };
+		A000000000000000000000D4 /* DueCheckWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DueCheckWindow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +177,8 @@
 				A00000000000000000000095 /* DoOnDate.swift */,
 				A000000000000000000000A2 /* TodosOverview.swift */,
 				A000000000000000000000BA /* TodosSettings.swift */,
+				A000000000000000000000D0 /* TodosDueCheckState.swift */,
+				A000000000000000000000D4 /* DueCheckWindow.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -199,7 +207,9 @@
 				A000000000000000000000C1 /* TodoDueNotificationCenter.swift */,
 				A000000000000000000000C3 /* TodosDueNotificationCoordinator.swift */,
 				A000000000000000000000C7 /* SystemTodoDueNotificationCenter.swift */,
-				A000000000000000000000C9 /* TimerDueNotificationScheduler.swift */,);
+				A000000000000000000000C9 /* TimerDueNotificationScheduler.swift */,
+				A000000000000000000000D2 /* TodosDueCheckStateStore.swift */,
+			);
 			path = Features;
 			sourceTree = "<group>";
 		};
@@ -368,6 +378,9 @@
 				A000000000000000000000BE /* TodoDueNotification.swift in Sources */,
 				A000000000000000000000C0 /* TodoDueNotificationCenter.swift in Sources */,
 				A000000000000000000000C2 /* TodosDueNotificationCoordinator.swift in Sources */,
+				A000000000000000000000D1 /* TodosDueCheckState.swift in Sources */,
+				A000000000000000000000D3 /* TodosDueCheckStateStore.swift in Sources */,
+				A000000000000000000000D5 /* DueCheckWindow.swift in Sources */,
 				A000000000000000000000C6 /* SystemTodoDueNotificationCenter.swift in Sources */,
 				A000000000000000000000C8 /* TimerDueNotificationScheduler.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;

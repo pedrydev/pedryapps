@@ -6,6 +6,7 @@ import UserNotifications
 final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUserNotificationCenterDelegate {
     let store = TodosStore()
     let todosSettingsStore = TodosSettingsStore()
+    let dueCheckStateStore = TodosDueCheckStateStore()
 
     private static let menuWidth = MenuBarTodoRowView.menuWidth
 
@@ -21,6 +22,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
     private lazy var dueNotificationCoordinator = TodosDueNotificationCoordinator(
         todosStore: store,
         settingsStore: todosSettingsStore,
+        stateStore: dueCheckStateStore,
         notificationCenter: SystemTodoDueNotificationCenter(),
         schedule: TimerTodoDueNotificationScheduler.schedule
     )
@@ -49,7 +51,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
         ) { [weak self] _ in
             Task { @MainActor in self?.openMainWindow() }
         }
-        dueNotificationCoordinator.start()
+        Task { @MainActor in await dueNotificationCoordinator.start() }
     }
 
     func handleNotificationResponse(actionIdentifier: String) {

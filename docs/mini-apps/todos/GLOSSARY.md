@@ -25,5 +25,9 @@ The day and start time a one-time Todo is intended to be worked on. It is requir
 _Avoid_: Due date, deadline, scheduled date, reminder
 
 **Due-check interval**:
-The elapsed time between checks for Do-on dates becoming due, also used as the lookback on launch. It defaults to 5 minutes.
+The length of a due-check window, from 5 to 60 minutes. It defaults to 5 minutes and changes in steps of five.
 _Avoid_: Check period, polling interval, refresh rate, reminder interval
+
+**Due-check window**:
+A range of local time ending at a boundary anchored to local midnight. A due-check interval sets its usual length.
+_Avoid_: Review period, verified period, check range, lookback
