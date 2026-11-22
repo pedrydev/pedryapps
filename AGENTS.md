@@ -16,7 +16,16 @@ All-in-one macOS utility app for everyday use. Known feature areas so far:
 
 ## Status
 
-The repository is empty and the tech stack is **not yet decided**. Confirm the stack with the user before writing any implementation code. Record the decision here once made (language, UI framework, minimum macOS version, project/package layout, dependency manager).
+Decided: macOS-only native app.
+
+- Language: Swift 6
+- UI: SwiftUI, with AppKit only where SwiftUI lacks a primitive
+- Minimum deployment target: macOS 14 (Sonoma)
+- Layout: one Xcode app target; source grouped as `App/`, `Domain/`, `Persistence/`, `Features/`, `Resources/`. No local Swift packages until a boundary is proven.
+- Dependency manager: Swift Package Manager; no third-party dependencies by default
+- Distribution: personal local use only; no App Store, sandbox, notarization, login item, or sync
+- UI shape: window + global hotkey first; menu bar extra later
+- Decisions and their rationale: `docs/adr/`
 
 ## Working rules
 
@@ -30,15 +39,22 @@ The repository is empty and the tech stack is **not yet decided**. Confirm the s
 
 ## Workflow
 
-- For tasks that do not decompose into independent units: use the single-agent pipeline (`business-analyst` → `architect` → `unit-tester` → `implementer` → `validator`) via the corresponding skills.
-- For features or epics spanning multiple independent tasks: use the multi-agent pipeline (`orchestrator` → `worker` → `validator`).
-- Load the `implementer` skill for any implementation task so work proceeds layer by layer, innermost to outermost, with test-verify-refactor loops and a checkpoint per layer.
-- Load `architect` for major design decisions; load `blazor` only if a Blazor-based stack is chosen.
+Use only the skills vendored in `.agents/skills/`. Do not load skills from `~/.claude/skills`, `~/.config/opencode/skills`, or `~/.agents/skills`. If a global config names a skill that is not vendored here, this list takes precedence.
+
+- Requirements and design: `grilling` or `grill-with-docs` for the decision tree; `domain-modeling` for terminology, `GLOSSARY.md`, and ADRs.
+- Specs and tickets: `to-spec` and `to-tickets` when the work needs tracking; otherwise go straight from decisions to implementation.
+- Implementation: `implement-spec` when working from a spec or ticket, `implement` otherwise. Use `tdd` where logic can be written test-first.
+- Work too large for one session: `wayfinder` for the decision map, then resolve tickets one at a time; `handoff` when context needs transferring.
+- Bugs: `diagnosing-bugs`. Review: `code-review` against the originating spec, ADR, or request.
+- Optional: `prototype` to sanity-check state or UI, `research` for primary-source fact-finding, `codebase-design` when designing a module interface.
 
 ## Verification
 
-- Run the project's lint and typecheck commands after changes. These commands are unknown until the stack is chosen; add them here once established.
-- If no verification command exists, ask the user for one and add it here.
+- Typecheck/build: `xcodebuild -scheme Macos -destination 'platform=macOS' -configuration Debug build`
+- Tests: `xcodebuild test -scheme Macos -destination 'platform=macOS'`
+- Run both after changes. Replace `Macos` with the actual scheme name once the Xcode project exists.
+- No lint command is configured yet; choose one when the project is created.
+- If a verification command fails for environmental reasons, report it rather than skipping it.
 
 ## Project memory
 
