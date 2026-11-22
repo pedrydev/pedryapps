@@ -4,6 +4,7 @@ import SwiftUI
 @MainActor
 final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     let store = TodosStore()
+    let todosSettingsStore = TodosSettingsStore()
 
     private static let menuWidth = MenuBarTodoRowView.menuWidth
 
@@ -15,6 +16,12 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
     private var openWindowObserver: NSObjectProtocol?
     private var currentItems: [Todo] = []
     private var currentAdditionalCount = 0
+    private lazy var dueNotificationCoordinator = TodosDueNotificationCoordinator(
+        todosStore: store,
+        settingsStore: todosSettingsStore,
+        notificationCenter: SystemTodoDueNotificationCenter(),
+        schedule: TimerTodoDueNotificationScheduler.schedule
+    )
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -39,6 +46,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
         ) { [weak self] _ in
             Task { @MainActor in self?.openMainWindow() }
         }
+        dueNotificationCoordinator.start()
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {

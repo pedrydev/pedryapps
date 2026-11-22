@@ -13,8 +13,9 @@ nonisolated func fixtureDate(
     _ day: Int,
     at hour: Int,
     minute: Int,
+    second: Int = 0,
     calendar: Calendar
 ) throws -> Date {
-    let components = DateComponents(year: year, month: month, day: day, hour: hour, minute: minute)
+    let components = DateComponents(year: year, month: month, day: day, hour: hour, minute: minute, second: second)
     return try #require(calendar.date(from: components))
 }

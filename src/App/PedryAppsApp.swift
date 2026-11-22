@@ -5,7 +5,7 @@ import SwiftUI
 struct PedryAppsApp: App {
     @NSApplicationDelegateAdaptor(MenuBarAppDelegate.self) private var appDelegate
 
-    private let todosSettingsStore = TodosSettingsStore()
+    private var todosSettingsStore: TodosSettingsStore { appDelegate.todosSettingsStore }
 
     init() {
         HotkeyManager.shared.register(.showWindow) {

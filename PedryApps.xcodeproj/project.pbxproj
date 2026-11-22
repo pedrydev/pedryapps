@@ -37,6 +37,12 @@
 		A000000000000000000000B9 /* TodosSettingsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B8 /* TodosSettingsStoreTests.swift */; };
 		A000000000000000000000BB /* TodosSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000BA /* TodosSettings.swift */; };
 		A000000000000000000000BD /* TodosSettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000BC /* TodosSettingsStore.swift */; };
+		A000000000000000000000BE /* TodoDueNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000BF /* TodoDueNotification.swift */; };
+		A000000000000000000000C0 /* TodoDueNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000C1 /* TodoDueNotificationCenter.swift */; };
+		A000000000000000000000C2 /* TodosDueNotificationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000C3 /* TodosDueNotificationCoordinator.swift */; };
+		A000000000000000000000C4 /* TodosDueNotificationCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000C5 /* TodosDueNotificationCoordinatorTests.swift */; };
+		A000000000000000000000C6 /* SystemTodoDueNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000C7 /* SystemTodoDueNotificationCenter.swift */; };
+		A000000000000000000000C8 /* TimerDueNotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000C9 /* TimerDueNotificationScheduler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +90,12 @@
 		A000000000000000000000BC /* TodosSettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosSettingsStore.swift; sourceTree = "<group>"; };
 		A00000000000000000000070 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		A00000000000000000000071 /* SwiftUICore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUICore.framework; path = System/Library/Frameworks/SwiftUICore.framework; sourceTree = SDKROOT; };
+		A000000000000000000000BF /* TodoDueNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoDueNotification.swift; sourceTree = "<group>"; };
+		A000000000000000000000C1 /* TodoDueNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoDueNotificationCenter.swift; sourceTree = "<group>"; };
+		A000000000000000000000C3 /* TodosDueNotificationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosDueNotificationCoordinator.swift; sourceTree = "<group>"; };
+		A000000000000000000000C5 /* TodosDueNotificationCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosDueNotificationCoordinatorTests.swift; sourceTree = "<group>"; };
+		A000000000000000000000C7 /* SystemTodoDueNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemTodoDueNotificationCenter.swift; sourceTree = "<group>"; };
+		A000000000000000000000C9 /* TimerDueNotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerDueNotificationScheduler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,7 +192,12 @@
 				A000000000000000000000A6 /* DoOnDatePicker.swift */,
 				A000000000000000000000B2 /* TodosSettingsView.swift */,
 				A000000000000000000000BC /* TodosSettingsStore.swift */,
-			);
+			
+				A000000000000000000000BF /* TodoDueNotification.swift */,
+				A000000000000000000000C1 /* TodoDueNotificationCenter.swift */,
+				A000000000000000000000C3 /* TodosDueNotificationCoordinator.swift */,
+				A000000000000000000000C7 /* SystemTodoDueNotificationCenter.swift */,
+				A000000000000000000000C9 /* TimerDueNotificationScheduler.swift */,);
 			path = Features;
 			sourceTree = "<group>";
 		};
@@ -211,7 +228,8 @@
 				A000000000000000000000A8 /* DateFixtures.swift */,
 				A000000000000000000000B6 /* TodosSettingsTests.swift */,
 				A000000000000000000000B8 /* TodosSettingsStoreTests.swift */,
-			);
+			
+				A000000000000000000000C5 /* TodosDueNotificationCoordinatorTests.swift */,);
 			path = PedryAppsTests;
 			sourceTree = "<group>";
 		};
@@ -343,7 +361,12 @@
 				A000000000000000000000B5 /* NotConfiguredSettingsView.swift in Sources */,
 				A000000000000000000000BB /* TodosSettings.swift in Sources */,
 				A000000000000000000000BD /* TodosSettingsStore.swift in Sources */,
-			);
+			
+				A000000000000000000000BE /* TodoDueNotification.swift in Sources */,
+				A000000000000000000000C0 /* TodoDueNotificationCenter.swift in Sources */,
+				A000000000000000000000C2 /* TodosDueNotificationCoordinator.swift in Sources */,
+				A000000000000000000000C6 /* SystemTodoDueNotificationCenter.swift in Sources */,
+				A000000000000000000000C8 /* TimerDueNotificationScheduler.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A00000000000000000000033 /* Sources */ = {
@@ -358,7 +381,8 @@
 				A000000000000000000000A9 /* DateFixtures.swift in Sources */,
 				A000000000000000000000B7 /* TodosSettingsTests.swift in Sources */,
 				A000000000000000000000B9 /* TodosSettingsStoreTests.swift in Sources */,
-			);
+			
+				A000000000000000000000C4 /* TodosDueNotificationCoordinatorTests.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
