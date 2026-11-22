@@ -9,7 +9,7 @@ final class HotkeyManager {
 
         static let showWindow = Shortcut(
             keyCode: UInt32(kVK_Space),
-            modifiers: UInt32(cmdKey | shiftKey | optionKey)
+            modifiers: UInt32(cmdKey | optionKey)
         )
     }
 

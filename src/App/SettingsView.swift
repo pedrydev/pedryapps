@@ -20,6 +20,6 @@ struct SettingsView: View {
                     Label("Calendar", systemImage: "calendar")
                 }
         }
-        .frame(width: 440, height: 260)
+        .frame(minWidth: 380, minHeight: 220)
     }
 }

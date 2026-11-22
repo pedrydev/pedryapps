@@ -10,6 +10,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
     private var statusItem: NSStatusItem?
     private var menu: NSMenu?
     private var openWindow: OpenWindowAction?
+    private var openSettings: OpenSettingsAction?
     private var clockTimer: Timer?
     private var openWindowObserver: NSObjectProtocol?
     private var currentItems: [Todo] = []
@@ -52,6 +53,10 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
         openWindow = action
     }
 
+    func registerOpenSettings(_ action: OpenSettingsAction) {
+        openSettings = action
+    }
+
     func menuNeedsUpdate(_ menu: NSMenu) {
         rebuildMenu(menu)
     }
@@ -66,6 +71,21 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
 
     @objc nonisolated private func openMainWindowAction() {
         Task { @MainActor in self.openMainWindow() }
+    }
+
+    @objc nonisolated private func showSettingsAction() {
+        Task { @MainActor in
+            NSApp.activate(ignoringOtherApps: true)
+            self.openSettings?()
+        }
+    }
+
+    @objc nonisolated private func showAboutAction() {
+        Task { @MainActor in NSApp.orderFrontStandardAboutPanel(nil) }
+    }
+
+    @objc nonisolated private func quitAction() {
+        Task { @MainActor in NSApp.terminate(nil) }
     }
 
     private func openMainWindow() {
@@ -120,10 +140,37 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
         let openItem = NSMenuItem(
             title: "Open PedryApps",
             action: #selector(openMainWindowAction),
-            keyEquivalent: ""
+            keyEquivalent: " "
         )
         openItem.target = self
+        openItem.keyEquivalentModifierMask = [.command, .option]
         menu.addItem(openItem)
+
+        let settingsItem = NSMenuItem(
+            title: "Settings...",
+            action: #selector(showSettingsAction),
+            keyEquivalent: ","
+        )
+        settingsItem.target = self
+        menu.addItem(settingsItem)
+
+        let aboutItem = NSMenuItem(
+            title: "About PedryApps",
+            action: #selector(showAboutAction),
+            keyEquivalent: ""
+        )
+        aboutItem.target = self
+        menu.addItem(aboutItem)
+
+        menu.addItem(.separator())
+
+        let quitItem = NSMenuItem(
+            title: "Quit PedryApps",
+            action: #selector(quitAction),
+            keyEquivalent: "q"
+        )
+        quitItem.target = self
+        menu.addItem(quitItem)
     }
 
     private func textItem(_ title: String, font: NSFont) -> NSMenuItem {
@@ -197,8 +244,4 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate 
             (item.view as? MenuBarTodoRowView)?.update(now: now)
         }
     }
-}
-
-extension Notification.Name {
-    static let openMainWindow = Notification.Name("openMainWindow")
 }
