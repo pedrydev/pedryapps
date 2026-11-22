@@ -4,11 +4,11 @@ Status: ready-for-agent
 
 ## Problem Statement
 
-I need a simple, reliable place on my Mac to capture personal to-dos as they come up, see them in one flat list, keep that list in the order I care about, and remove items when I have checked them off. I do not want a heavyweight task manager; I want a lightweight personal list that is immediately available in the app and still there after I quit and reopen it.
+I need a simple, reliable place on my Mac to capture personal to-dos as they come up, see them in one flat list, note the day I plan to work on each one, keep that list in the order I care about, and remove items when I have checked them off. I do not want a heavyweight task manager; I want a lightweight personal list that is immediately available in the app and still there after I quit and reopen it.
 
 ## Solution
 
-Provide a Todos mini-app that shows a single flat list of Todos. I can add a Todo, see all current Todos, reorder them, and check off a Todo to remove it from the list permanently. The Todos mini-app persists its own data locally as its own document so the list survives app restarts, while keeping the domain model independent from persistence concerns.
+Provide a Todos mini-app that shows a single flat list of Todos. I can add a Todo with a do-on date, see all current Todos with their do-on dates, change a do-on date, reorder them, and check off a Todo to remove it from the list permanently. The Todos mini-app persists its own data locally as its own document so the list survives app restarts, while keeping the domain model independent from persistence concerns.
 
 ## User Stories
 
@@ -43,7 +43,12 @@ Provide a Todos mini-app that shows a single flat list of Todos. I can add a Tod
 29. As a Mac user, I want the Todos mini-app to have predictable behavior when I add multiple Todos in sequence, so that rapid capture is reliable.
 30. As a Mac user, I want the Todos mini-app to keep only active Todos, so that completed work does not accumulate as hidden history.
 31. As a Mac user, I want Todo text to be stored exactly as I entered it, except for ignoring meaningless whitespace-only input, so that my wording is preserved.
-32. As a Mac user, I want the Todos mini-app to avoid unnecessary features like due dates, tags, or nested lists in this initial version, so that the core capture-and-check-off flow stays simple.
+32. As a Mac user, I want the Todos mini-app to avoid unnecessary features like reminders, tags, or nested lists in this initial version, so that the core capture-and-check-off flow stays simple.
+33. As a Mac user, I want every Todo to carry a do-on date when it is created, so that I know which day I plan to work on it.
+34. As a Mac user, I want the do-on date to default to today, so that adding a Todo stays a single-step action.
+35. As a Mac user, I want to see each Todo's do-on date in its row, so that I can scan my list by day without opening anything.
+36. As a Mac user, I want to change a Todo's do-on date without changing its text, so that I can reschedule it in place.
+37. As a Mac user, I want the changed do-on date to persist across app restarts, so that my plan survives quitting the app.
 
 ## Implementation Decisions
 
@@ -52,10 +57,13 @@ Provide a Todos mini-app that shows a single flat list of Todos. I can add a Tod
 - **Persistence seam reuse**: Reuse the existing `JSONDocumentStore` as the persistence seam. `TodosStore` depends on an injected `JSONDocumentStore` for a Todos document; no new lower-level persistence abstraction is introduced unless implementation proves necessary.
 - **Document ownership**: The Todos mini-app owns its own Codable JSON document in Application Support (for example, a Todos-specific document file). This follows ADR 0002: one document per mini-app, independent schemas, no shared app-wide document.
 - **Domain model shape**: Keep the domain model as plain Swift value types with no persistence annotations, per ADR 0002. Todo identity should be stable enough to support reorder and check-off operations without ambiguity.
+- **Do-on date**: Every Todo has a required `Date` representing a day, with no time component. New Todos default to the start of the current local day. The store exposes a mutation for changing a Todo's do-on date, and every change persists.
+- **Do-on date UI**: The add row includes a compact `DatePicker` defaulting to today; each list row shows a compact `DatePicker` bound to that Todo's do-on date for both display and editing.
 - **Mutation serialization**: All Todos mutations go through the `TodosStore` on the main actor, consistent with ADR 0002's "no concurrent writers" consequence. The store is responsible for keeping in-memory state and persisted document consistent.
 - **Check-off semantics**: "Check off" removes the Todo from the list permanently. There is no completed/archive state in this version.
-- **List shape**: The Todos mini-app manages a single flat list. No projects, tags, due dates, priorities, subtasks, or nested structure.
-- **Ordering**: The store maintains an explicit list order. New-Todo insertion position should be predictable and covered by tests; reorder operations persist the resulting order.
+- **List shape**: The Todos mini-app manages a single flat list. No projects, tags, reminders, priorities, subtasks, or nested structure.
+- **Ordering**: The store maintains an explicit list order. New-Todo insertion position should be predictable and covered by tests; reorder operations persist the resulting order. The do-on date is display metadata and never changes list order.
+- **Existing data**: The saved Todos document from initial testing is discarded. No decode fallback or schema version is added for documents without a do-on date; genuinely malformed documents still surface the existing load error.
 - **Validation**: Adding a Todo rejects empty or whitespace-only text. The UI should not create a Todo in that case.
 - **UI integration**: The Todos mini-app is presented in the existing macOS app window. Existing app-level window activation/global hotkey behavior remains the entry mechanism; this spec does not redesign app shell behavior beyond hosting the Todos mini-app.
 - **Error handling**: Missing document on load yields an empty list. Save/load failures should be surfaced in a minimal, non-corrupting way; the store must not silently corrupt in-memory state.
@@ -63,7 +71,7 @@ Provide a Todos mini-app that shows a single flat list of Todos. I can add a Tod
 ## Testing Decisions
 
 - **Good test definition**: Tests should verify external behavior through public interfaces, not implementation details. They should assert observable outcomes such as returned/loaded state, persisted document contents through the store seam, ordering, and removal behavior.
-- **Primary module to test**: `TodosStore` is the primary unit-test seam. Tests should cover load, add, reject-empty, check-off removal, reorder, and persistence across store instances using a temporary directory/injected document store.
+- **Primary module to test**: `TodosStore` is the primary unit-test seam. Tests should cover load, add, reject-empty, check-off removal, reorder, do-on date creation default and editing persistence, and persistence across store instances using a temporary directory/injected document store.
 - **Persistence seam tests**: Reuse existing `JSONDocumentStore` tests as prior art for atomic save/load behavior. Add Todos-specific persistence tests only where Todos document behavior needs coverage.
 - **UI tests**: Add lightweight UI/view-model-level tests only where SwiftUI behavior is not adequately covered by store tests; prefer store tests for business behavior. If UI tests are added, they should verify user-visible behaviors like add/check-off/reorder/empty state.
 - **Prior art**: Follow the existing `JSONDocumentStoreTests` style in the test target: Swift Testing, `@MainActor` where needed, temporary directories, and behavior-focused assertions.
@@ -72,7 +80,7 @@ Provide a Todos mini-app that shows a single flat list of Todos. I can add a Tod
 ## Out of Scope
 
 - Editing existing Todo text.
-- Due dates, reminders, notifications, calendar integration, or scheduling.
+- Reminders, notifications, calendar integration, time-of-day or repeating scheduling. A do-on date is a plain day with no time, alert, or recurrence.
 - Tags, projects, lists, subtasks, nesting, or grouping.
 - Completed/history/archive views; checked-off Todos are removed permanently.
 - Sync, iCloud, CloudKit, multi-device, or multi-user support.
@@ -84,5 +92,5 @@ Provide a Todos mini-app that shows a single flat list of Todos. I can add a Tod
 ## Further Notes
 
 - This spec follows the decisions in ADR 0001 (native Swift/SwiftUI, macOS-only, no third-party UI framework) and ADR 0002 (one Codable JSON document per mini-app in Application Support, plain Swift value types, main-actor mutations).
-- Domain vocabulary follows `docs/GLOSSARY.md` and `docs/mini-apps/todos/GLOSSARY.md`: use "Todos mini-app", "Todo", and "Check off"; avoid "Task", "complete", "finish", and "archive".
+- Domain vocabulary follows `docs/GLOSSARY.md` and `docs/mini-apps/todos/GLOSSARY.md`: use "Todos mini-app", "Todo", "Check off", and "Do-on date"; avoid "Task", "complete", "finish", "archive", "due date", and "scheduled date".
 - The existing codebase has only the app shell, `JSONDocumentStore`, and its tests; the Todos mini-app behavior described here is not yet implemented. A prior commit established Todos glossary/ADR direction but no Todos domain/store/UI implementation.

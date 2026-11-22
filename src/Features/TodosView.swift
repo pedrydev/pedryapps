@@ -3,6 +3,7 @@ import SwiftUI
 struct TodosView: View {
     @ObservedObject var store: TodosStore
     @State private var newTodoTitle = ""
+    @State private var newTodoDoOnDate = Calendar.current.startOfDay(for: Date())
 
     var body: some View {
         VStack(spacing: 0) {
@@ -19,6 +20,11 @@ struct TodosView: View {
             TextField("Add a Todo", text: $newTodoTitle)
                 .textFieldStyle(.roundedBorder)
                 .onSubmit(add)
+            DatePicker("Do-on date", selection: $newTodoDoOnDate, displayedComponents: .date)
+                .datePickerStyle(.compact)
+                .labelsHidden()
+                .frame(maxWidth: 160)
+                .help("Do-on date")
             Button("Add", action: add)
                 .keyboardShortcut(.defaultAction)
                 .disabled(newTodoTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
@@ -47,6 +53,19 @@ struct TodosView: View {
                         .help("Check off")
 
                         Text(todo.title)
+                        Spacer(minLength: 8)
+                        DatePicker(
+                            "Do-on date",
+                            selection: Binding(
+                                get: { todo.doOnDate },
+                                set: { store.setDoOnDate($0, for: todo) }
+                            ),
+                            displayedComponents: .date
+                        )
+                        .datePickerStyle(.compact)
+                        .labelsHidden()
+                        .frame(maxWidth: 160)
+                        .help("Do-on date")
                     }
                 }
                 .onMove { source, destination in
@@ -71,7 +90,8 @@ struct TodosView: View {
 
     private func add() {
         guard !newTodoTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
-        store.addTodo(newTodoTitle)
+        store.addTodo(newTodoTitle, doOnDate: newTodoDoOnDate)
         newTodoTitle = ""
+        newTodoDoOnDate = Calendar.current.startOfDay(for: Date())
     }
 }

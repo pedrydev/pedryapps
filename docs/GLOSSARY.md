@@ -9,5 +9,5 @@ A major, self-contained feature area hosted by the app, such as Todos, Notificat
 _Avoid_: Feature, module, plugin
 
 **Todos mini-app**:
-The mini-app for capturing, ordering and checking off a single flat list of personal to-dos.
+The mini-app for capturing, ordering and checking off a single flat list of personal to-dos, each with a day it is intended to be worked on.
 _Avoid_: TODO feature, Task manager

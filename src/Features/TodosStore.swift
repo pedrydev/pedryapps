@@ -26,9 +26,17 @@ final class TodosStore: ObservableObject {
         }
     }
 
-    func addTodo(_ title: String) {
+    func addTodo(_ title: String, doOnDate: Date = Date()) {
         guard !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
-        mutate { $0.append(Todo(title: title)) }
+        mutate { $0.append(Todo(title: title, doOnDate: doOnDate)) }
+    }
+
+    func setDoOnDate(_ date: Date, for todo: Todo) {
+        let doOnDate = Calendar.current.startOfDay(for: date)
+        mutate { todos in
+            guard let index = todos.firstIndex(where: { $0.id == todo.id }) else { return }
+            todos[index].doOnDate = doOnDate
+        }
     }
 
     func checkOff(_ todo: Todo) {

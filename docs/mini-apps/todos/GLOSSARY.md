@@ -11,3 +11,7 @@ _Avoid_: Task, TODO item
 **Check off**:
 To mark a todo as done, which removes it from the list permanently.
 _Avoid_: Complete, finish, archive
+
+**Do-on date**:
+The day a todo is intended to be worked on. It is date-only, required when the todo is created, and can be changed later.
+_Avoid_: Due date, deadline, scheduled date, reminder

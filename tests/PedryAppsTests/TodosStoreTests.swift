@@ -27,6 +27,20 @@ struct TodosStoreTests {
         #expect(store.todos.map(\.title) == ["Buy milk", "  Call Sam  "])
     }
 
+    @Test func addedTodoDefaultsToStartOfToday() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = makeStore(in: directory)
+        let calendar = Calendar.current
+        let before = calendar.startOfDay(for: Date())
+
+        store.addTodo("Buy milk")
+
+        let after = calendar.startOfDay(for: Date())
+        let actual = store.todos.first?.doOnDate
+        #expect(actual == before || actual == after)
+    }
+
     @Test func addingWhitespaceOnlyTodoIsRejected() throws {
         let directory = try makeTemporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
@@ -36,6 +50,30 @@ struct TodosStoreTests {
         store.addTodo("   \n\t ")
 
         #expect(store.todos.isEmpty)
+    }
+
+    @Test func changingDoOnDatePersistsWithoutChangingTitleOrOrder() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = makeStore(in: directory)
+        store.addTodo("Buy milk")
+        store.addTodo("Call Sam")
+        let target = store.todos[0]
+        let otherDate = store.todos[1].doOnDate
+        let calendar = Calendar.current
+        let afternoon = calendar.date(from: DateComponents(year: 2030, month: 1, day: 2))!
+            .addingTimeInterval(12 * 60 * 60)
+        let expected = calendar.startOfDay(for: afternoon)
+
+        store.setDoOnDate(afternoon, for: target)
+
+        #expect(store.todos.map(\.title) == ["Buy milk", "Call Sam"])
+        #expect(store.todos[0].doOnDate == expected)
+        #expect(store.todos[1].doOnDate == otherDate)
+        let reloaded = makeStore(in: directory)
+        reloaded.load()
+        #expect(reloaded.todos[0].doOnDate == expected)
+        #expect(reloaded.todos[1].doOnDate == otherDate)
     }
 
     @Test func addedTodoIsAvailableToANewStoreInstance() throws {
