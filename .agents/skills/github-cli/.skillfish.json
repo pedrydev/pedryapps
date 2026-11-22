@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "github-cli",
+  "owner": "oriolrius",
+  "repo": "pki-manager-web",
+  "path": ".claude/skills/github-cli",
+  "branch": "main",
+  "sha": "c0ebc92e0c3986462259bf7bd8f9b4d320dfd70e",
+  "source": "manual"
+}
