@@ -30,6 +30,9 @@
 		A000000000000000000000A9 /* DateFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000A8 /* DateFixtures.swift */; };
 		A000000000000000000000AD /* TimeLeftLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000AC /* TimeLeftLabel.swift */; };
 		A000000000000000000000AF /* MenuBarTodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000AE /* MenuBarTodoRow.swift */; };
+		A000000000000000000000B1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B0 /* SettingsView.swift */; };
+		A000000000000000000000B3 /* TodosSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B2 /* TodosSettingsView.swift */; };
+		A000000000000000000000B5 /* NotConfiguredSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B4 /* NotConfiguredSettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +71,9 @@
 		A000000000000000000000A8 /* DateFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFixtures.swift; sourceTree = "<group>"; };
 		A000000000000000000000AC /* TimeLeftLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLeftLabel.swift; sourceTree = "<group>"; };
 		A000000000000000000000AE /* MenuBarTodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarTodoRow.swift; sourceTree = "<group>"; };
+		A000000000000000000000B0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A000000000000000000000B2 /* TodosSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosSettingsView.swift; sourceTree = "<group>"; };
+		A000000000000000000000B4 /* NotConfiguredSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotConfiguredSettingsView.swift; sourceTree = "<group>"; };
 		A00000000000000000000070 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		A00000000000000000000071 /* SwiftUICore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUICore.framework; path = System/Library/Frameworks/SwiftUICore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -130,6 +136,8 @@
 				A000000000000000000000A0 /* MenuBarExtraView.swift */,
 				A000000000000000000000AC /* TimeLeftLabel.swift */,
 				A000000000000000000000AE /* MenuBarTodoRow.swift */,
+				A000000000000000000000B0 /* SettingsView.swift */,
+				A000000000000000000000B4 /* NotConfiguredSettingsView.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -161,6 +169,7 @@
 				A00000000000000000000097 /* AddTodoRow.swift */,
 				A00000000000000000000099 /* TodoRow.swift */,
 				A000000000000000000000A6 /* DoOnDatePicker.swift */,
+				A000000000000000000000B2 /* TodosSettingsView.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -317,6 +326,9 @@
 				A0000000000000000000009A /* TodoRow.swift in Sources */,
 				A000000000000000000000A3 /* TodosOverview.swift in Sources */,
 				A000000000000000000000A7 /* DoOnDatePicker.swift in Sources */,
+				A000000000000000000000B1 /* SettingsView.swift in Sources */,
+				A000000000000000000000B3 /* TodosSettingsView.swift in Sources */,
+				A000000000000000000000B5 /* NotConfiguredSettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

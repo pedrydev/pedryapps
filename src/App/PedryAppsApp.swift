@@ -18,6 +18,10 @@ struct PedryAppsApp: App {
                     OpenWindowRegistrar { appDelegate.registerOpenWindow($0) }
                 }
         }
+
+        Settings {
+            SettingsView()
+        }
     }
 }
 
