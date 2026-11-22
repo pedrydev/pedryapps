@@ -11,3 +11,7 @@
 - [ ] The Todos glossary defines one-time Todo and scheduled Todo, and corrects the do-on date entry so it covers a day and a time instead of a date-only day.
 - [ ] The earlier Todos spec is corrected where it says the do-on date has no time and never influences ordering; the new spec remains the source of truth for this feature.
 - [ ] No implementation code is changed.
+
+## Comments
+
+- Implemented on 2026-11-21.

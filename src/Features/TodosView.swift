@@ -48,7 +48,8 @@ struct TodosView: View {
 
     private func add() {
         guard Todo.hasText(newTodoTitle) else { return }
-        store.addTodo(newTodoTitle, doOnDate: newTodoDoOnDate)
+        let doOnDate = newTodoDoOnDate.isUpcoming ? newTodoDoOnDate : DoOnDate()
+        store.addTodo(newTodoTitle, doOnDate: doOnDate)
         newTodoTitle = ""
         newTodoDoOnDate = DoOnDate()
     }

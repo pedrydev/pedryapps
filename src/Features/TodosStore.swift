@@ -36,11 +36,12 @@ final class TodosStore {
     }
 
     func addTodo(_ title: String, doOnDate: DoOnDate = DoOnDate()) {
-        guard Todo.hasText(title) else { return }
+        guard Todo.hasText(title), doOnDate.isUpcoming else { return }
         mutate { $0.append(Todo(title: title, doOnDate: doOnDate)) }
     }
 
     func setDoOnDate(_ doOnDate: DoOnDate, for todo: Todo) {
+        guard doOnDate.isUpcoming else { return }
         mutate { todos in
             guard let index = todos.firstIndex(where: { $0.id == todo.id }) else { return }
             todos[index].doOnDate = doOnDate

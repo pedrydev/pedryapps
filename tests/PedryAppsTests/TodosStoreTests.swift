@@ -25,17 +25,37 @@ struct TodosStoreTests {
         #expect(store.todos.map(\.title) == ["Buy milk", "  Call Sam  "])
     }
 
-    @Test func addedTodoDefaultsToStartOfToday() throws {
+    @Test func addedTodoDefaultsToAnUpcomingWholeHour() throws {
         let directory = try TemporaryDirectory()
         let store = makeStore(in: directory.url)
-        let calendar = Calendar.current
-        let before = calendar.startOfDay(for: Date())
 
         store.addTodo("Buy milk")
 
-        let after = calendar.startOfDay(for: Date())
-        let actual = store.todos.first?.doOnDate.date
-        #expect(actual == before || actual == after)
+        let actual = try #require(store.todos.first?.doOnDate.date)
+        let components = Calendar.current.dateComponents([.minute, .second], from: actual)
+        #expect(actual > Date())
+        #expect(components.minute == 0)
+        #expect(components.second == 0)
+    }
+
+    @Test func addingTodoWithPastStartIsRejected() throws {
+        let directory = try TemporaryDirectory()
+        let store = makeStore(in: directory.url)
+
+        store.addTodo("Buy milk", doOnDate: DoOnDate(Date().addingTimeInterval(-3600)))
+
+        #expect(store.todos.isEmpty)
+    }
+
+    @Test func changingToPastStartIsRejected() throws {
+        let directory = try TemporaryDirectory()
+        let store = makeStore(in: directory.url)
+        store.addTodo("Buy milk", doOnDate: DoOnDate(Date().addingTimeInterval(3600)))
+        let original = try #require(store.todos.first?.doOnDate)
+
+        store.setDoOnDate(DoOnDate(Date().addingTimeInterval(-3600)), for: store.todos[0])
+
+        #expect(store.todos.first?.doOnDate == original)
     }
 
     @Test func addingWhitespaceOnlyTodoIsRejected() throws {

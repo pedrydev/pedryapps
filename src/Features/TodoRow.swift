@@ -16,16 +16,13 @@ struct TodoRow: View {
         HStack {
             Button("Check off", systemImage: "circle", action: checkOffTodo)
                 .buttonStyle(.borderless)
+                .labelStyle(.iconOnly)
                 .help("Permanently removes this Todo")
                 .accessibilityHint("Permanently removes this Todo")
 
             Text(todo.title)
             Spacer(minLength: 8)
-            DatePicker("Do-on date", selection: dateBinding, displayedComponents: .date)
-                .datePickerStyle(.compact)
-                .labelsHidden()
-                .frame(maxWidth: 160)
-                .help("Do-on date")
+            DoOnDatePicker(date: dateBinding)
         }
     }
 

@@ -12,3 +12,7 @@
 - [ ] The existing global hotkey is registered when the app is created and works whether or not the main window has appeared.
 - [ ] No login item is registered, the icon carries no count badge, and the menu is not a floating window.
 - [ ] Build, test and lint commands from `AGENTS.md` pass.
+
+## Comments
+
+- Implemented on 2026-11-21.

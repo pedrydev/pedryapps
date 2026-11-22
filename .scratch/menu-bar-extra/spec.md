@@ -61,11 +61,11 @@ Add a menu bar extra to PedryApps: a small status-bar icon that opens a compact 
 - **Shared state**: The app creates one Todos store instance and passes the same instance to both scenes. No singleton, environment injection, or store refactor.
 - **Hotkey lifetime**: Register the existing global hotkey once when the app is created, instead of from the window's appearance callback.
 - **Overview scope**: The menu is an app-level host for future mini-apps. This change contributes only the Todos section; no plugin mechanism or cross-mini-app abstraction is introduced.
-- **Do-on date shape**: The do-on date carries a day and a time. The name "Do-on date" and the existing glossary term are kept. New Todos default to 09:00 local time on today; existing stored values are not upgraded.
+- **Do-on date shape**: The do-on date carries a day and a time. The name "Do-on date" and the existing glossary term are kept. New Todos default to 09:00 local time today, or to the next whole hour when 09:00 has already passed; existing stored values are not upgraded.
 - **Editors**: The add row and each Todo row edit the day and the time together in one control. A start moment earlier than now is rejected on create and on change.
 - **Selection rule**: From all Todos, keep those whose do-on date is the current local day and whose start moment is in the future. Order them by increasing time left, using their existing manual order only when start moments are equal. Take the first five.
 - **Time left**: Compute from the current time to the start moment. Show whole minutes in a compact form; show "now" when less than one minute remains.
-- **Refresh**: Recompute the selection when the menu content is produced, and refresh it on a one-minute cadence while the menu is open so labels and membership stay current.
+- **Refresh**: Recompute the selection when the menu content is produced; refresh at least every minute and remove a row promptly at its start moment so labels and membership stay current.
 - **Actions**: The menu offers "Open PedryApps" and a Check off action per row. Check off calls the existing store mutation. No add, edit, search, or settings controls in the menu.
 - **Main list**: The main Todos list stays manually ordered. The overview's time-based order does not change it.
 - **Vocabulary**: Use one-time Todo for a Todo with a point in time, and scheduled Todo for the future repetitive kind. Keep Todo, Check off, and Do-on date as the domain terms.

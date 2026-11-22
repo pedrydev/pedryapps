@@ -23,6 +23,13 @@
 		A0000000000000000000009A /* TodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000099 /* TodoRow.swift */; };
 		A0000000000000000000009C /* TemporaryDirectory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009B /* TemporaryDirectory.swift */; };
 		A0000000000000000000009E /* DoOnDateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009D /* DoOnDateTests.swift */; };
+		A000000000000000000000A1 /* MenuBarExtraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000A0 /* MenuBarExtraView.swift */; };
+		A000000000000000000000A3 /* TodosOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000A2 /* TodosOverview.swift */; };
+		A000000000000000000000A5 /* TodosOverviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000A4 /* TodosOverviewTests.swift */; };
+		A000000000000000000000A7 /* DoOnDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000A6 /* DoOnDatePicker.swift */; };
+		A000000000000000000000A9 /* DateFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000A8 /* DateFixtures.swift */; };
+		A000000000000000000000AD /* TimeLeftLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000AC /* TimeLeftLabel.swift */; };
+		A000000000000000000000AF /* MenuBarTodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000AE /* MenuBarTodoRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +61,13 @@
 		A00000000000000000000099 /* TodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoRow.swift; sourceTree = "<group>"; };
 		A0000000000000000000009B /* TemporaryDirectory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryDirectory.swift; sourceTree = "<group>"; };
 		A0000000000000000000009D /* DoOnDateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoOnDateTests.swift; sourceTree = "<group>"; };
+		A000000000000000000000A0 /* MenuBarExtraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarExtraView.swift; sourceTree = "<group>"; };
+		A000000000000000000000A2 /* TodosOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosOverview.swift; sourceTree = "<group>"; };
+		A000000000000000000000A4 /* TodosOverviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosOverviewTests.swift; sourceTree = "<group>"; };
+		A000000000000000000000A6 /* DoOnDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoOnDatePicker.swift; sourceTree = "<group>"; };
+		A000000000000000000000A8 /* DateFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFixtures.swift; sourceTree = "<group>"; };
+		A000000000000000000000AC /* TimeLeftLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLeftLabel.swift; sourceTree = "<group>"; };
+		A000000000000000000000AE /* MenuBarTodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarTodoRow.swift; sourceTree = "<group>"; };
 		A00000000000000000000070 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		A00000000000000000000071 /* SwiftUICore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUICore.framework; path = System/Library/Frameworks/SwiftUICore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -113,6 +127,9 @@
 				A00000000000000000000010 /* PedryAppsApp.swift */,
 				A00000000000000000000011 /* ContentView.swift */,
 				A00000000000000000000012 /* HotkeyManager.swift */,
+				A000000000000000000000A0 /* MenuBarExtraView.swift */,
+				A000000000000000000000AC /* TimeLeftLabel.swift */,
+				A000000000000000000000AE /* MenuBarTodoRow.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -122,6 +139,7 @@
 			children = (
 				A00000000000000000000080 /* Todo.swift */,
 				A00000000000000000000095 /* DoOnDate.swift */,
+				A000000000000000000000A2 /* TodosOverview.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -142,6 +160,7 @@
 				A00000000000000000000084 /* TodosView.swift */,
 				A00000000000000000000097 /* AddTodoRow.swift */,
 				A00000000000000000000099 /* TodoRow.swift */,
+				A000000000000000000000A6 /* DoOnDatePicker.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -169,6 +188,8 @@
 				A00000000000000000000083 /* TodosStoreTests.swift */,
 				A0000000000000000000009B /* TemporaryDirectory.swift */,
 				A0000000000000000000009D /* DoOnDateTests.swift */,
+				A000000000000000000000A4 /* TodosOverviewTests.swift */,
+				A000000000000000000000A8 /* DateFixtures.swift */,
 			);
 			path = PedryAppsTests;
 			sourceTree = "<group>";
@@ -283,6 +304,9 @@
 				A00000000000000000000060 /* PedryAppsApp.swift in Sources */,
 				A00000000000000000000061 /* ContentView.swift in Sources */,
 				A00000000000000000000062 /* HotkeyManager.swift in Sources */,
+				A000000000000000000000A1 /* MenuBarExtraView.swift in Sources */,
+				A000000000000000000000AD /* TimeLeftLabel.swift in Sources */,
+				A000000000000000000000AF /* MenuBarTodoRow.swift in Sources */,
 				A00000000000000000000063 /* JSONDocumentStore.swift in Sources */,
 				A00000000000000000000090 /* Todo.swift in Sources */,
 				A00000000000000000000091 /* TodosDocument.swift in Sources */,
@@ -291,6 +315,8 @@
 				A00000000000000000000096 /* DoOnDate.swift in Sources */,
 				A00000000000000000000098 /* AddTodoRow.swift in Sources */,
 				A0000000000000000000009A /* TodoRow.swift in Sources */,
+				A000000000000000000000A3 /* TodosOverview.swift in Sources */,
+				A000000000000000000000A7 /* DoOnDatePicker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,6 +328,8 @@
 				A00000000000000000000093 /* TodosStoreTests.swift in Sources */,
 				A0000000000000000000009C /* TemporaryDirectory.swift in Sources */,
 				A0000000000000000000009E /* DoOnDateTests.swift in Sources */,
+				A000000000000000000000A5 /* TodosOverviewTests.swift in Sources */,
+				A000000000000000000000A9 /* DateFixtures.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -57,12 +57,12 @@ Provide a Todos mini-app that shows a single flat list of Todos. I can add a Tod
 - **Persistence seam reuse**: Reuse the existing `JSONDocumentStore` as the persistence seam. `TodosStore` depends on an injected `JSONDocumentStore` for a Todos document; no new lower-level persistence abstraction is introduced unless implementation proves necessary.
 - **Document ownership**: The Todos mini-app owns its own Codable JSON document in Application Support (for example, a Todos-specific document file). This follows ADR 0002: one document per mini-app, independent schemas, no shared app-wide document.
 - **Domain model shape**: Keep the domain model as plain Swift value types with no persistence annotations, per ADR 0002. Todo identity should be stable enough to support reorder and check-off operations without ambiguity.
-- **Do-on date**: Every Todo has a required `Date` representing a day, with no time component. New Todos default to the start of the current local day. The store exposes a mutation for changing a Todo's do-on date, and every change persists.
+- **Do-on date**: Every one-time Todo has a required do-on date representing a day and a start time. New Todos default to 09:00 local time today, or the next whole hour if 09:00 has passed. The store exposes a mutation for changing a Todo's do-on date, and every change persists.
 - **Do-on date UI**: The add row includes a compact `DatePicker` defaulting to today; each list row shows a compact `DatePicker` bound to that Todo's do-on date for both display and editing.
 - **Mutation serialization**: All Todos mutations go through the `TodosStore` on the main actor, consistent with ADR 0002's "no concurrent writers" consequence. The store is responsible for keeping in-memory state and persisted document consistent.
 - **Check-off semantics**: "Check off" removes the Todo from the list permanently. There is no completed/archive state in this version.
 - **List shape**: The Todos mini-app manages a single flat list. No projects, tags, reminders, priorities, subtasks, or nested structure.
-- **Ordering**: The store maintains an explicit list order. New-Todo insertion position should be predictable and covered by tests; reorder operations persist the resulting order. The do-on date is display metadata and never changes list order.
+- **Ordering**: The store maintains an explicit list order. New-Todo insertion position should be predictable and covered by tests; reorder operations persist the resulting order. The do-on date does not change the main list's manual order; the menu bar extra's overview orders upcoming Todos by time left.
 - **Existing data**: The saved Todos document from initial testing is discarded. No decode fallback or schema version is added for documents without a do-on date; genuinely malformed documents still surface the existing load error.
 - **Validation**: Adding a Todo rejects empty or whitespace-only text. The UI should not create a Todo in that case.
 - **UI integration**: The Todos mini-app is presented in the existing macOS app window. Existing app-level window activation/global hotkey behavior remains the entry mechanism; this spec does not redesign app shell behavior beyond hosting the Todos mini-app.
@@ -80,7 +80,7 @@ Provide a Todos mini-app that shows a single flat list of Todos. I can add a Tod
 ## Out of Scope
 
 - Editing existing Todo text.
-- Reminders, notifications, calendar integration, time-of-day or repeating scheduling. A do-on date is a plain day with no time, alert, or recurrence.
+- Reminders, notifications, calendar integration, or repeating scheduling. A do-on date is a plain day and start time with no alert or recurrence.
 - Tags, projects, lists, subtasks, nesting, or grouping.
 - Completed/history/archive views; checked-off Todos are removed permanently.
 - Sync, iCloud, CloudKit, multi-device, or multi-user support.
@@ -91,6 +91,7 @@ Provide a Todos mini-app that shows a single flat list of Todos. I can add a Tod
 
 ## Further Notes
 
-- This spec follows the decisions in ADR 0001 (native Swift/SwiftUI, macOS-only, no third-party UI framework) and ADR 0002 (one Codable JSON document per mini-app in Application Support, plain Swift value types, main-actor mutations).
+- This spec follows the decisions in ADR 0001 (native Swift/SwiftUI, macOS-only, no third-party UI framework), ADR 0002 (one Codable JSON document per mini-app in Application Support, plain Swift value types, main-actor mutations), and ADR 0003 (menu bar extra overviews and clean starts for breaking model changes).
+- The menu bar extra is specified in `.scratch/menu-bar-extra/spec.md`; the do-on date now carries a start time so that overview can show time left.
 - Domain vocabulary follows `docs/GLOSSARY.md` and `docs/mini-apps/todos/GLOSSARY.md`: use "Todos mini-app", "Todo", "Check off", and "Do-on date"; avoid "Task", "complete", "finish", "archive", "due date", and "scheduled date".
 - The existing codebase has only the app shell, `JSONDocumentStore`, and its tests; the Todos mini-app behavior described here is not yet implemented. A prior commit established Todos glossary/ADR direction but no Todos domain/store/UI implementation.
