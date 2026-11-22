@@ -5,6 +5,8 @@ struct TodoRow: View {
     let checkOff: (Todo) -> Void
     let setDoOnDate: (DoOnDate, Todo) -> Void
 
+    @State private var isHovered = false
+
     private var dateBinding: Binding<Date> {
         Binding(
             get: { todo.doOnDate.date },
@@ -24,6 +26,10 @@ struct TodoRow: View {
             Spacer(minLength: 8)
             DoOnDatePicker(date: dateBinding)
         }
+        .padding(.vertical, 4)
+        .background(isHovered ? Color.primary.opacity(0.05) : Color.clear)
+        .contentShape(Rectangle())
+        .onHover { isHovered = $0 }
     }
 
     private func checkOffTodo() {

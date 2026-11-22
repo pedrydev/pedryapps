@@ -148,6 +148,55 @@ struct TodosStoreTests {
         #expect(store.todos.first?.id == original[1].id)
     }
 
+    @Test func checkingOffSelectedTodosRemovesOnlyThose() throws {
+        let directory = try TemporaryDirectory()
+        let store = makeStore(in: directory.url)
+        store.addTodo("Buy milk")
+        store.addTodo("Call Sam")
+        store.addTodo("Pay bills")
+        let ids = [store.todos[0].id, store.todos[2].id]
+
+        store.checkOff(ids: Set(ids))
+
+        #expect(store.todos.map(\.title) == ["Call Sam"])
+    }
+
+    @Test func checkingOffCanBeUndoneAndRedone() throws {
+        let directory = try TemporaryDirectory()
+        let store = makeStore(in: directory.url)
+        let undoManager = UndoManager()
+        store.undoManager = undoManager
+        store.addTodo("Buy milk")
+        store.addTodo("Call Sam")
+        store.addTodo("Pay bills")
+
+        store.checkOff(ids: [store.todos[1].id])
+
+        #expect(store.todos.map(\.title) == ["Buy milk", "Pay bills"])
+
+        undoManager.undo()
+        #expect(store.todos.map(\.title) == ["Buy milk", "Call Sam", "Pay bills"])
+
+        undoManager.redo()
+        #expect(store.todos.map(\.title) == ["Buy milk", "Pay bills"])
+    }
+
+    @Test func undoingCheckOffPersistsTheRestoredTodo() throws {
+        let directory = try TemporaryDirectory()
+        let store = makeStore(in: directory.url)
+        let undoManager = UndoManager()
+        store.undoManager = undoManager
+        store.addTodo("Buy milk")
+        store.addTodo("Call Sam")
+
+        store.checkOff(store.todos[0])
+        undoManager.undo()
+
+        let reloaded = makeStore(in: directory.url)
+        reloaded.load()
+        #expect(reloaded.todos.map(\.title) == ["Buy milk", "Call Sam"])
+    }
+
     @Test func checkedOffTodoStaysRemovedAfterReload() throws {
         let directory = try TemporaryDirectory()
         let store = makeStore(in: directory.url)

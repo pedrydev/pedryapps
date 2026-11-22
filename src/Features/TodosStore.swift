@@ -6,6 +6,7 @@ import Observation
 final class TodosStore {
     private(set) var todos: [Todo] = []
     private(set) var errorMessage: String?
+    var undoManager: UndoManager?
 
     private let documentStore: JSONDocumentStore<TodosDocument>?
 
@@ -49,17 +50,44 @@ final class TodosStore {
     }
 
     func checkOff(_ todo: Todo) {
-        mutate { $0.removeAll { $0.id == todo.id } }
+        checkOff(ids: [todo.id])
+    }
+
+    func checkOff(ids: Set<Todo.ID>) {
+        let removed = todos.enumerated().filter { ids.contains($0.element.id) }
+        guard !removed.isEmpty else { return }
+        guard mutate({ $0.removeAll { ids.contains($0.id) } }) else { return }
+        registerUndo { store in store.restore(removed) }
     }
 
     func moveTodo(from source: IndexSet, to destination: Int) {
         mutate { $0.move(fromOffsets: source, toOffset: destination) }
     }
 
-    private func mutate(_ change: (inout [Todo]) -> Void) {
+    private func restore(_ removed: [(offset: Int, element: Todo)]) {
+        let restored = mutate { current in
+            for item in removed.sorted(by: { $0.offset < $1.offset }) {
+                current.insert(item.element, at: min(item.offset, current.count))
+            }
+        }
+        guard restored else { return }
+        registerUndo { store in store.checkOff(ids: Set(removed.map(\.element.id))) }
+    }
+
+    private func registerUndo(_ handler: @escaping (TodosStore) -> Void) {
+        undoManager?.registerUndo(withTarget: self, handler: handler)
+        undoManager?.setActionName("Check Off")
+    }
+
+    @discardableResult
+    private func mutate(_ change: (inout [Todo]) -> Void) -> Bool {
         let previous = todos
         change(&todos)
-        if !persist() { todos = previous }
+        guard persist() else {
+            todos = previous
+            return false
+        }
+        return true
     }
 
     private func persist() -> Bool {

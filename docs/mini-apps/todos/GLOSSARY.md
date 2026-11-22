@@ -23,3 +23,7 @@ _Avoid_: Complete, finish, archive
 **Do-on date**:
 The day and start time a one-time Todo is intended to be worked on. It is required when the Todo is created, defaults to 09:00 local time today or the next whole hour if that has passed, and can be changed later.
 _Avoid_: Due date, deadline, scheduled date, reminder
+
+**Due-check interval**:
+The elapsed time between checks for Do-on dates becoming due, also used as the lookback on launch. It defaults to 5 minutes.
+_Avoid_: Check period, polling interval, refresh rate, reminder interval
