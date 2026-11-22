@@ -34,7 +34,6 @@ Decided: macOS-only native app.
 - Prioritize correctness and clarity over cleverness. No unnecessary abstractions.
 - Do not add comments unless the logic is non-obvious.
 - No emojis.
-- Never commit unless the user explicitly asks.
 - Never skip hooks or bypass safety checks.
 - If the requirement is ambiguous, ask before proceeding.
 
@@ -66,6 +65,7 @@ Use only the skills vendored in `.agents/skills/`. Do not load skills from `~/.c
 - Review: `code-review` against the originating spec, ADR, or request.
 - Quality pass: after review, load the vendored Swift skills that match the diff — `write-swift`, `swiftui-pro`, `swift-testing-expert`, `swift-format-style`, `swiftui-design-principles`, plus `app-intents` / `background-execution` / `widgets` when those frameworks are touched — apply their improvements to changed files only, report them under `## Swift quality`, and re-run verification.
 - Optional: `prototype` to sanity-check state or UI, `research` for primary-source fact-finding, `codebase-design` when designing a module interface.
+- Completion: once a ticket passes the full cycle and its parent issue is closed, pull the latest `master`, merge the ticket branch into `master`, push `master`, then delete that branch locally and on the remote.
 
 ## Verification
 
@@ -74,6 +74,7 @@ Use only the skills vendored in `.agents/skills/`. Do not load skills from `~/.c
 - Run both after changes.
 - Lint: `swift format lint --recursive src tests --strict`
 - If a verification command fails for environmental reasons, report it rather than skipping it.
+- After all defined verification passes, commit and push. Manual verification counts as a test; when a change needs it, ask me whether I want to review the result before committing.
 
 ## Project memory
 
