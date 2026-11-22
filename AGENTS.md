@@ -42,7 +42,7 @@ Decided: macOS-only native app.
 
 ### Issue tracker
 
-GitHub Issues in `pedrydev/pedryapps`. See `docs/agents/issue-tracker.md`.
+GitHub Issues in `pedrydev/pedryapps`. See `docs/agents/issue-tracker.md`. When every child issue of a parent is closed, close the parent immediately.
 
 ### Triage labels
 
