@@ -16,20 +16,20 @@ struct TodosSettingsStoreTests {
         let directory = try TemporaryDirectory()
         let store = makeStore(in: directory.url)
 
-        store.setDueCheckIntervalSeconds(60)
+        store.setDueCheckIntervalSeconds(600)
         let reloaded = makeStore(in: directory.url)
 
-        #expect(store.settings.dueCheckIntervalSeconds == 60)
-        #expect(reloaded.settings.dueCheckIntervalSeconds == 60)
+        #expect(store.settings.dueCheckIntervalSeconds == 600)
+        #expect(reloaded.settings.dueCheckIntervalSeconds == 600)
     }
 
-    @Test func injectedPositiveSecondsAreNotClampedToMinuteBounds() throws {
+    @Test func offGridStoredIntervalIsReadAsNearestStepWithoutRewrite() throws {
         let directory = try TemporaryDirectory()
+        try Data("{\"dueCheckIntervalSeconds\": 420}".utf8).write(to: settingsURL(in: directory.url))
         let store = makeStore(in: directory.url)
 
-        store.setDueCheckIntervalSeconds(1)
-
-        #expect(store.settings.dueCheckIntervalSeconds == 1)
+        #expect(store.dueCheckIntervalMinutes == 5)
+        #expect(store.settings.dueCheckIntervalSeconds == 420)
     }
 
     @Test func nonPositiveIntervalIsIgnored() throws {
@@ -67,20 +67,26 @@ struct TodosSettingsStoreTests {
         let store = makeStore(in: directory.url)
         #expect(store.settings.dueCheckIntervalSeconds == 300)
 
-        store.setDueCheckIntervalSeconds(60)
+        store.setDueCheckIntervalSeconds(300)
 
-        #expect(makeStore(in: directory.url).settings.dueCheckIntervalSeconds == 60)
+        #expect(makeStore(in: directory.url).settings.dueCheckIntervalSeconds == 300)
     }
 
-    @Test func subMinuteInjectedIntervalStaysWithinDisplayBounds() throws {
+    @Test func offGridIntervalWritesAreSnappedToTheFiveMinuteGrid() throws {
         let directory = try TemporaryDirectory()
         let store = makeStore(in: directory.url)
 
         store.setDueCheckIntervalSeconds(1)
-        #expect(store.dueCheckIntervalMinutes == 1)
+        #expect(store.dueCheckIntervalMinutes == 5)
+        #expect(store.settings.dueCheckIntervalSeconds == 300)
+
+        store.setDueCheckIntervalSeconds(2580)
+        #expect(store.dueCheckIntervalMinutes == 45)
+        #expect(store.settings.dueCheckIntervalSeconds == 2700)
 
         store.setDueCheckIntervalSeconds(3600)
         #expect(store.dueCheckIntervalMinutes == 60)
+        #expect(store.settings.dueCheckIntervalSeconds == 3600)
     }
 
     @Test func failedSaveRollsBackIntervalChange() {
@@ -89,7 +95,7 @@ struct TodosSettingsStoreTests {
             documentStore: JSONDocumentStore(directory: missingDirectory, filename: "todos-settings.json")
         )
 
-        store.setDueCheckIntervalSeconds(60)
+        store.setDueCheckIntervalSeconds(300)
 
         #expect(store.settings.dueCheckIntervalSeconds == 300)
     }
@@ -99,14 +105,14 @@ struct TodosSettingsStoreTests {
         let documentStore = JSONDocumentStore<TodosSettings>(directory: directory, filename: "todos-settings.json")
         let store = TodosSettingsStore(documentStore: documentStore)
 
-        store.setDueCheckIntervalSeconds(60)
+        store.setDueCheckIntervalSeconds(300)
         #expect(store.settings.dueCheckIntervalSeconds == 300)
 
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        store.setDueCheckIntervalSeconds(120)
+        store.setDueCheckIntervalSeconds(600)
 
-        #expect(store.settings.dueCheckIntervalSeconds == 120)
-        #expect(try documentStore.load()?.dueCheckIntervalSeconds == 120)
+        #expect(store.settings.dueCheckIntervalSeconds == 600)
+        #expect(try documentStore.load()?.dueCheckIntervalSeconds == 600)
     }
 
     @Test func settingsAreIndependentOfTodosDocument() throws {
@@ -117,7 +123,7 @@ struct TodosSettingsStoreTests {
         todosStore.addTodo("Buy milk")
         let settingsStore = makeStore(in: directory.url)
 
-        settingsStore.setDueCheckIntervalSeconds(60)
+        settingsStore.setDueCheckIntervalSeconds(300)
         todosStore.load()
 
         #expect(todosStore.todos.map(\.title) == ["Buy milk"])

@@ -6,13 +6,10 @@ import Observation
 final class TodosSettingsStore {
     private(set) var settings: TodosSettings = .default
 
+    var onDueCheckIntervalChange: (() -> Void)?
+
     var dueCheckIntervalMinutes: Int {
-        get {
-            min(
-                max(settings.dueCheckIntervalMinutes, TodosSettings.minuteBounds.lowerBound),
-                TodosSettings.minuteBounds.upperBound
-            )
-        }
+        get { settings.dueCheckIntervalMinutes }
         set {
             guard let seconds = TodosSettings.seconds(fromMinutes: newValue) else { return }
             setDueCheckIntervalSeconds(seconds)
@@ -37,9 +34,15 @@ final class TodosSettingsStore {
 
     func setDueCheckIntervalSeconds(_ seconds: Int) {
         guard seconds > 0 else { return }
+        let minutes = TodosSettings.snappedMinutes(from: seconds / 60)
+        guard let gridSeconds = TodosSettings.seconds(fromMinutes: minutes) else { return }
         let previous = settings
-        settings = TodosSettings(dueCheckIntervalSeconds: seconds)
-        if !persist() { settings = previous }
+        settings = TodosSettings(dueCheckIntervalSeconds: gridSeconds)
+        guard persist() else {
+            settings = previous
+            return
+        }
+        onDueCheckIntervalChange?()
     }
 
     private func persist() -> Bool {

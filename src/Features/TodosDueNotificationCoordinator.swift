@@ -9,40 +9,78 @@ protocol TodoDueNotificationCancellable: AnyObject {
 final class TodosDueNotificationCoordinator {
     private let todosStore: TodosStore
     private let settingsStore: TodosSettingsStore
+    private let stateStore: any TodosDueCheckStoring
     private let notificationCenter: any TodoDueNotificationCenter
+    private let calendar: Calendar
     private let now: @MainActor () -> Date
     private let schedule: @MainActor (TimeInterval, @escaping @MainActor () async -> Void) -> any TodoDueNotificationCancellable
 
-    private var lastCheck: Date?
     private var task: (any TodoDueNotificationCancellable)?
 
     init(
         todosStore: TodosStore,
         settingsStore: TodosSettingsStore,
+        stateStore: any TodosDueCheckStoring,
         notificationCenter: any TodoDueNotificationCenter,
+        calendar: Calendar = .current,
         now: @escaping @MainActor () -> Date = { Date() },
         schedule: @escaping @MainActor (TimeInterval, @escaping @MainActor () async -> Void) -> any TodoDueNotificationCancellable
     ) {
         self.todosStore = todosStore
         self.settingsStore = settingsStore
+        self.stateStore = stateStore
         self.notificationCenter = notificationCenter
+        self.calendar = calendar
         self.now = now
         self.schedule = schedule
+        settingsStore.onDueCheckIntervalChange = { [weak self] in self?.reschedule() }
     }
 
-    func start() {
+    func start() async {
         task?.cancel()
-        task = schedule(TimeInterval(settingsStore.settings.dueCheckIntervalSeconds)) { [weak self] in
-            await self?.checkNow()
+        let current = now()
+        let interval = TimeInterval(settingsStore.settings.snappedDueCheckIntervalSeconds)
+        let lastBoundary = boundary(atOrBefore: current, interval: interval)
+        if stateStore.lastReviewedBoundary.map({ $0 < lastBoundary }) ?? true {
+            await review(endingAt: lastBoundary, interval: interval)
+        }
+        scheduleNext(from: current)
+    }
+
+    private func reschedule() {
+        task?.cancel()
+        scheduleNext(from: now())
+    }
+
+    private func scheduleNext(from date: Date) {
+        let interval = TimeInterval(settingsStore.settings.snappedDueCheckIntervalSeconds)
+        let boundary = nextBoundary(after: date, interval: interval)
+        task = schedule(boundary.timeIntervalSince(date)) { [weak self] in
+            guard let self else { return }
+            await self.review(endingAt: boundary, interval: interval)
+            self.scheduleNext(from: boundary)
         }
     }
 
-    func checkNow() async {
-        let current = now()
-        let interval = TimeInterval(settingsStore.settings.dueCheckIntervalSeconds)
-        let windowStart = lastCheck ?? current.addingTimeInterval(-interval)
-        lastCheck = current
-        let due = todosStore.todos.filter { $0.doOnDate.date > windowStart && $0.doOnDate.date <= current }
+    private func nextBoundary(after date: Date, interval: TimeInterval) -> Date {
+        let dayStart = calendar.startOfDay(for: date)
+        let elapsed = date.timeIntervalSince(dayStart)
+        return dayStart.addingTimeInterval((floor(elapsed / interval) + 1) * interval)
+    }
+
+    private func boundary(atOrBefore date: Date, interval: TimeInterval) -> Date {
+        nextBoundary(after: date.addingTimeInterval(-interval), interval: interval)
+    }
+
+    private func review(endingAt boundary: Date, interval: TimeInterval) async {
+        guard boundary > (stateStore.lastReviewedBoundary ?? .distantPast) else { return }
+        let window = DueCheckWindow.ending(
+            at: boundary,
+            interval: interval,
+            lastReviewedBoundary: stateStore.lastReviewedBoundary
+        )
+        stateStore.markReviewed(boundary)
+        let due = todosStore.todos.filter { window.contains($0.doOnDate.date) }
         guard !due.isEmpty else { return }
         let status = await notificationCenter.authorizationStatus()
         let resolved: TodoNotificationAuthorizationStatus
@@ -52,13 +90,12 @@ final class TodosDueNotificationCoordinator {
             resolved = status
         }
         guard resolved == .authorized else { return }
-        for todo in due {
-            let request = TodoDueNotificationRequest(
-                identifier: todo.id.uuidString + ":\(todo.doOnDate.date.timeIntervalSinceReferenceDate)",
-                title: "Time to work",
-                body: todo.title
-            )
-            try? await notificationCenter.add(request)
-        }
+        let body = due.count == 1 ? "1 todo is ready to work" : "\(due.count) todos are ready to work"
+        let request = TodoDueNotificationRequest(
+            identifier: "due-check:\(boundary.timeIntervalSinceReferenceDate)",
+            title: "Time to work",
+            body: body
+        )
+        try? await notificationCenter.add(request)
     }
 }

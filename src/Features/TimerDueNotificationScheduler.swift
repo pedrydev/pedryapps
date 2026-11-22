@@ -21,7 +21,7 @@ enum TimerTodoDueNotificationScheduler {
         action: @escaping @MainActor () async -> Void
     ) -> any TodoDueNotificationCancellable {
         let timer = DispatchSource.makeTimerSource(queue: .main)
-        timer.schedule(deadline: .now(), repeating: interval)
+        timer.schedule(deadline: .now() + interval)
         timer.setEventHandler {
             Task { @MainActor in await action() }
         }
