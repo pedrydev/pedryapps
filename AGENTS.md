@@ -38,6 +38,20 @@ Decided: macOS-only native app.
 - Never skip hooks or bypass safety checks.
 - If the requirement is ambiguous, ask before proceeding.
 
+## Agent skills
+
+### Issue tracker
+
+Local markdown in `.scratch/<feature>/`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default triage role names (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context (`GLOSSARY.md` + `docs/adr/`, plus per-mini-app glossaries under `docs/mini-apps/`). See `docs/agents/domain.md`.
+
 ## Workflow
 
 Use only the skills vendored in `.agents/skills/`. Do not load skills from `~/.claude/skills`, `~/.config/opencode/skills`, or `~/.agents/skills`. If a global config names a skill that is not vendored here, this list takes precedence.
