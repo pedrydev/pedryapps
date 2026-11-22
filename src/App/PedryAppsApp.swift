@@ -2,9 +2,11 @@ import SwiftUI
 
 @main
 struct PedryAppsApp: App {
+    @State private var store = TodosStore()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(store: store)
                 .onAppear {
                     HotkeyManager.shared.register(.showWindow) {
                         NSApp.activate(ignoringOtherApps: true)

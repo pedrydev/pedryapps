@@ -71,7 +71,7 @@ final class HotkeyManager {
 // Carbon delivers hotkeys through a C callback, so the handler is bridged through process-global state.
 nonisolated(unsafe) private var activeHandler: (@MainActor () -> Void)?
 
-private func hotKeyEventHandler(
+nonisolated private func hotKeyEventHandler(
     _ nextHandler: EventHandlerCallRef?,
     _ event: EventRef?,
     _ userData: UnsafeMutableRawPointer?

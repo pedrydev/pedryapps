@@ -18,6 +18,11 @@
 		A00000000000000000000092 /* TodosStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000082 /* TodosStore.swift */; };
 		A00000000000000000000093 /* TodosStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000083 /* TodosStoreTests.swift */; };
 		A00000000000000000000094 /* TodosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000084 /* TodosView.swift */; };
+		A00000000000000000000096 /* DoOnDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000095 /* DoOnDate.swift */; };
+		A00000000000000000000098 /* AddTodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000097 /* AddTodoRow.swift */; };
+		A0000000000000000000009A /* TodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000099 /* TodoRow.swift */; };
+		A0000000000000000000009C /* TemporaryDirectory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009B /* TemporaryDirectory.swift */; };
+		A0000000000000000000009E /* DoOnDateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009D /* DoOnDateTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +49,11 @@
 		A00000000000000000000082 /* TodosStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosStore.swift; sourceTree = "<group>"; };
 		A00000000000000000000083 /* TodosStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosStoreTests.swift; sourceTree = "<group>"; };
 		A00000000000000000000084 /* TodosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosView.swift; sourceTree = "<group>"; };
+		A00000000000000000000095 /* DoOnDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoOnDate.swift; sourceTree = "<group>"; };
+		A00000000000000000000097 /* AddTodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTodoRow.swift; sourceTree = "<group>"; };
+		A00000000000000000000099 /* TodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoRow.swift; sourceTree = "<group>"; };
+		A0000000000000000000009B /* TemporaryDirectory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryDirectory.swift; sourceTree = "<group>"; };
+		A0000000000000000000009D /* DoOnDateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoOnDateTests.swift; sourceTree = "<group>"; };
 		A00000000000000000000070 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		A00000000000000000000071 /* SwiftUICore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUICore.framework; path = System/Library/Frameworks/SwiftUICore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -111,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000080 /* Todo.swift */,
+				A00000000000000000000095 /* DoOnDate.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -129,6 +140,8 @@
 			children = (
 				A00000000000000000000082 /* TodosStore.swift */,
 				A00000000000000000000084 /* TodosView.swift */,
+				A00000000000000000000097 /* AddTodoRow.swift */,
+				A00000000000000000000099 /* TodoRow.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -154,6 +167,8 @@
 			children = (
 				A00000000000000000000015 /* JSONDocumentStoreTests.swift */,
 				A00000000000000000000083 /* TodosStoreTests.swift */,
+				A0000000000000000000009B /* TemporaryDirectory.swift */,
+				A0000000000000000000009D /* DoOnDateTests.swift */,
 			);
 			path = PedryAppsTests;
 			sourceTree = "<group>";
@@ -273,6 +288,9 @@
 				A00000000000000000000091 /* TodosDocument.swift in Sources */,
 				A00000000000000000000092 /* TodosStore.swift in Sources */,
 				A00000000000000000000094 /* TodosView.swift in Sources */,
+				A00000000000000000000096 /* DoOnDate.swift in Sources */,
+				A00000000000000000000098 /* AddTodoRow.swift in Sources */,
+				A0000000000000000000009A /* TodoRow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,6 +300,8 @@
 			files = (
 				A00000000000000000000065 /* JSONDocumentStoreTests.swift in Sources */,
 				A00000000000000000000093 /* TodosStoreTests.swift in Sources */,
+				A0000000000000000000009C /* TemporaryDirectory.swift in Sources */,
+				A0000000000000000000009E /* DoOnDateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,6 +339,8 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
@@ -340,7 +362,9 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				SDKROOT = macosx;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
 				VALIDATE_PRODUCT = YES;

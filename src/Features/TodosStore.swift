@@ -1,23 +1,32 @@
 import Foundation
-import SwiftUI
+import Observation
 
 @MainActor
-final class TodosStore: ObservableObject {
-    @Published private(set) var todos: [Todo] = []
-    @Published private(set) var errorMessage: String?
+@Observable
+final class TodosStore {
+    private(set) var todos: [Todo] = []
+    private(set) var errorMessage: String?
 
-    private let documentStore: JSONDocumentStore<TodosDocument>
+    private let documentStore: JSONDocumentStore<TodosDocument>?
 
-    init(documentStore: JSONDocumentStore<TodosDocument>) {
-        self.documentStore = documentStore
-    }
-
-    convenience init() throws {
-        let documentStore = try JSONDocumentStore<TodosDocument>(filename: "todos.json")
-        self.init(documentStore: documentStore)
+    init(documentStore: JSONDocumentStore<TodosDocument>? = nil) {
+        var setupError: String?
+        if let documentStore {
+            self.documentStore = documentStore
+        } else {
+            do {
+                self.documentStore = try JSONDocumentStore(filename: "todos.json")
+            } catch {
+                self.documentStore = nil
+                setupError = error.localizedDescription
+            }
+        }
+        errorMessage = setupError
+        load()
     }
 
     func load() {
+        guard let documentStore else { return }
         do {
             todos = try documentStore.load()?.todos ?? []
             errorMessage = nil
@@ -26,13 +35,12 @@ final class TodosStore: ObservableObject {
         }
     }
 
-    func addTodo(_ title: String, doOnDate: Date = Date()) {
-        guard !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+    func addTodo(_ title: String, doOnDate: DoOnDate = DoOnDate()) {
+        guard Todo.hasText(title) else { return }
         mutate { $0.append(Todo(title: title, doOnDate: doOnDate)) }
     }
 
-    func setDoOnDate(_ date: Date, for todo: Todo) {
-        let doOnDate = Calendar.current.startOfDay(for: date)
+    func setDoOnDate(_ doOnDate: DoOnDate, for todo: Todo) {
         mutate { todos in
             guard let index = todos.firstIndex(where: { $0.id == todo.id }) else { return }
             todos[index].doOnDate = doOnDate
@@ -54,6 +62,7 @@ final class TodosStore: ObservableObject {
     }
 
     private func persist() -> Bool {
+        guard let documentStore else { return false }
         do {
             try documentStore.save(TodosDocument(todos: todos))
             errorMessage = nil

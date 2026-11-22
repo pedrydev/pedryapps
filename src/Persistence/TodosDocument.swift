@@ -1,5 +1,5 @@
 import Foundation
 
-struct TodosDocument: Codable {
+nonisolated struct TodosDocument: Codable {
     var todos: [Todo] = []
 }

@@ -68,7 +68,7 @@ Use only the skills vendored in `.agents/skills/`. Do not load skills from `~/.c
 - Typecheck/build: `xcodebuild -scheme PedryApps -destination 'platform=macOS' -configuration Debug build`
 - Tests: `xcodebuild test -scheme PedryApps -destination 'platform=macOS'`
 - Run both after changes.
-- No lint command is configured yet; choose one when the project is created.
+- Lint: `swift format lint --recursive src tests --strict`
 - If a verification command fails for environmental reasons, report it rather than skipping it.
 
 ## Project memory
