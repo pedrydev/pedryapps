@@ -58,8 +58,9 @@ Use only the skills vendored in `.agents/skills/`. Do not load skills from `~/.c
 
 - Sequence: **make it work**, then **make it work well**. Bank quality ideas during implementation; apply them in the quality pass.
 - Requirements and design: `grilling` or `grill-with-docs` for the decision tree; `domain-modeling` for terminology (`docs/GLOSSARY-MAP.md`, global and per-mini-app glossaries) and ADRs.
-- Specs and tickets: `to-spec` and `to-tickets` when the work needs tracking; otherwise go straight from decisions to implementation.
-- Implementation: `implement-spec` when working from a spec or ticket, `implement` otherwise. Speed first: smallest change that compiles and passes tests; build for feedback, full verification once at the end. Use `tdd` where logic can be written test-first.
+- Specs and tickets: never go directly to implementation. A spec and one or more tickets must exist before any implementation starts. If the task is trivial, ask the user whether to skip these artifacts and proceed only after explicit approval — never decide unilaterally.
+- Implementation: `implement-spec` when working from a spec or ticket. Speed first: smallest change that compiles and passes tests; build for feedback, full verification once at the end. Use `tdd` where logic can be written test-first.
+- The `code -> build -> test -> review -> improve -> lint` cycle runs per ticket, not per spec. Do not advance to the next ticket until the current one has passed the full cycle.
 - Work too large for one session: `wayfinder` for the decision map, then resolve tickets one at a time; `handoff` when context needs transferring.
 - Bugs: `diagnosing-bugs`.
 - Review: `code-review` against the originating spec, ADR, or request.
