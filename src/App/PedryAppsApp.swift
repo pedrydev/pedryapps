@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct MacosApp: App {
+struct PedryAppsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

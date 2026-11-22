@@ -1,6 +1,6 @@
 # 01: Show and add Todos
 
-**What to build:** A usable Todos mini-app in the existing Macos app window. The user can open the app, see the Todos mini-app with an empty state when no Todos exist, add a Todo with visible text, and have that Todo appear in a predictable position in a single flat list. Adding rejects empty or whitespace-only input. Todos load when the Todos mini-app appears and persist in the Todos mini-app's own local document so they remain after quitting and reopening the app.
+**What to build:** A usable Todos mini-app in the existing PedryApps app window. The user can open the app, see the Todos mini-app with an empty state when no Todos exist, add a Todo with visible text, and have that Todo appear in a predictable position in a single flat list. Adding rejects empty or whitespace-only input. Todos load when the Todos mini-app appears and persist in the Todos mini-app's own local document so they remain after quitting and reopening the app.
 
 **Blocked by:** None (can start immediately).
 

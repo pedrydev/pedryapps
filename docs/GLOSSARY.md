@@ -1,4 +1,4 @@
-# Macos
+# PedryApps
 
 A macOS app for everyday utilities. Its major feature areas are called mini-apps. Terms specific to a mini-app live in that mini-app's glossary; see [GLOSSARY-MAP.md](./GLOSSARY-MAP.md).
 

@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import Macos
+@testable import PedryApps
 
 @MainActor
 struct TodosStoreTests {

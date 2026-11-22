@@ -65,9 +65,9 @@ Use only the skills vendored in `.agents/skills/`. Do not load skills from `~/.c
 
 ## Verification
 
-- Typecheck/build: `xcodebuild -scheme Macos -destination 'platform=macOS' -configuration Debug build`
-- Tests: `xcodebuild test -scheme Macos -destination 'platform=macOS'`
-- Run both after changes. Replace `Macos` with the actual scheme name once the Xcode project exists.
+- Typecheck/build: `xcodebuild -scheme PedryApps -destination 'platform=macOS' -configuration Debug build`
+- Tests: `xcodebuild test -scheme PedryApps -destination 'platform=macOS'`
+- Run both after changes.
 - No lint command is configured yet; choose one when the project is created.
 - If a verification command fails for environmental reasons, report it rather than skipping it.
 

@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A00000000000000000000004"
-               BuildableName = "Macos.app"
-               BlueprintName = "Macos"
-               ReferencedContainer = "container:Macos.xcodeproj">
+               BuildableName = "PedryApps.app"
+               BlueprintName = "PedryApps"
+               ReferencedContainer = "container:PedryApps.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A00000000000000000000005"
-               BuildableName = "MacosTests.xctest"
-               BlueprintName = "MacosTests"
-               ReferencedContainer = "container:Macos.xcodeproj">
+               BuildableName = "PedryAppsTests.xctest"
+               BlueprintName = "PedryAppsTests"
+               ReferencedContainer = "container:PedryApps.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A00000000000000000000004"
-            BuildableName = "Macos.app"
-            BlueprintName = "Macos"
-            ReferencedContainer = "container:Macos.xcodeproj">
+            BuildableName = "PedryApps.app"
+            BlueprintName = "PedryApps"
+            ReferencedContainer = "container:PedryApps.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A00000000000000000000004"
-            BuildableName = "Macos.app"
-            BlueprintName = "Macos"
-            ReferencedContainer = "container:Macos.xcodeproj">
+            BuildableName = "PedryApps.app"
+            BlueprintName = "PedryApps"
+            ReferencedContainer = "container:PedryApps.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

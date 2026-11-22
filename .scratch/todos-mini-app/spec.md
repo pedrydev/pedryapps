@@ -38,7 +38,7 @@ Provide a Todos mini-app that shows a single flat list of Todos. I can add a Tod
 24. As a Mac user, I want Todo mutations to be serialized through one store, so that the list does not get corrupted by concurrent writes.
 25. As a Mac user, I want the UI to reflect store changes immediately, so that I can trust what I see after adding, checking off, or reordering.
 26. As a Mac user, I want the Todos mini-app to be usable with keyboard and pointer interactions appropriate for macOS, so that I can manage Todos naturally.
-27. As a Mac user, I want the Todos mini-app to fit into the existing app window, so that it feels like part of the Macos app rather than a separate system.
+27. As a Mac user, I want the Todos mini-app to fit into the existing app window, so that it feels like part of the PedryApps app rather than a separate system.
 28. As a Mac user, I want the Todos mini-app to be accessible through normal app activation, including the existing global hotkey window activation behavior, so that I can get to my Todos quickly.
 29. As a Mac user, I want the Todos mini-app to have predictable behavior when I add multiple Todos in sequence, so that rapid capture is reliable.
 30. As a Mac user, I want the Todos mini-app to keep only active Todos, so that completed work does not accumulate as hidden history.
@@ -67,7 +67,7 @@ Provide a Todos mini-app that shows a single flat list of Todos. I can add a Tod
 - **Persistence seam tests**: Reuse existing `JSONDocumentStore` tests as prior art for atomic save/load behavior. Add Todos-specific persistence tests only where Todos document behavior needs coverage.
 - **UI tests**: Add lightweight UI/view-model-level tests only where SwiftUI behavior is not adequately covered by store tests; prefer store tests for business behavior. If UI tests are added, they should verify user-visible behaviors like add/check-off/reorder/empty state.
 - **Prior art**: Follow the existing `JSONDocumentStoreTests` style in the test target: Swift Testing, `@MainActor` where needed, temporary directories, and behavior-focused assertions.
-- **Verification commands**: After implementation, run the project verification commands from `AGENTS.md`: `xcodebuild -scheme Macos -destination 'platform=macOS' -configuration Debug build` and `xcodebuild test -scheme Macos -destination 'platform=macOS'`.
+- **Verification commands**: After implementation, run the project verification commands from `AGENTS.md`: `xcodebuild -scheme PedryApps -destination 'platform=macOS' -configuration Debug build` and `xcodebuild test -scheme PedryApps -destination 'platform=macOS'`.
 
 ## Out of Scope
 
