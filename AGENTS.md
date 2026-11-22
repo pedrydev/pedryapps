@@ -25,7 +25,8 @@ Decided: macOS-only native app.
 - Dependency manager: Swift Package Manager; no third-party dependencies by default
 - Distribution: personal local use only; no App Store, sandbox, notarization, login item, or sync
 - UI shape: window + global hotkey first; menu bar extra later
-- Decisions and their rationale: `docs/adr/`
+- Decisions and their rationale: `docs/adr/` globally; mini-app-specific ADRs under `docs/mini-apps/<mini-app>/adr/`
+- All non-code artifacts produced by sessions live under `docs/`, split into one global set and one set per mini-app: global artifacts at `docs/<kind>/` (e.g. `docs/adr/`) plus `docs/GLOSSARY-MAP.md` and `docs/GLOSSARY.md`; mini-app artifacts at `docs/mini-apps/<mini-app>/` (e.g. `docs/mini-apps/todos/GLOSSARY.md`). Do not duplicate global content into mini-app folders. Do not create session feedback logs for this project.
 
 ## Working rules
 
@@ -41,7 +42,7 @@ Decided: macOS-only native app.
 
 Use only the skills vendored in `.agents/skills/`. Do not load skills from `~/.claude/skills`, `~/.config/opencode/skills`, or `~/.agents/skills`. If a global config names a skill that is not vendored here, this list takes precedence.
 
-- Requirements and design: `grilling` or `grill-with-docs` for the decision tree; `domain-modeling` for terminology, `GLOSSARY.md`, and ADRs.
+- Requirements and design: `grilling` or `grill-with-docs` for the decision tree; `domain-modeling` for terminology (`docs/GLOSSARY-MAP.md`, global and per-mini-app glossaries) and ADRs.
 - Specs and tickets: `to-spec` and `to-tickets` when the work needs tracking; otherwise go straight from decisions to implementation.
 - Implementation: `implement-spec` when working from a spec or ticket, `implement` otherwise. Use `tdd` where logic can be written test-first.
 - Work too large for one session: `wayfinder` for the decision map, then resolve tickets one at a time; `handoff` when context needs transferring.
