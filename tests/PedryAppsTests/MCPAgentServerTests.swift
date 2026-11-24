@@ -87,6 +87,63 @@ struct MCPAgentServerTests {
         await harness.stop()
     }
 
+    @Test @MainActor func successfulCallPostsInboxNotificationAndSystemAlert() async throws {
+        let directory = try TemporaryDirectory()
+        let store = NotificationsStore(
+            documentStore: JSONDocumentStore(directory: directory.url, filename: "notifications.json")
+        )
+        let center = FakeSystemAlertCenter()
+        let harness = try await MCPTestHarness(
+            posting: MCPNotificationPosting(store: store, alertPoster: SystemAlertPoster(center: center))
+        )
+
+        let result = try await harness.client.callTool(
+            name: "send_notification",
+            arguments: [
+                "title": "Build finished",
+                "body": "The nightly build is ready.",
+                "type": "information",
+            ]
+        )
+
+        #expect(result.isError != true)
+        #expect(store.notifications.count == 1)
+        #expect(store.notifications.first?.title == "Build finished")
+        #expect(center.addAttempts == 1)
+        let alert = try #require(center.requests.first)
+        #expect(alert.identifier.hasPrefix("agent-notification:"))
+        #expect(alert.title == "Build finished")
+        #expect(alert.body == "The nightly build is ready.")
+        await harness.stop()
+    }
+
+    @Test @MainActor func firstRunRequestsAuthorizationBeforeSystemAlert() async throws {
+        let directory = try TemporaryDirectory()
+        let store = NotificationsStore(
+            documentStore: JSONDocumentStore(directory: directory.url, filename: "notifications.json")
+        )
+        let center = FakeSystemAlertCenter()
+        center.authorization = .notDetermined
+        let harness = try await MCPTestHarness(
+            posting: MCPNotificationPosting(store: store, alertPoster: SystemAlertPoster(center: center))
+        )
+
+        let result = try await harness.client.callTool(
+            name: "send_notification",
+            arguments: [
+                "title": "Authorization check",
+                "body": "The first call requests authorization.",
+                "type": "information",
+            ]
+        )
+
+        #expect(result.isError != true)
+        #expect(center.authorizationRequests == 1)
+        #expect(center.requests.count == 1)
+        #expect(store.notifications.count == 1)
+        await harness.stop()
+    }
+
     @Test func missingTypeRejectsCallWithoutPosting() async throws {
         let posting = StubAgentNotificationPosting()
         let harness = try await MCPTestHarness(posting: posting)
@@ -147,7 +204,10 @@ struct MCPAgentServerTests {
             documentStore: JSONDocumentStore(directory: directory.url, filename: "notifications.json"),
             now: { postedAt }
         )
-        let posting = MCPNotificationPosting(store: store)
+        let posting = MCPNotificationPosting(
+            store: store,
+            alertPoster: SystemAlertPoster(center: FakeSystemAlertCenter())
+        )
 
         await posting.post(
             source: .notifications,

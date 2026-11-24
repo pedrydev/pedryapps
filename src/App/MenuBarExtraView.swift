@@ -42,8 +42,10 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
         notificationPoster: notificationsStore,
         schedule: TimerTodoDueNotificationScheduler.schedule
     )
+    private lazy var systemAlertCenter = SystemUserNotificationCenter()
+    private lazy var systemAlertPoster = SystemAlertPoster(center: systemAlertCenter)
     private lazy var mcpServerController = MCPServerController(
-        posting: MCPNotificationPosting(store: notificationsStore)
+        posting: MCPNotificationPosting(store: notificationsStore, alertPoster: systemAlertPoster)
     )
 
     func applicationDidFinishLaunching(_ notification: Notification) {
