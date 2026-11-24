@@ -33,7 +33,6 @@
 		A000000000000000000000AF /* MenuBarTodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000AE /* MenuBarTodoRow.swift */; };
 		A000000000000000000000B1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B0 /* SettingsView.swift */; };
 		A000000000000000000000B3 /* TodosSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B2 /* TodosSettingsView.swift */; };
-		A000000000000000000000B5 /* NotConfiguredSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B4 /* NotConfiguredSettingsView.swift */; };
 		A000000000000000000000B7 /* TodosSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B6 /* TodosSettingsTests.swift */; };
 		A000000000000000000000B9 /* TodosSettingsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B8 /* TodosSettingsStoreTests.swift */; };
 		A000000000000000000000BB /* TodosSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000BA /* TodosSettings.swift */; };
@@ -115,7 +114,6 @@
 		A000000000000000000000AE /* MenuBarTodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarTodoRow.swift; sourceTree = "<group>"; };
 		A000000000000000000000B0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A000000000000000000000B2 /* TodosSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosSettingsView.swift; sourceTree = "<group>"; };
-		A000000000000000000000B4 /* NotConfiguredSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotConfiguredSettingsView.swift; sourceTree = "<group>"; };
 		A000000000000000000000B6 /* TodosSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosSettingsTests.swift; sourceTree = "<group>"; };
 		A000000000000000000000B8 /* TodosSettingsStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosSettingsStoreTests.swift; sourceTree = "<group>"; };
 		A000000000000000000000BA /* TodosSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosSettings.swift; sourceTree = "<group>"; };
@@ -208,7 +206,6 @@
 				A000000000000000000000AC /* TimeLeftLabel.swift */,
 				A000000000000000000000AE /* MenuBarTodoRow.swift */,
 				A000000000000000000000B0 /* SettingsView.swift */,
-				A000000000000000000000B4 /* NotConfiguredSettingsView.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -440,7 +437,6 @@
 				A000000000000000000000A7 /* DoOnDatePicker.swift in Sources */,
 				A000000000000000000000B1 /* SettingsView.swift in Sources */,
 				A000000000000000000000B3 /* TodosSettingsView.swift in Sources */,
-				A000000000000000000000B5 /* NotConfiguredSettingsView.swift in Sources */,
 				A000000000000000000000BB /* TodosSettings.swift in Sources */,
 				A000000000000000000000BD /* TodosSettingsStore.swift in Sources */,
 			

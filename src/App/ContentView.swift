@@ -30,8 +30,6 @@ struct ContentView: View {
             TodosView(store: todosStore)
         case .notifications:
             NotificationsInboxView(store: notificationsStore)
-        case .calendar:
-            EmptyView()
         }
     }
 }

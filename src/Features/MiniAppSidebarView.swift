@@ -16,7 +16,6 @@ struct MiniAppSidebarView: View {
                 .font(.title3)
                 .frame(minWidth: 32, minHeight: 32)
                 .contentShape(Rectangle())
-                .disabled(!miniApp.isAvailable)
                 .background(
                     RoundedRectangle(cornerRadius: 6)
                         .fill(miniApp == selection ? Color.accentColor.opacity(0.18) : Color.clear)

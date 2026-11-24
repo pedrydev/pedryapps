@@ -5,7 +5,7 @@ A macOS app for everyday utilities. Its major feature areas are called mini-apps
 ## Language
 
 **Mini-app**:
-A major, self-contained feature area hosted by the app, such as Todos, Notifications, or Calendar.
+A major, self-contained feature area hosted by the app, such as Todos or Notifications.
 _Avoid_: Feature, module, plugin
 
 **Todos mini-app**:
@@ -15,3 +15,7 @@ _Avoid_: TODO feature, Task manager
 **Notifications mini-app**:
 The mini-app for collecting in-app messages posted by mini-apps and showing their unread count in the menu bar.
 _Avoid_: Notification center, Alerts feature
+
+**AI agent**:
+An external program acting on the user's behalf that calls actions the app exposes over MCP.
+_Avoid_: Bot, automation, script

@@ -25,25 +25,31 @@ struct MiniAppSelectionStoreTests {
         }
     }
 
-    @Test func unavailableMiniAppsCannotBeSelected() {
+    @Test func unselectableMiniAppsCannotBeSelected() {
         withIsolatedDefaults { defaults in
-            let store = MiniAppSelectionStore(userDefaults: defaults)
+            let store = MiniAppSelectionStore(
+                userDefaults: defaults,
+                selectableMiniApps: [.todos]
+            )
 
-            store.select(.calendar)
+            store.select(.notifications)
 
             #expect(store.selected == .todos)
         }
     }
 
-    @Test func storedUnavailableSelectionFallsBackToTodos() {
+    @Test func storedUnselectableSelectionFallsBackToTodos() {
         withIsolatedDefaults { defaults in
-            let storeWithCalendar = MiniAppSelectionStore(
+            let restrictedStore = MiniAppSelectionStore(
                 userDefaults: defaults,
-                selectableMiniApps: [.todos, .calendar]
+                selectableMiniApps: [.notifications]
             )
-            storeWithCalendar.select(.calendar)
+            restrictedStore.select(.notifications)
 
-            let store = MiniAppSelectionStore(userDefaults: defaults)
+            let store = MiniAppSelectionStore(
+                userDefaults: defaults,
+                selectableMiniApps: [.todos]
+            )
 
             #expect(store.selected == .todos)
         }

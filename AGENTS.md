@@ -6,7 +6,6 @@ All-in-one macOS utility app for everyday use. Known feature areas so far:
 
 - Todos
 - Notifications
-- Calendar
 - Additional utilities to be added over time
 
 ## Platform constraint

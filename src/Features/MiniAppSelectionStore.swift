@@ -12,7 +12,7 @@ final class MiniAppSelectionStore {
 
     init(
         userDefaults: UserDefaults = .standard,
-        selectableMiniApps: Set<MiniApp> = Set(MiniApp.allCases.filter(\.isAvailable))
+        selectableMiniApps: Set<MiniApp> = Set(MiniApp.allCases)
     ) {
         self.userDefaults = userDefaults
         self.selectableMiniApps = selectableMiniApps
