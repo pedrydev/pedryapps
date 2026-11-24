@@ -93,9 +93,7 @@ struct MCPAgentServerTests {
             documentStore: JSONDocumentStore(directory: directory.url, filename: "notifications.json")
         )
         let center = FakeSystemAlertCenter()
-        let harness = try await MCPTestHarness(
-            posting: MCPNotificationPosting(store: store, alertPoster: SystemAlertPoster(center: center))
-        )
+        let harness = try await makeAgentHarness(store: store, center: center)
 
         let result = try await harness.client.callTool(
             name: "send_notification",
@@ -141,6 +139,39 @@ struct MCPAgentServerTests {
         #expect(center.authorizationRequests == 1)
         #expect(center.requests.count == 1)
         #expect(store.notifications.count == 1)
+        await harness.stop()
+    }
+
+    @Test(arguments: [SystemAlertAuthorizationStatus.denied, .notDetermined])
+    @MainActor func deniedAlertAuthorizationKeepsInboxEntryAndSucceeds(
+        initialStatus: SystemAlertAuthorizationStatus
+    ) async throws {
+        let directory = try TemporaryDirectory()
+        let store = NotificationsStore(
+            documentStore: JSONDocumentStore(directory: directory.url, filename: "notifications.json")
+        )
+        let center = FakeSystemAlertCenter()
+        center.authorization = initialStatus
+        center.authorizationAfterRequest = .denied
+        let harness = try await MCPTestHarness(
+            posting: MCPNotificationPosting(store: store, alertPoster: SystemAlertPoster(center: center))
+        )
+
+        let result = try await harness.client.callTool(
+            name: "send_notification",
+            arguments: [
+                "title": "Denied alert",
+                "body": "The Inbox entry must survive a denied alert.",
+                "type": "attentionRequest",
+            ]
+        )
+
+        #expect(result.isError != true)
+        #expect(store.notifications.count == 1)
+        #expect(store.notifications.first?.title == "Denied alert")
+        #expect(center.addAttempts == 0)
+        #expect(center.requests.isEmpty)
+        #expect(center.authorizationRequests == (initialStatus == .notDetermined ? 1 : 0))
         await harness.stop()
     }
 
@@ -305,6 +336,16 @@ struct MCPAgentServerTests {
         #expect(posts.count == 1)
         #expect(posts.first?.title == "Loopback test")
     }
+}
+
+@MainActor
+private func makeAgentHarness(
+    store: NotificationsStore,
+    center: FakeSystemAlertCenter
+) async throws -> MCPTestHarness {
+    try await MCPTestHarness(
+        posting: MCPNotificationPosting(store: store, alertPoster: SystemAlertPoster(center: center))
+    )
 }
 
 private struct MCPTestHarness {
