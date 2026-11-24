@@ -14,11 +14,15 @@ struct BoardCategoryView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(category.name)
-                .font(.headline)
-                .lineLimit(1)
-            Button("Add Todo", systemImage: "plus", action: reveal)
-                .buttonStyle(.borderless)
+            HStack {
+                Text(category.name)
+                    .font(.headline)
+                    .lineLimit(1)
+                Spacer(minLength: 8)
+                Button("Todo", systemImage: "plus", action: reveal)
+                    .buttonStyle(.borderless)
+                    .accessibilityLabel("Add Todo")
+            }
             List(selection: $selectedTodoIDs) {
                 ForEach(todos) { todo in
                     TodoRow(todo: todo, checkOff: checkOff)
@@ -27,7 +31,6 @@ struct BoardCategoryView: View {
             .listStyle(.inset)
             .frame(height: 360)
         }
-        .frame(width: 280)
         .padding(12)
         .background(.quaternary, in: RoundedRectangle(cornerRadius: 10))
         .sheet(isPresented: $isAddingTodo) {

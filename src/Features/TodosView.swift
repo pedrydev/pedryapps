@@ -45,22 +45,25 @@ struct TodosView: View {
                 Button("Manage Categories", action: openCategories)
             }
         } else {
-            ScrollView(.horizontal) {
-                LazyHStack(alignment: .top, spacing: 16) {
-                    ForEach(store.categories) { category in
-                        BoardCategoryView(
-                            category: category,
-                            todos: visibleTodos(in: category),
-                            errorMessage: store.errorMessage,
-                            selectedTodoIDs: $selectedTodoIDs,
-                            checkOff: checkOff,
-                            addTodo: { title, doOnDate in
-                                store.addTodo(title, in: category, doOnDate: doOnDate)
-                            }
-                        )
+            GeometryReader { geometry in
+                ScrollView(.horizontal) {
+                    LazyHStack(alignment: .top, spacing: 16) {
+                        ForEach(store.categories) { category in
+                            BoardCategoryView(
+                                category: category,
+                                todos: visibleTodos(in: category),
+                                errorMessage: store.errorMessage,
+                                selectedTodoIDs: $selectedTodoIDs,
+                                checkOff: checkOff,
+                                addTodo: { title, doOnDate in
+                                    store.addTodo(title, in: category, doOnDate: doOnDate)
+                                }
+                            )
+                            .frame(width: columnWidth(in: geometry.size.width))
+                        }
                     }
+                    .padding(16)
                 }
-                .padding(16)
             }
         }
     }
@@ -75,6 +78,14 @@ struct TodosView: View {
                 .padding(.horizontal)
                 .padding(.bottom, 8)
         }
+    }
+
+    private func columnWidth(in containerWidth: CGFloat) -> CGFloat {
+        let visibleCount = min(5, max(1, store.categories.count))
+        let spacing: CGFloat = 16
+        let padding: CGFloat = 32
+        let available = containerWidth - padding - spacing * CGFloat(visibleCount - 1)
+        return min(520, max(240, available / CGFloat(visibleCount)))
     }
 
     private func visibleTodos(in category: Category) -> [Todo] {
