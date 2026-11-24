@@ -142,7 +142,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
 
     private func rebuildMenu(_ menu: NSMenu) {
         let now = Date()
-        let overview = TodosOverview.make(from: store.todos, now: now)
+        let overview = TodosOverview.make(from: store.todos, categories: store.categories, now: now)
 
         menu.removeAllItems()
         currentItems = overview.items
@@ -280,7 +280,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
     private func tick() {
         guard let menu else { return }
         let now = Date()
-        let overview = TodosOverview.make(from: store.todos, now: now)
+        let overview = TodosOverview.make(from: store.todos, categories: store.categories, now: now)
 
         guard overview.items == currentItems, overview.additionalCount == currentAdditionalCount else {
             rebuildMenu(menu)

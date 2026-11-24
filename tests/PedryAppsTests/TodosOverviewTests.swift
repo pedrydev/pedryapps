@@ -20,20 +20,41 @@ struct TodosOverviewTests {
         #expect(overview.additionalCount == 0)
     }
 
+    @Test func ordersByDoOnDateThenCategoryThenWithinCategory() throws {
+        let calendar = utcCalendar()
+        let now = try fixtureDate(2030, 1, 2, at: 10, minute: 0, calendar: calendar)
+        let work = Category(name: "Work")
+        let home = Category(name: "Home")
+        let categories = [work, home]
+        let sameTime = try fixtureDate(2030, 1, 2, at: 11, minute: 0, calendar: calendar)
+        let later = try fixtureDate(2030, 1, 2, at: 12, minute: 0, calendar: calendar)
+        let todos = [
+            Todo(categoryID: home.id, title: "Home second", doOnDate: DoOnDate(sameTime)),
+            Todo(categoryID: work.id, title: "Work first", doOnDate: DoOnDate(sameTime)),
+            Todo(categoryID: home.id, title: "Home first", doOnDate: DoOnDate(later)),
+            Todo(categoryID: work.id, title: "Work later", doOnDate: DoOnDate(later)),
+        ]
+
+        let overview = TodosOverview.make(from: todos, categories: categories, calendar: calendar, now: now)
+
+        #expect(overview.items.map(\.title) == ["Work first", "Home second", "Work later", "Home first"])
+    }
+
     @Test func ordersByTimeLeftWithManualTieBreakAndLimitsToFive() throws {
         let calendar = utcCalendar()
         let now = try fixtureDate(2030, 1, 2, at: 10, minute: 0, calendar: calendar)
+        let category = Category(name: "Work")
         let todos = try [
-            todo("A", at: 12, calendar: calendar),
-            todo("B", at: 11, calendar: calendar),
-            todo("C", at: 11, calendar: calendar),
-            todo("D", at: 13, calendar: calendar),
-            todo("E", at: 14, calendar: calendar),
-            todo("F", at: 15, calendar: calendar),
-            todo("G", at: 16, calendar: calendar),
+            todo("A", at: 12, calendar: calendar, categoryID: category.id),
+            todo("B", at: 11, calendar: calendar, categoryID: category.id),
+            todo("C", at: 11, calendar: calendar, categoryID: category.id),
+            todo("D", at: 13, calendar: calendar, categoryID: category.id),
+            todo("E", at: 14, calendar: calendar, categoryID: category.id),
+            todo("F", at: 15, calendar: calendar, categoryID: category.id),
+            todo("G", at: 16, calendar: calendar, categoryID: category.id),
         ]
 
-        let overview = TodosOverview.make(from: todos, calendar: calendar, now: now)
+        let overview = TodosOverview.make(from: todos, categories: [category], calendar: calendar, now: now)
 
         #expect(overview.items.map(\.title) == ["B", "C", "A", "D", "E"])
         #expect(overview.additionalCount == 2)
@@ -55,9 +76,9 @@ struct TodosOverviewTests {
         #expect(TimeLeftLabel.text(from: now, to: deadline) == values.expected)
     }
 
-    private func todo(_ title: String, at hour: Int, calendar: Calendar) throws -> Todo {
+    private func todo(_ title: String, at hour: Int, calendar: Calendar, categoryID: UUID = UUID()) throws -> Todo {
         Todo(
-            categoryID: UUID(),
+            categoryID: categoryID,
             title: title,
             doOnDate: DoOnDate(try fixtureDate(2030, 1, 2, at: hour, minute: 0, calendar: calendar))
         )
