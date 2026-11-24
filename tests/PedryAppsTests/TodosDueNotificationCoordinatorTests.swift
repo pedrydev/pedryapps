@@ -154,6 +154,39 @@ struct TodosDueNotificationCoordinatorTests {
 
         #expect(env.center.requests.isEmpty)
         #expect(env.center.addAttempts == 0)
+        #expect(env.poster.posts.isEmpty)
+    }
+
+    @Test func dueWindowPostsOneInformationNotificationAlongsideSystemAlert() async throws {
+        let now = try fixtureDate(2030, 1, 2, at: 10, minute: 0, calendar: utcCalendar())
+        let env = try makeEnvironment(now: now)
+        env.addTodo("Buy milk", at: try fixtureDate(2030, 1, 2, at: 10, minute: 3, calendar: env.calendar))
+        await env.coordinator.start()
+
+        await env.scheduler.fire()
+
+        let boundary = try fixtureDate(2030, 1, 2, at: 10, minute: 5, calendar: env.calendar)
+        let expectedPost = FakeNotificationPoster.Post(
+            source: .todos,
+            type: .information,
+            title: "Time to work",
+            body: "1 todo is ready to work"
+        )
+        #expect(env.poster.posts == [expectedPost])
+        #expect(env.center.requests == [request(count: 1, endingAt: boundary)])
+    }
+
+    @Test func inboxPostDoesNotDependOnSystemAuthorization() async throws {
+        let now = try fixtureDate(2030, 1, 2, at: 10, minute: 0, calendar: utcCalendar())
+        let env = try makeEnvironment(now: now)
+        env.center.authorization = .denied
+        env.addTodo("Buy milk", at: try fixtureDate(2030, 1, 2, at: 10, minute: 3, calendar: env.calendar))
+        await env.coordinator.start()
+
+        await env.scheduler.fire()
+
+        #expect(env.poster.posts.count == 1)
+        #expect(env.center.requests.isEmpty)
     }
 
     @Test func multipleTodosInSameWindowProduceOneCountNotification() async throws {
@@ -250,6 +283,7 @@ struct TodosDueNotificationCoordinatorTests {
         try settingsDocument.save(TodosSettings(dueCheckIntervalSeconds: intervalSeconds))
         let settingsStore = TodosSettingsStore(documentStore: settingsDocument)
         let center = FakeTodoNotificationCenter()
+        let poster = FakeNotificationPoster()
         let clock = MutableClock(now: now)
         let scheduler = Scheduler()
         let coordinator = TodosDueNotificationCoordinator(
@@ -257,6 +291,7 @@ struct TodosDueNotificationCoordinatorTests {
             settingsStore: settingsStore,
             stateStore: stateStore,
             notificationCenter: center,
+            notificationPoster: poster,
             calendar: calendar,
             now: { clock.now },
             schedule: { delay, action in scheduler.schedule(delay: delay, action: action) }
@@ -268,6 +303,7 @@ struct TodosDueNotificationCoordinatorTests {
             todosStore: todosStore,
             settingsStore: settingsStore,
             center: center,
+            poster: poster,
             clock: clock,
             scheduler: scheduler,
             coordinator: coordinator
@@ -334,6 +370,7 @@ private final class Environment {
     let todosStore: TodosStore
     let settingsStore: TodosSettingsStore
     let center: FakeTodoNotificationCenter
+    let poster: FakeNotificationPoster
     let clock: MutableClock
     let scheduler: Scheduler
     let coordinator: TodosDueNotificationCoordinator
@@ -345,6 +382,7 @@ private final class Environment {
         todosStore: TodosStore,
         settingsStore: TodosSettingsStore,
         center: FakeTodoNotificationCenter,
+        poster: FakeNotificationPoster,
         clock: MutableClock,
         scheduler: Scheduler,
         coordinator: TodosDueNotificationCoordinator
@@ -355,6 +393,7 @@ private final class Environment {
         self.todosStore = todosStore
         self.settingsStore = settingsStore
         self.center = center
+        self.poster = poster
         self.clock = clock
         self.scheduler = scheduler
         self.coordinator = coordinator
@@ -392,6 +431,22 @@ private final class FakeTodoNotificationCenter: TodoDueNotificationCenter {
         addAttempts += 1
         if let addError { throw addError }
         requests.append(request)
+    }
+}
+
+@MainActor
+private final class FakeNotificationPoster: NotificationPosting {
+    struct Post: Equatable {
+        let source: MiniApp
+        let type: NotificationType
+        let title: String
+        let body: String
+    }
+
+    var posts: [Post] = []
+
+    func post(source: MiniApp, type: NotificationType, title: String, body: String) {
+        posts.append(Post(source: source, type: type, title: title, body: body))
     }
 }
 
