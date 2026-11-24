@@ -2,14 +2,16 @@ import SwiftUI
 
 struct MiniAppSidebarView: View {
     @Binding var selection: MiniApp
+    @FocusState private var focusedMiniApp: MiniApp?
 
     var body: some View {
         VStack(spacing: 8) {
             ForEach(MiniApp.allCases) { miniApp in
                 Button(miniApp.name, systemImage: miniApp.symbolName) {
-                    selection = miniApp
+                    select(miniApp)
                 }
                 .buttonStyle(.borderless)
+                .focused($focusedMiniApp, equals: miniApp)
                 .labelStyle(.iconOnly)
                 .font(.title3)
                 .frame(minWidth: 32, minHeight: 32)
@@ -28,5 +30,10 @@ struct MiniAppSidebarView: View {
         .padding(.vertical, 12)
         .frame(minWidth: 56, maxHeight: .infinity, alignment: .top)
         .background(Color(nsColor: .controlBackgroundColor))
+    }
+
+    private func select(_ miniApp: MiniApp) {
+        selection = miniApp
+        focusedMiniApp = miniApp
     }
 }

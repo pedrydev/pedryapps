@@ -64,6 +64,8 @@
 		A000000000000000000000F5 /* NotificationPosting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000F4 /* NotificationPosting.swift */; };
 		A000000000000000000000F7 /* NotificationsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000F6 /* NotificationsStore.swift */; };
 		A000000000000000000000F9 /* NotificationsInboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000F8 /* NotificationsInboxView.swift */; };
+		A00000000000000000000101 /* MiniAppSidebarViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000100 /* MiniAppSidebarViewTests.swift */; };
+		A00000000000000000000103 /* MenuBarNotificationsOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000102 /* MenuBarNotificationsOverview.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -133,11 +135,13 @@
 		A000000000000000000000E6 /* MiniAppSelectionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppSelectionStore.swift; sourceTree = "<group>"; };
 		A000000000000000000000E8 /* MiniAppSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppSidebarView.swift; sourceTree = "<group>"; };
 		A000000000000000000000FA /* NotificationsStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsStoreTests.swift; sourceTree = "<group>"; };
+		A00000000000000000000100 /* MiniAppSidebarViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppSidebarViewTests.swift; sourceTree = "<group>"; };
 		A000000000000000000000F0 /* InboxNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxNotification.swift; sourceTree = "<group>"; };
 		A000000000000000000000F2 /* NotificationsDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsDocument.swift; sourceTree = "<group>"; };
 		A000000000000000000000F4 /* NotificationPosting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPosting.swift; sourceTree = "<group>"; };
 		A000000000000000000000F6 /* NotificationsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsStore.swift; sourceTree = "<group>"; };
 		A000000000000000000000F8 /* NotificationsInboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsInboxView.swift; sourceTree = "<group>"; };
+		A00000000000000000000102 /* MenuBarNotificationsOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarNotificationsOverview.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,6 +221,7 @@
 				A000000000000000000000D4 /* DueCheckWindow.swift */,
 				A000000000000000000000E4 /* MiniApp.swift */,
 				A000000000000000000000F0 /* InboxNotification.swift */,
+				A00000000000000000000102 /* MenuBarNotificationsOverview.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -293,7 +298,8 @@
 				A000000000000000000000C5 /* TodosDueNotificationCoordinatorTests.swift */,
 				A000000000000000000000CD /* MenuBarAppDelegateNotificationTests.swift */,
 				A000000000000000000000EA /* MiniAppSelectionStoreTests.swift */,
-				A000000000000000000000FA /* NotificationsStoreTests.swift */,);
+				A000000000000000000000FA /* NotificationsStoreTests.swift */,
+				A00000000000000000000100 /* MiniAppSidebarViewTests.swift */,);
 			path = PedryAppsTests;
 			sourceTree = "<group>";
 		};
@@ -447,7 +453,8 @@
 				A000000000000000000000F3 /* NotificationsDocument.swift in Sources */,
 				A000000000000000000000F5 /* NotificationPosting.swift in Sources */,
 				A000000000000000000000F7 /* NotificationsStore.swift in Sources */,
-				A000000000000000000000F9 /* NotificationsInboxView.swift in Sources */,);
+				A000000000000000000000F9 /* NotificationsInboxView.swift in Sources */,
+				A00000000000000000000103 /* MenuBarNotificationsOverview.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A00000000000000000000033 /* Sources */ = {
@@ -467,7 +474,8 @@
 				A000000000000000000000C4 /* TodosDueNotificationCoordinatorTests.swift in Sources */,
 				A000000000000000000000CC /* MenuBarAppDelegateNotificationTests.swift in Sources */,
 				A000000000000000000000EB /* MiniAppSelectionStoreTests.swift in Sources */,
-				A000000000000000000000FB /* NotificationsStoreTests.swift in Sources */,);
+				A000000000000000000000FB /* NotificationsStoreTests.swift in Sources */,
+				A00000000000000000000101 /* MiniAppSidebarViewTests.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
