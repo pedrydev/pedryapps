@@ -245,7 +245,7 @@ struct TodosDueNotificationCoordinatorTests {
     ) throws -> Environment {
         let directory = try TemporaryDirectory()
         let calendar = utcCalendar()
-        let todosStore = TodosStore(documentStore: JSONDocumentStore(directory: directory.url, filename: "todos.json"))
+        let todosStore = TodosStore(documentStore: JSONDocumentStore(directory: directory.url, filename: "board.json"))
         let settingsDocument = JSONDocumentStore<TodosSettings>(directory: directory.url, filename: "todos-settings.json")
         try settingsDocument.save(TodosSettings(dueCheckIntervalSeconds: intervalSeconds))
         let settingsStore = TodosSettingsStore(documentStore: settingsDocument)
@@ -363,12 +363,11 @@ private final class Environment {
     var scheduledDelays: [TimeInterval] { scheduler.delays }
 
     func addTodo(_ title: String, at date: Date) {
-        let todo = Todo(title: title, doOnDate: DoOnDate(date))
-        let documentStore = JSONDocumentStore<TodosDocument>(directory: todosDirectory, filename: "todos.json")
-        var document = (try? documentStore.load()) ?? TodosDocument()
-        document.todos.append(todo)
-        try? documentStore.save(document)
-        todosStore.load()
+        if todosStore.categories.isEmpty {
+            todosStore.addCategory("Todos")
+        }
+        guard let category = todosStore.categories.first else { return }
+        todosStore.addTodo(title, in: category, doOnDate: DoOnDate(date))
     }
 }
 

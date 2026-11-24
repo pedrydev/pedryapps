@@ -4,6 +4,7 @@ import Observation
 @MainActor
 @Observable
 final class TodosStore {
+    private(set) var categories: [Category] = []
     private(set) var todos: [Todo] = []
     private(set) var errorMessage: String?
     var undoManager: UndoManager?
@@ -16,7 +17,7 @@ final class TodosStore {
             self.documentStore = documentStore
         } else {
             do {
-                self.documentStore = try JSONDocumentStore(filename: "todos.json")
+                self.documentStore = try JSONDocumentStore(filename: "board.json")
             } catch {
                 self.documentStore = nil
                 setupError = error.localizedDescription
@@ -29,23 +30,95 @@ final class TodosStore {
     func load() {
         guard let documentStore else { return }
         do {
-            todos = try documentStore.load()?.todos ?? []
+            let document = try documentStore.load() ?? TodosDocument()
+            categories = document.categories
+            todos = document.todos
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
         }
     }
 
-    func addTodo(_ title: String, doOnDate: DoOnDate = DoOnDate()) {
-        guard Todo.hasText(title), doOnDate.isUpcoming else { return }
-        mutate { $0.append(Todo(title: title, doOnDate: doOnDate)) }
+    func todos(in category: Category) -> [Todo] {
+        todos.filter { $0.categoryID == category.id }
+    }
+
+    @discardableResult
+    func addCategory() -> Category? {
+        addCategory(availableCategoryName())
+    }
+
+    @discardableResult
+    func addCategory(_ name: String) -> Category? {
+        guard let name = Category.normalizedName(name), isCategoryNameAvailable(name) else { return nil }
+        let category = Category(name: name)
+        guard
+            mutateWithUndo(
+                actionName: "Add Category",
+                { document in
+                    var next = document
+                    next.categories.append(category)
+                    return next
+                })
+        else { return nil }
+        return category
+    }
+
+    @discardableResult
+    func renameCategory(_ category: Category, to name: String) -> Bool {
+        guard let name = Category.normalizedName(name),
+            isCategoryNameAvailable(name, excluding: category.id)
+        else { return false }
+        return mutateWithUndo(actionName: "Rename Category") { document in
+            var next = document
+            guard let index = next.categories.firstIndex(where: { $0.id == category.id }) else { return nil }
+            next.categories[index].name = name
+            return next
+        }
+    }
+
+    @discardableResult
+    func moveCategories(from source: IndexSet, to destination: Int) -> Bool {
+        mutateWithUndo(actionName: "Reorder Category") { document in
+            var next = document
+            next.categories.move(fromOffsets: source, toOffset: destination)
+            guard next.categories != document.categories else { return nil }
+            return next
+        }
+    }
+
+    @discardableResult
+    func deleteCategory(_ category: Category) -> Bool {
+        mutateWithUndo(actionName: "Delete Category") { document in
+            var next = document
+            guard next.categories.count > 1,
+                let index = next.categories.firstIndex(where: { $0.id == category.id }),
+                !next.todos.contains(where: { $0.categoryID == category.id })
+            else { return nil }
+            next.categories.remove(at: index)
+            return next
+        }
+    }
+
+    @discardableResult
+    func addTodo(_ title: String, in category: Category, doOnDate: DoOnDate = DoOnDate()) -> Bool {
+        guard Todo.hasText(title), doOnDate.isUpcoming,
+            categories.contains(where: { $0.id == category.id })
+        else { return false }
+        return mutate { document in
+            var next = document
+            next.todos.append(Todo(categoryID: category.id, title: title, doOnDate: doOnDate))
+            return next
+        }
     }
 
     func setDoOnDate(_ doOnDate: DoOnDate, for todo: Todo) {
         guard doOnDate.isUpcoming else { return }
-        mutate { todos in
-            guard let index = todos.firstIndex(where: { $0.id == todo.id }) else { return }
-            todos[index].doOnDate = doOnDate
+        mutate { document in
+            var next = document
+            guard let index = next.todos.firstIndex(where: { $0.id == todo.id }) else { return nil }
+            next.todos[index].doOnDate = doOnDate
+            return next
         }
     }
 
@@ -54,51 +127,76 @@ final class TodosStore {
     }
 
     func checkOff(ids: Set<Todo.ID>) {
-        let removed = todos.enumerated().filter { ids.contains($0.element.id) }
-        guard !removed.isEmpty else { return }
-        guard mutate({ $0.removeAll { ids.contains($0.id) } }) else { return }
-        registerUndo { store in store.restore(removed) }
-    }
-
-    func moveTodo(from source: IndexSet, to destination: Int) {
-        mutate { $0.move(fromOffsets: source, toOffset: destination) }
-    }
-
-    private func restore(_ removed: [(offset: Int, element: Todo)]) {
-        let restored = mutate { current in
-            for item in removed.sorted(by: { $0.offset < $1.offset }) {
-                current.insert(item.element, at: min(item.offset, current.count))
-            }
+        mutateWithUndo(actionName: "Check Off") { document in
+            var next = document
+            next.todos.removeAll { ids.contains($0.id) }
+            guard next.todos != document.todos else { return nil }
+            return next
         }
-        guard restored else { return }
-        registerUndo { store in store.checkOff(ids: Set(removed.map(\.element.id))) }
     }
 
-    private func registerUndo(_ handler: @escaping (TodosStore) -> Void) {
-        undoManager?.registerUndo(withTarget: self, handler: handler)
-        undoManager?.setActionName("Check Off")
+    private var document: TodosDocument {
+        TodosDocument(categories: categories, todos: todos)
+    }
+
+    private func isCategoryNameAvailable(_ name: String, excluding id: Category.ID? = nil) -> Bool {
+        !categories.contains { category in
+            category.id != id && category.name.caseInsensitiveCompare(name) == .orderedSame
+        }
+    }
+
+    private func availableCategoryName() -> String {
+        var name = "New Category"
+        var suffix = 2
+        while !isCategoryNameAvailable(name) {
+            name = "New Category \(suffix)"
+            suffix += 1
+        }
+        return name
     }
 
     @discardableResult
-    private func mutate(_ change: (inout [Todo]) -> Void) -> Bool {
-        let previous = todos
-        change(&todos)
-        guard persist() else {
-            todos = previous
-            return false
-        }
+    private func mutate(_ change: (TodosDocument) -> TodosDocument?) -> Bool {
+        guard let next = change(document) else { return false }
+        return apply(next)
+    }
+
+    @discardableResult
+    private func mutateWithUndo(actionName: String, _ change: (TodosDocument) -> TodosDocument?) -> Bool {
+        let previous = document
+        guard mutate(change) else { return false }
+        registerUndo(actionName: actionName) { store in store.applyUndoSnapshot(previous, actionName: actionName) }
         return true
     }
 
-    private func persist() -> Bool {
+    private func applyUndoSnapshot(_ snapshot: TodosDocument, actionName: String) {
+        let previous = document
+        guard apply(snapshot) else { return }
+        registerUndo(actionName: actionName) { store in store.applyUndoSnapshot(previous, actionName: actionName) }
+    }
+
+    @discardableResult
+    private func apply(_ next: TodosDocument) -> Bool {
+        guard persist(next) else { return false }
+        categories = next.categories
+        todos = next.todos
+        return true
+    }
+
+    private func persist(_ document: TodosDocument) -> Bool {
         guard let documentStore else { return false }
         do {
-            try documentStore.save(TodosDocument(todos: todos))
+            try documentStore.save(document)
             errorMessage = nil
             return true
         } catch {
             errorMessage = error.localizedDescription
             return false
         }
+    }
+
+    private func registerUndo(actionName: String, _ handler: @escaping (TodosStore) -> Void) {
+        undoManager?.registerUndo(withTarget: self, handler: handler)
+        undoManager?.setActionName(actionName)
     }
 }

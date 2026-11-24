@@ -1,11 +1,19 @@
 # Todos
 
-The Todos mini-app captures, orders and checks off a single flat list of personal to-dos. Back to [GLOSSARY-MAP.md](../../GLOSSARY-MAP.md).
+The Todos mini-app captures, categorizes, orders and checks off personal to-dos on a board. Back to [GLOSSARY-MAP.md](../../GLOSSARY-MAP.md).
 
 ## Language
 
+**Board**:
+The Todos mini-app's primary layout, which shows Categories side by side with each Category's Todos ordered inside it.
+_Avoid_: Kanban, view
+
+**Category**:
+A user-defined group that owns Todos on the Board. Every Todo belongs to exactly one Category, and the Board may start empty but cannot be left empty once populated.
+_Avoid_: Tag, column, lane, label, list
+
 **Todo**:
-A single item in the Todos mini-app's list, captured to be checked off.
+A single item in a Category, captured to be checked off.
 _Avoid_: Task, TODO item
 
 **One-time Todo**:
@@ -17,7 +25,7 @@ A Todo with a schedule because it is repetitive. Its model and UI are deferred.
 _Avoid_: Recurring Todo, repeating Todo
 
 **Check off**:
-To mark a todo as done, which removes it from the list permanently.
+To mark a Todo as done, which removes it from its Category permanently.
 _Avoid_: Complete, finish, archive
 
 **Do-on date**:

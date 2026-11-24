@@ -1,14 +1,18 @@
 import Foundation
 import Testing
+
 @testable import PedryApps
 
 struct TodosOverviewTests {
     @Test func selectsOnlyTodaysUpcomingTodos() throws {
         let calendar = utcCalendar()
         let now = try fixtureDate(2030, 1, 2, at: 10, minute: 0, calendar: calendar)
-        let passed = Todo(title: "Passed", doOnDate: DoOnDate(try fixtureDate(2030, 1, 2, at: 9, minute: 0, calendar: calendar)))
-        let upcoming = Todo(title: "Upcoming", doOnDate: DoOnDate(try fixtureDate(2030, 1, 2, at: 11, minute: 0, calendar: calendar)))
-        let tomorrow = Todo(title: "Tomorrow", doOnDate: DoOnDate(try fixtureDate(2030, 1, 3, at: 11, minute: 0, calendar: calendar)))
+        let passed = Todo(
+            categoryID: UUID(), title: "Passed", doOnDate: DoOnDate(try fixtureDate(2030, 1, 2, at: 9, minute: 0, calendar: calendar)))
+        let upcoming = Todo(
+            categoryID: UUID(), title: "Upcoming", doOnDate: DoOnDate(try fixtureDate(2030, 1, 2, at: 11, minute: 0, calendar: calendar)))
+        let tomorrow = Todo(
+            categoryID: UUID(), title: "Tomorrow", doOnDate: DoOnDate(try fixtureDate(2030, 1, 3, at: 11, minute: 0, calendar: calendar)))
 
         let overview = TodosOverview.make(from: [passed, upcoming, tomorrow], calendar: calendar, now: now)
 
@@ -53,6 +57,7 @@ struct TodosOverviewTests {
 
     private func todo(_ title: String, at hour: Int, calendar: Calendar) throws -> Todo {
         Todo(
+            categoryID: UUID(),
             title: title,
             doOnDate: DoOnDate(try fixtureDate(2030, 1, 2, at: hour, minute: 0, calendar: calendar))
         )

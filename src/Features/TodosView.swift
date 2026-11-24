@@ -3,37 +3,25 @@ import SwiftUI
 struct TodosView: View {
     let store: TodosStore
 
-    @State private var newTodoTitle = ""
-    @State private var newTodoDoOnDate = DoOnDate()
     @State private var selectedTodoIDs: Set<Todo.ID> = []
     @State private var searchText = ""
-    @FocusState private var isNewTodoFocused: Bool
+    @State private var isManagingCategories = false
     @Environment(\.colorSchemeContrast) private var colorSchemeContrast
     @Environment(\.undoManager) private var undoManager: UndoManager?
 
-    private var visibleTodos: [Todo] {
-        guard !searchText.isEmpty else { return store.todos }
-        return store.todos.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
-    }
-
     var body: some View {
         VStack(spacing: 0) {
-            AddTodoRow(
-                title: $newTodoTitle,
-                doOnDate: $newTodoDoOnDate,
-                isFocused: $isNewTodoFocused,
-                add: add
-            )
-            todosContent
+            boardContent
             errorMessageView
         }
-        .frame(minWidth: 340, minHeight: 260)
+        .frame(minWidth: 520, minHeight: 460)
         .searchable(text: $searchText, placement: .toolbar, prompt: "Search Todos")
+        .sheet(isPresented: $isManagingCategories) {
+            ManageCategoriesView(store: store)
+        }
         .toolbar(id: "Todos") {
-            ToolbarItem(id: "add", placement: .primaryAction) {
-                Button("Add Todo", systemImage: "plus", action: add)
-                    .help("Add Todo (Command-T)")
-                    .disabled(Todo.hasText(newTodoTitle) == false)
+            ToolbarItem(id: "manageCategories", placement: .primaryAction) {
+                Button("Manage Categories", systemImage: "square.grid.2x2", action: openCategories)
             }
             ToolbarItem(id: "checkOff", placement: .secondaryAction) {
                 Button("Check Off Selected", systemImage: "checkmark.circle", action: checkOffSelection)
@@ -41,47 +29,37 @@ struct TodosView: View {
             }
         }
         .onAppear { store.undoManager = undoManager }
-        .onReceive(NotificationCenter.default.publisher(for: .focusNewTodo)) { _ in
-            isNewTodoFocused = true
-        }
         .onReceive(NotificationCenter.default.publisher(for: .checkOffSelectedTodos)) { _ in
             checkOffSelection()
         }
     }
 
     @ViewBuilder
-    private var todosContent: some View {
-        if store.todos.isEmpty {
-            emptyView
+    private var boardContent: some View {
+        if store.categories.isEmpty {
+            ContentUnavailableView {
+                Label("No Categories", systemImage: "square.grid.2x2")
+            } description: {
+                Text("Create a Category to start your Board.")
+            } actions: {
+                Button("Manage Categories", action: openCategories)
+            }
         } else {
-            todoListView
-        }
-    }
-
-    private var emptyView: some View {
-        ContentUnavailableView {
-            Label("No Todos", systemImage: "checkmark.circle")
-        } description: {
-            Text("Add a Todo above to get started.")
-        }
-    }
-
-    private var todoListView: some View {
-        List(selection: $selectedTodoIDs) {
-            ForEach(visibleTodos) { todo in
-                TodoRow(todo: todo, checkOff: checkOff, setDoOnDate: setDoOnDate)
-                    .contextMenu {
-                        Button("Check Off", systemImage: "checkmark.circle") {
-                            checkOffFromContextMenu(todo)
-                        }
+            ScrollView(.horizontal) {
+                LazyHStack(alignment: .top, spacing: 16) {
+                    ForEach(store.categories) { category in
+                        BoardCategoryView(
+                            category: category,
+                            todos: visibleTodos(in: category),
+                            selectedTodoIDs: $selectedTodoIDs,
+                            checkOff: checkOff,
+                            setDoOnDate: setDoOnDate
+                        )
                     }
+                }
+                .padding(16)
             }
-            .onMove { source, destination in
-                if searchText.isEmpty { moveTodo(from: source, to: destination) }
-            }
-            .onDelete(perform: checkOff(at:))
         }
-        .listStyle(.inset)
     }
 
     @ViewBuilder
@@ -96,12 +74,14 @@ struct TodosView: View {
         }
     }
 
-    private func add() {
-        guard Todo.hasText(newTodoTitle) else { return }
-        let doOnDate = newTodoDoOnDate.isUpcoming ? newTodoDoOnDate : DoOnDate()
-        store.addTodo(newTodoTitle, doOnDate: doOnDate)
-        newTodoTitle = ""
-        newTodoDoOnDate = DoOnDate()
+    private func visibleTodos(in category: Category) -> [Todo] {
+        let categoryTodos = store.todos(in: category)
+        guard !searchText.isEmpty else { return categoryTodos }
+        return categoryTodos.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+    }
+
+    private func openCategories() {
+        isManagingCategories = true
     }
 
     private func checkOff(_ todo: Todo) {
@@ -114,25 +94,7 @@ struct TodosView: View {
         selectedTodoIDs.removeAll()
     }
 
-    private func checkOffFromContextMenu(_ todo: Todo) {
-        if selectedTodoIDs.contains(todo.id) {
-            checkOffSelection()
-        } else {
-            checkOff(todo)
-        }
-    }
-
     private func setDoOnDate(_ doOnDate: DoOnDate, for todo: Todo) {
         store.setDoOnDate(doOnDate, for: todo)
-    }
-
-    private func moveTodo(from source: IndexSet, to destination: Int) {
-        store.moveTodo(from: source, to: destination)
-    }
-
-    private func checkOff(at offsets: IndexSet) {
-        let ids = offsets.filter { visibleTodos.indices.contains($0) }.map { visibleTodos[$0].id }
-        store.checkOff(ids: Set(ids))
-        selectedTodoIDs.subtract(ids)
     }
 }

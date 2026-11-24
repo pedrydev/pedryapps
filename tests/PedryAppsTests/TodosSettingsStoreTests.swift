@@ -118,9 +118,10 @@ struct TodosSettingsStoreTests {
     @Test func settingsAreIndependentOfTodosDocument() throws {
         let directory = try TemporaryDirectory()
         let todosStore = TodosStore(
-            documentStore: JSONDocumentStore(directory: directory.url, filename: "todos.json")
+            documentStore: JSONDocumentStore(directory: directory.url, filename: "board.json")
         )
-        todosStore.addTodo("Buy milk")
+        let category = try #require(todosStore.addCategory("Work"))
+        todosStore.addTodo("Buy milk", in: category)
         let settingsStore = makeStore(in: directory.url)
 
         settingsStore.setDueCheckIntervalSeconds(300)

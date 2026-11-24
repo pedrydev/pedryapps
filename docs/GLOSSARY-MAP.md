@@ -3,7 +3,7 @@
 ## Contexts
 
 - [Global](./GLOSSARY.md): the container app and the language shared across mini-apps
-- [Todos](./mini-apps/todos/GLOSSARY.md): capturing, ordering and checking off personal to-dos, each with a do-on date
+- [Todos](./mini-apps/todos/GLOSSARY.md): capturing, categorizing, ordering and checking off personal to-dos on a board, each with a do-on date
 
 ## Relationships
 
