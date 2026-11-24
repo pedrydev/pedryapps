@@ -6,6 +6,7 @@ struct ManageCategoriesView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var newCategoryID: Category.ID?
     @State private var validationMessage: String?
+    @State private var categoryPendingDeletion: Category?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -18,7 +19,7 @@ struct ManageCategoriesView: View {
                         todoCount: store.todos(in: category).count,
                         selectsName: category.id == newCategoryID,
                         rename: rename,
-                        delete: delete
+                        delete: requestDelete
                     )
                 }
                 .onMove { store.moveCategories(from: $0, to: $1) }
@@ -38,6 +39,31 @@ struct ManageCategoriesView: View {
         }
         .frame(width: 400, height: 360)
         .padding()
+        .confirmationDialog(
+            deleteDialogTitle,
+            isPresented: Binding(
+                get: { categoryPendingDeletion != nil },
+                set: { if !$0 { categoryPendingDeletion = nil } }
+            ),
+            titleVisibility: .visible
+        ) {
+            if let categoryPendingDeletion {
+                Button("Delete Category and Todos", role: .destructive) {
+                    delete(categoryPendingDeletion)
+                }
+                Button("Cancel", role: .cancel) { self.categoryPendingDeletion = nil }
+            }
+        } message: {
+            if let categoryPendingDeletion {
+                let count = store.todos(in: categoryPendingDeletion).count
+                Text("This will permanently delete \(count) Todos in this Category.")
+            }
+        }
+    }
+
+    private var deleteDialogTitle: String {
+        guard let categoryPendingDeletion else { return "Delete Category" }
+        return "Delete “\(categoryPendingDeletion.name)”?"
     }
 
     private func add() {
@@ -55,12 +81,23 @@ struct ManageCategoriesView: View {
         return Category.normalizedName(name)
     }
 
+    private func requestDelete(_ category: Category) {
+        let todoCount = store.todos(in: category).count
+        guard todoCount > 0 else {
+            delete(category)
+            return
+        }
+        categoryPendingDeletion = category
+        validationMessage = nil
+    }
+
     private func delete(_ category: Category) {
         guard store.deleteCategory(category) else {
             validationMessage = "The last Category cannot be deleted."
             return
         }
         validationMessage = nil
+        categoryPendingDeletion = nil
     }
 }
 
@@ -106,7 +143,6 @@ private struct CategoryRow: View {
             .labelStyle(.iconOnly)
             .buttonStyle(.borderless)
             .help("Delete Category")
-            .disabled(todoCount > 0)
         }
     }
 }

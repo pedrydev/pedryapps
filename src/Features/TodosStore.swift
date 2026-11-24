@@ -92,9 +92,9 @@ final class TodosStore {
         mutateWithUndo(actionName: "Delete Category") { document in
             var next = document
             guard next.categories.count > 1,
-                let index = next.categories.firstIndex(where: { $0.id == category.id }),
-                !next.todos.contains(where: { $0.categoryID == category.id })
+                let index = next.categories.firstIndex(where: { $0.id == category.id })
             else { return nil }
+            next.todos.removeAll { $0.categoryID == category.id }
             next.categories.remove(at: index)
             return next
         }

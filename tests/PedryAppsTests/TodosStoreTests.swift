@@ -135,17 +135,52 @@ struct TodosStoreTests {
         #expect(store.categories == [work])
     }
 
-    @Test func deletingACategoryWithTodosIsRejected() throws {
+    @Test func deletingANonEmptyCategoryDeletesItsTodos() throws {
         let directory = try TemporaryDirectory()
         let store = makeStore(in: directory.url)
         let work = try addCategory(to: store, named: "Work")
-        try addCategory(to: store, named: "Home")
-        store.addTodo("Buy milk", in: work)
+        let home = try addCategory(to: store, named: "Home")
+        store.addTodo("A", in: work, doOnDate: DoOnDate(Date().addingTimeInterval(3600)))
+        store.addTodo("B", in: home, doOnDate: DoOnDate(Date().addingTimeInterval(7200)))
 
-        #expect(store.deleteCategory(work) == false)
+        #expect(store.deleteCategory(work))
 
-        #expect(store.categories.map(\.name) == ["Work", "Home"])
-        #expect(store.todos(in: work).map(\.title) == ["Buy milk"])
+        #expect(store.categories.map(\.name) == ["Home"])
+        #expect(store.todos(in: home).map(\.title) == ["B"])
+        #expect(store.todos.count == 1)
+        let reloaded = makeStore(in: directory.url)
+        reloaded.load()
+        #expect(reloaded.categories.map(\.name) == ["Home"])
+        #expect(reloaded.todos(in: home).map(\.title) == ["B"])
+    }
+
+    @Test func deletingANonEmptyCategoryCanBeUndoneAndRedone() throws {
+        let directory = try TemporaryDirectory()
+        let store = makeStore(in: directory.url)
+        let work = try addCategory(to: store, named: "Work")
+        let home = try addCategory(to: store, named: "Home")
+        let undoManager = UndoManager()
+        store.undoManager = undoManager
+        store.addTodo("A", in: work, doOnDate: DoOnDate(Date().addingTimeInterval(3600)))
+        store.addTodo("B", in: home, doOnDate: DoOnDate(Date().addingTimeInterval(7200)))
+        let originalDocument = TodosDocument(categories: store.categories, todos: store.todos)
+
+        #expect(store.deleteCategory(work))
+        undoManager.undo()
+        #expect(store.categories == originalDocument.categories)
+        #expect(store.todos == originalDocument.todos)
+        let afterUndo = makeStore(in: directory.url)
+        afterUndo.load()
+        #expect(afterUndo.categories == originalDocument.categories)
+        #expect(afterUndo.todos == originalDocument.todos)
+
+        undoManager.redo()
+        #expect(store.categories.map(\.name) == ["Home"])
+        #expect(store.todos(in: home).map(\.title) == ["B"])
+        let afterRedo = makeStore(in: directory.url)
+        afterRedo.load()
+        #expect(afterRedo.categories.map(\.name) == ["Home"])
+        #expect(afterRedo.todos(in: home).map(\.title) == ["B"])
     }
 
     @Test func categoryCreationCanBeUndoneAndRedone() throws {
