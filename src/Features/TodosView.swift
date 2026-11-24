@@ -44,17 +44,20 @@ struct TodosView: View {
             } actions: {
                 Button("Manage Categories", action: openCategories)
             }
+        } else if visibleCategories.isEmpty {
+            ContentUnavailableView.search(text: searchText)
         } else {
             GeometryReader { geometry in
                 ScrollView(.horizontal) {
                     LazyHStack(alignment: .top, spacing: 24) {
-                        ForEach(store.categories) { category in
+                        ForEach(visibleCategories) { category in
                             BoardCategoryView(
                                 category: category,
                                 todos: visibleTodos(in: category),
                                 categories: store.categories,
                                 errorMessage: store.errorMessage,
                                 allowsReordering: searchText.isEmpty,
+                                allowsAdding: searchText.isEmpty,
                                 selectedTodoIDs: $selectedTodoIDs,
                                 checkOff: checkOff,
                                 addTodo: { title, doOnDate in
@@ -65,7 +68,7 @@ struct TodosView: View {
                                 },
                                 dropTodo: dropTodo
                             )
-                            .frame(width: columnWidth(in: geometry.size.width))
+                            .frame(width: columnWidth(in: geometry.size.width, visibleCount: visibleCategories.count))
                         }
                     }
                     .padding(16)
@@ -86,12 +89,17 @@ struct TodosView: View {
         }
     }
 
-    private func columnWidth(in containerWidth: CGFloat) -> CGFloat {
-        let visibleCount = min(5, max(1, store.categories.count))
+    private var visibleCategories: [Category] {
+        guard !searchText.isEmpty else { return store.categories }
+        return store.categories.filter { !visibleTodos(in: $0).isEmpty }
+    }
+
+    private func columnWidth(in containerWidth: CGFloat, visibleCount: Int? = nil) -> CGFloat {
+        let count = min(5, max(1, visibleCount ?? store.categories.count))
         let spacing: CGFloat = 24
         let padding: CGFloat = 32
-        let available = containerWidth - padding - spacing * CGFloat(visibleCount - 1)
-        return min(520, max(240, available / CGFloat(visibleCount)))
+        let available = containerWidth - padding - spacing * CGFloat(count - 1)
+        return min(520, max(240, available / CGFloat(count)))
     }
 
     private func visibleTodos(in category: Category) -> [Todo] {

@@ -6,6 +6,7 @@ struct BoardCategoryView: View {
     let categories: [Category]
     let errorMessage: String?
     let allowsReordering: Bool
+    let allowsAdding: Bool
     @Binding var selectedTodoIDs: Set<Todo.ID>
     let checkOff: (Todo) -> Void
     let addTodo: (String, DoOnDate) -> Bool
@@ -24,9 +25,11 @@ struct BoardCategoryView: View {
                     .font(.headline)
                     .lineLimit(1)
                 Spacer(minLength: 8)
-                Button("Todo", systemImage: "plus", action: reveal)
-                    .buttonStyle(.borderless)
-                    .accessibilityLabel("Add Todo")
+                if allowsAdding {
+                    Button("Todo", systemImage: "plus", action: reveal)
+                        .buttonStyle(.borderless)
+                        .accessibilityLabel("Add Todo")
+                }
             }
             List(selection: $selectedTodoIDs) {
                 ForEach(Array(todos.enumerated()), id: \.element.id) { index, todo in
