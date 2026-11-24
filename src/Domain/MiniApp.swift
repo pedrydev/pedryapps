@@ -5,7 +5,7 @@ enum MiniApp: String, Codable, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var name: String {
+    nonisolated var name: String {
         switch self {
         case .todos: "Todos"
         case .notifications: "Notifications"

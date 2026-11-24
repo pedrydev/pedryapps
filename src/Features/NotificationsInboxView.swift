@@ -12,7 +12,7 @@ struct NotificationsInboxView: View {
                     Text(notification.title)
                         .font(.headline)
                     Spacer(minLength: 8)
-                    Text(relativeAge(from: notification.postedAt, now: now))
+                    Text(NotificationRelativeAge.text(from: notification.postedAt, now: now))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -41,20 +41,5 @@ struct NotificationsInboxView: View {
                 }
             }
         }
-    }
-
-    private func relativeAge(from postedAt: Date, now: Date) -> String {
-        let seconds = max(0, now.timeIntervalSince(postedAt))
-        guard seconds >= 60 else { return "just now" }
-        let age = Duration.seconds(seconds).formatted(
-            .units(
-                allowed: [.days, .hours, .minutes],
-                width: .abbreviated,
-                maximumUnitCount: 1,
-                zeroValueUnits: .hide,
-                fractionalPart: .hide(rounded: .down)
-            )
-        )
-        return "\(age) ago"
     }
 }

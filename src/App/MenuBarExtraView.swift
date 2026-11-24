@@ -1,4 +1,5 @@
 import AppKit
+import Observation
 import SwiftUI
 import UserNotifications
 
@@ -7,10 +8,22 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
     let store = TodosStore()
     let todosSettingsStore = TodosSettingsStore()
     let dueCheckStateStore = TodosDueCheckStateStore()
-    let notificationsStore = NotificationsStore()
-    let miniAppSelectionStore = MiniAppSelectionStore()
+    let notificationsStore: NotificationsStore
+    let miniAppSelectionStore: MiniAppSelectionStore
 
     private static let menuWidth = MenuBarTodoRowView.menuWidth
+
+    override init() {
+        notificationsStore = NotificationsStore()
+        miniAppSelectionStore = MiniAppSelectionStore()
+        super.init()
+    }
+
+    init(selectionStore: MiniAppSelectionStore, notificationsStore: NotificationsStore) {
+        self.notificationsStore = notificationsStore
+        self.miniAppSelectionStore = selectionStore
+        super.init()
+    }
 
     private var statusItem: NSStatusItem?
     private var menu: NSMenu?
@@ -37,6 +50,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
             image.isTemplate = true
             statusItem.button?.image = image
         }
+        statusItem.button?.setAccessibilityLabel("PedryApps")
 
         let menu = NSMenu()
         menu.autoenablesItems = false
@@ -46,6 +60,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
         self.statusItem = statusItem
         self.menu = menu
         rebuildMenu(menu)
+        observeNotificationsStore()
 
         openWindowObserver = NotificationCenter.default.addObserver(
             forName: .openMainWindow,
@@ -120,6 +135,10 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
         Task { @MainActor in self.openMainWindow() }
     }
 
+    @objc nonisolated private func openNotificationsAction() {
+        Task { @MainActor in self.openNotificationsFromMenuBar() }
+    }
+
     @objc nonisolated private func showSettingsAction() {
         Task { @MainActor in
             NSApp.activate(ignoringOtherApps: true)
@@ -143,22 +162,33 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
         openMainWindowHandler?("main")
     }
 
+    func openNotificationsFromMenuBar() {
+        miniAppSelectionStore.select(.notifications)
+        openMainWindow()
+    }
+
     private func rebuildMenu(_ menu: NSMenu) {
         let now = Date()
-        let overview = TodosOverview.make(from: store.todos, categories: store.categories, now: now)
+        let todosOverview = TodosOverview.make(from: store.todos, categories: store.categories, now: now)
+        let notificationsOverview = MenuBarNotificationsOverview.make(
+            from: notificationsStore.notifications,
+            now: now
+        )
 
         menu.removeAllItems()
-        currentItems = overview.items
-        currentAdditionalCount = overview.additionalCount
+        currentItems = todosOverview.items
+        currentAdditionalCount = todosOverview.additionalCount
+        updateBadge(notificationsOverview.unreadCount)
+        addNotificationsSection(to: menu, overview: notificationsOverview)
 
         menu.addItem(
             textItem(
-                "Today (\(overview.items.count))",
+                "Today (\(todosOverview.items.count))",
                 font: .systemFont(ofSize: NSFont.systemFontSize, weight: .semibold)
             )
         )
 
-        if overview.items.isEmpty {
+        if todosOverview.items.isEmpty {
             menu.addItem(
                 textItem(
                     "Nothing upcoming today",
@@ -166,7 +196,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
                 )
             )
         } else {
-            for todo in overview.items {
+            for todo in todosOverview.items {
                 let view = MenuBarTodoRowView(dueDate: todo.doOnDate.date, title: todo.title)
                 view.update(now: now)
                 let item = NSMenuItem()
@@ -175,10 +205,10 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
                 menu.addItem(item)
             }
 
-            if overview.additionalCount > 0 {
+            if todosOverview.additionalCount > 0 {
                 menu.addItem(
                     textItem(
-                        "\(overview.additionalCount) more today",
+                        "\(todosOverview.additionalCount) more today",
                         font: .systemFont(ofSize: NSFont.systemFontSize, weight: .medium)
                     )
                 )
@@ -221,6 +251,97 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
         )
         quitItem.target = self
         menu.addItem(quitItem)
+    }
+
+    private func addNotificationsSection(to menu: NSMenu, overview: MenuBarNotificationsOverview) {
+        menu.addItem(
+            textItem(
+                "Notifications (\(overview.unreadCount))",
+                font: .systemFont(ofSize: NSFont.systemFontSize, weight: .semibold)
+            )
+        )
+
+        if overview.unread.isEmpty {
+            menu.addItem(
+                disabledItem(
+                    "No unread notifications",
+                    font: .systemFont(ofSize: NSFont.systemFontSize, weight: .medium)
+                )
+            )
+        } else {
+            for row in overview.unread {
+                let item = NSMenuItem(title: "", action: #selector(openNotificationsAction), keyEquivalent: "")
+                item.attributedTitle = notificationTitle(row)
+                item.target = self
+                menu.addItem(item)
+            }
+        }
+
+        let showAllItem = NSMenuItem(
+            title: "Show All",
+            action: #selector(openNotificationsAction),
+            keyEquivalent: ""
+        )
+        showAllItem.target = self
+        showAllItem.isEnabled = true
+        menu.addItem(showAllItem)
+        menu.addItem(.separator())
+    }
+
+    private func updateBadge(_ unreadCount: Int) {
+        guard let button = statusItem?.button else { return }
+        button.attributedTitle =
+            MenuBarUnreadBadge.attributedTitle(for: unreadCount) ?? NSAttributedString(string: "")
+        button.toolTip = unreadCount > 0 ? "\(unreadCount) unread notifications" : nil
+        button.setAccessibilityLabel(
+            unreadCount > 0 ? "PedryApps, \(unreadCount) unread notifications" : "PedryApps"
+        )
+    }
+
+    private func observeNotificationsStore() {
+        withObservationTracking {
+            _ = notificationsStore.notifications
+        } onChange: { [weak self] in
+            Task { @MainActor in
+                guard let self else { return }
+                if let menu = self.menu {
+                    self.rebuildMenu(menu)
+                }
+                self.observeNotificationsStore()
+            }
+        }
+    }
+
+    private func notificationTitle(_ row: MenuBarNotificationsOverview.Row) -> NSAttributedString {
+        let fontSize = NSFont.menuFont(ofSize: 0).pointSize
+        let attributed = NSMutableAttributedString(
+            string: row.title,
+            attributes: [
+                .font: NSFont.systemFont(ofSize: fontSize, weight: .semibold),
+                .foregroundColor: NSColor.controlTextColor,
+            ]
+        )
+        attributed.append(NSAttributedString(string: "\n"))
+        attributed.append(
+            NSAttributedString(
+                string: "\(row.source)  ·  \(row.relativeAge)",
+                attributes: [
+                    .font: NSFont.systemFont(ofSize: fontSize - 2),
+                    .foregroundColor: NSColor.secondaryLabelColor,
+                ]
+            )
+        )
+        return attributed
+    }
+
+    private func disabledItem(_ title: String, font: NSFont) -> NSMenuItem {
+        let item = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+        item.attributedTitle = NSAttributedString(
+            string: title,
+            attributes: [.font: font, .foregroundColor: NSColor.disabledControlTextColor]
+        )
+        item.isEnabled = false
+        return item
     }
 
     private func textItem(_ title: String, font: NSFont) -> NSMenuItem {
@@ -293,5 +414,40 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
         for item in menu.items {
             (item.view as? MenuBarTodoRowView)?.update(now: now)
         }
+    }
+}
+
+private struct MenuBarUnreadBadge {
+    static func attributedTitle(for count: Int) -> NSAttributedString? {
+        guard count > 0 else { return nil }
+
+        let text = "\(count)"
+        let font = NSFont.boldSystemFont(ofSize: 10)
+        let diameter: CGFloat = 16
+        let textWidth = ceil((text as NSString).size(withAttributes: [.font: font]).width)
+        let width = max(diameter, textWidth + 8)
+        let image = NSImage(size: NSSize(width: width, height: diameter), flipped: false) { rect in
+            NSColor.systemRed.setFill()
+            NSBezierPath(roundedRect: rect, xRadius: diameter / 2, yRadius: diameter / 2).fill()
+            let style = NSMutableParagraphStyle()
+            style.alignment = .center
+            (text as NSString).draw(
+                in: rect,
+                withAttributes: [.font: font, .foregroundColor: NSColor.white, .paragraphStyle: style]
+            )
+            return true
+        }
+
+        let attachment = NSTextAttachment()
+        attachment.image = image
+        let overlap: CGFloat = 6
+        attachment.bounds = NSRect(x: -overlap, y: -3, width: width - overlap, height: diameter)
+        let attributed = NSMutableAttributedString(attachment: attachment)
+        attributed.addAttribute(
+            .baselineOffset,
+            value: 1,
+            range: NSRange(location: 0, length: attributed.length)
+        )
+        return attributed
     }
 }
