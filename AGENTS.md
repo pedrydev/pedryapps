@@ -57,23 +57,36 @@ Use only the skills vendored in `.agents/skills/`. Do not load skills from `~/.c
 - Sequence: **make it work**, then **make it work well**. Bank quality ideas during implementation; apply them in the quality pass.
 - Requirements and design: `grilling` or `grill-with-docs` for the decision tree; `domain-modeling` for terminology (`docs/GLOSSARY-MAP.md`, global and per-mini-app glossaries) and ADRs.
 - Specs and tickets: never go directly to implementation. A spec and one or more tickets must exist before any implementation starts. If the task is trivial, ask the user whether to skip these artifacts and proceed only after explicit approval — never decide unilaterally.
-- Implementation: `implement-spec` when working from a spec or ticket. Speed first: smallest change that compiles and passes tests; build for feedback, full verification once at the end. Use `tdd` where logic can be written test-first.
-- The `code -> build -> test -> review -> improve -> lint` cycle runs per ticket, not per spec. Do not advance to the next ticket until the current one has passed the full cycle.
+- Implementation: `implement-spec` when working from a spec or ticket. Speed first: smallest change that compiles and passes tests; build for feedback, full verification at each AC gate. Use `tdd` where logic can be written test-first.
 - Work too large for one session: `wayfinder` for the decision map, then resolve tickets one at a time; `handoff` when context needs transferring.
 - Bugs: `diagnosing-bugs`.
-- Review: `code-review` against the originating spec, ADR, or request.
-- Quality pass: after review, load the vendored Swift skills that match the diff — `write-swift`, `swiftui-pro`, `swift-testing-expert`, `swift-format-style`, `swiftui-design-principles`, plus `app-intents` / `background-execution` / `widgets` when those frameworks are touched — apply their improvements to changed files only, report them under `## Swift quality`, and re-run verification.
 - Optional: `prototype` to sanity-check state or UI, `research` for primary-source fact-finding, `codebase-design` when designing a module interface.
-- Completion: once a ticket passes the full cycle and its parent issue is closed, pull the latest `master`, merge the ticket branch into `master`, push `master`, then delete that branch locally and on the remote.
+
+### Ticket execution: mandatory gates
+
+One ticket at a time. Every step below is a **gate** with a completion criterion; the next gate starts only when the current one is met. If a gate fails, stay on it until it passes, or stop and report if blocked. No other order is valid.
+
+1. **Pick ticket.** Choose an issue whose parent issue refers to the associated spec. Gate complete when the ticket, its parent, and the spec are in context.
+2. **List acceptance criteria.** Put every AC from the ticket into a numbered working checklist; a ticket has at least one AC. Gate complete when every AC is numbered and none are implied.
+3. **Run the AC loop**, in checklist order. For each AC, complete all six gates before starting the next AC:
+   1. **Test suite:** add or extend tests that fail for this AC.
+   2. **Implement fast:** smallest change that makes this AC pass and compiles.
+   3. **Pass tests:** run build and test commands; green only.
+   4. **Code review with skills:** `code-review` against the spec, ADR, and ticket; then load the vendored Swift skills matching the diff — `write-swift`, `swiftui-pro`, `swift-testing-expert`, `swift-format-style`, `swiftui-design-principles`, plus `app-intents` / `background-execution` / `widgets` when those frameworks are touched — apply their improvements to changed files only, report them under `## Swift quality`, and re-run verification.
+   5. **Lint:** `swift format lint --recursive src tests --strict`; clean.
+   6. **Commit:** exactly one commit holding only this AC's changes; the message names the AC. Gate complete when the commit exists and its checklist entry is marked done.
+   
+   Ask me for a manual test whenever one is useful; asking after the AC commit is fine.
+4. **Close out the ticket.** Only after every checklist entry is committed: pull the latest `master`, push the ticket branch, open a PR to `master` whose body links the ticket and its parent issue, and wait for merge. Then comment the explanation and close the ticket; close the parent immediately when its last child is closed. Delete the merged branch locally and on the remote. Gate complete when the PR is merged and the ticket is closed.
 
 ## Verification
 
 - Typecheck/build: `xcodebuild -scheme PedryApps -destination 'platform=macOS' -configuration Debug build`
 - Tests: `xcodebuild test -scheme PedryApps -destination 'platform=macOS'`
-- Run both after changes.
+- Run both at every AC's **Pass tests** gate.
 - Lint: `swift format lint --recursive src tests --strict`
 - If a verification command fails for environmental reasons, report it rather than skipping it.
-- After all defined verification passes, commit and push. Manual verification counts as a test; when a change needs it, ask me whether I want to review the result before committing.
+- Commit at the AC's **Commit** gate, not at the end of the ticket. Manual verification counts as a test; ask me for it when a change needs it.
 
 ## Project memory
 
