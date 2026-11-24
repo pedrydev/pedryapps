@@ -59,6 +59,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
 
         self.statusItem = statusItem
         self.menu = menu
+        notificationsStore.startExpiryScheduling()
         rebuildMenu(menu)
         observeNotificationsStore()
 

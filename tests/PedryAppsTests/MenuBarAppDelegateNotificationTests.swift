@@ -44,6 +44,43 @@ struct MenuBarAppDelegateNotificationTests {
         #expect(delegate.miniAppSelectionStore.selected == .notifications)
         #expect(delegate.notificationsStore.notifications.allSatisfy { !$0.isRead })
     }
+
+    @Test func menuBarOverviewStopsShowingNotificationOnceItIsRead() throws {
+        let directory = try TemporaryDirectory()
+        let now = try fixtureDate(2030, 1, 2, at: 10, minute: 30, calendar: utcCalendar())
+        let store = NotificationsStore(
+            documentStore: JSONDocumentStore(directory: directory.url, filename: "notifications.json"),
+            now: { now }
+        )
+        store.post(source: .todos, type: .attentionRequest, title: "Due", body: "Body")
+        let identifier = try #require(store.notifications.first?.id)
+        #expect(MenuBarNotificationsOverview.make(from: store.notifications, now: now).unreadCount == 1)
+
+        store.markRead(id: identifier)
+
+        let overview = MenuBarNotificationsOverview.make(from: store.notifications, now: now)
+        #expect(overview.unreadCount == 0)
+        #expect(overview.unread.isEmpty)
+    }
+
+    @Test func menuBarOverviewIsEmptyForNotificationsPurgedOnLaunch() throws {
+        let directory = try TemporaryDirectory()
+        let postedAt = try fixtureDate(2030, 1, 2, at: 10, minute: 30, calendar: utcCalendar())
+        let seedingStore = NotificationsStore(
+            documentStore: JSONDocumentStore(directory: directory.url, filename: "notifications.json"),
+            now: { postedAt }
+        )
+        seedingStore.post(source: .todos, type: .information, title: "Stale", body: "Body")
+        let launchDate = postedAt.addingTimeInterval(NotificationsStore.lifetime)
+        let store = NotificationsStore(
+            documentStore: JSONDocumentStore(directory: directory.url, filename: "notifications.json"),
+            now: { launchDate }
+        )
+
+        let overview = MenuBarNotificationsOverview.make(from: store.notifications, now: launchDate)
+        #expect(overview.unreadCount == 0)
+        #expect(overview.unread.isEmpty)
+    }
 }
 
 struct MenuBarNotificationsOverviewTests {
