@@ -25,6 +25,80 @@ struct NotificationsStoreTests {
         #expect(reloaded.notifications == [notification])
     }
 
+    @Test func filterOptionsUseNotificationTypeVocabulary() {
+        #expect(NotificationFilter.allCases.map(\.label) == ["All", "Information", "Attention request"])
+    }
+
+    @Test func notificationQueryMatchesTitleAndBodyTogetherWithType() throws {
+        let directory = try TemporaryDirectory()
+        let postedAt = try fixtureDate(2030, 1, 2, at: 10, minute: 30, calendar: utcCalendar())
+        let clock = MutableClock(now: postedAt)
+        let store = makeStore(in: directory.url, clock: clock)
+
+        store.post(source: .todos, type: .information, title: "Buy milk", body: "Grocery list")
+        clock.now = postedAt.addingTimeInterval(60)
+        store.post(source: .todos, type: .attentionRequest, title: "Pay rent", body: "Bank transfer due")
+
+        #expect(
+            NotificationQuery(searchText: "grocery").applied(to: store.notifications).map(\.title)
+                == ["Buy milk"]
+        )
+        #expect(
+            NotificationQuery(searchText: "rent").applied(to: store.notifications).map(\.title)
+                == ["Pay rent"]
+        )
+        #expect(
+            NotificationQuery(searchText: "BANK").applied(to: store.notifications).map(\.title)
+                == ["Pay rent"]
+        )
+        #expect(
+            NotificationQuery(searchText: "  milk  ").applied(to: store.notifications).map(\.title)
+                == ["Buy milk"]
+        )
+        #expect(
+            NotificationQuery(type: .attentionRequest, searchText: "milk")
+                .applied(to: store.notifications).isEmpty
+        )
+        #expect(
+            NotificationQuery(type: .information, searchText: "transfer")
+                .applied(to: store.notifications).isEmpty
+        )
+        #expect(
+            NotificationQuery(type: .attentionRequest, searchText: "transfer")
+                .applied(to: store.notifications).map(\.title) == ["Pay rent"]
+        )
+    }
+
+    @Test func filteringKeepsNewestFirstOrderAndIncludesReadNotifications() throws {
+        let directory = try TemporaryDirectory()
+        let postedAt = try fixtureDate(2030, 1, 2, at: 10, minute: 30, calendar: utcCalendar())
+        let clock = MutableClock(now: postedAt)
+        let store = makeStore(in: directory.url, clock: clock)
+
+        store.post(source: .todos, type: .information, title: "Older information", body: "Body")
+        clock.now = postedAt.addingTimeInterval(60)
+        store.post(source: .todos, type: .attentionRequest, title: "Newer attention", body: "Body")
+        let attentionID = try #require(store.notifications.first?.id)
+        clock.now = postedAt.addingTimeInterval(120)
+        store.post(source: .todos, type: .information, title: "Newest information", body: "Body")
+        store.markRead(id: attentionID)
+
+        #expect(
+            NotificationFilter.all.applied(to: store.notifications).map(\.title)
+                == ["Newest information", "Newer attention", "Older information"]
+        )
+        #expect(
+            NotificationFilter.information.applied(to: store.notifications).map(\.title)
+                == ["Newest information", "Older information"]
+        )
+        #expect(
+            NotificationFilter.attentionRequest.applied(to: store.notifications).map(\.title)
+                == ["Newer attention"]
+        )
+        #expect(store.notifications.map(\.title) == ["Newest information", "Newer attention", "Older information"])
+        #expect(store.unreadCount == 2)
+    }
+
     @Test func inboxListsNotificationsNewestFirst() throws {
         let directory = try TemporaryDirectory()
         let first = try fixtureDate(2030, 1, 2, at: 10, minute: 30, calendar: utcCalendar())
