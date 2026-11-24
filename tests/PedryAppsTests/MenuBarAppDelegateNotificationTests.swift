@@ -44,6 +44,43 @@ struct MenuBarAppDelegateNotificationTests {
         #expect(delegate.miniAppSelectionStore.selected == .notifications)
         #expect(delegate.notificationsStore.notifications.allSatisfy { !$0.isRead })
     }
+
+    @Test func menuBarOverviewStopsShowingNotificationOnceItIsRead() throws {
+        let directory = try TemporaryDirectory()
+        let now = try fixtureDate(2030, 1, 2, at: 10, minute: 30, calendar: utcCalendar())
+        let store = NotificationsStore(
+            documentStore: JSONDocumentStore(directory: directory.url, filename: "notifications.json"),
+            now: { now }
+        )
+        store.post(source: .todos, type: .attentionRequest, title: "Due", body: "Body")
+        let identifier = try #require(store.notifications.first?.id)
+        #expect(MenuBarNotificationsOverview.make(from: store.notifications, now: now).unreadCount == 1)
+
+        store.markRead(id: identifier)
+
+        let overview = MenuBarNotificationsOverview.make(from: store.notifications, now: now)
+        #expect(overview.unreadCount == 0)
+        #expect(overview.unread.isEmpty)
+    }
+
+    @Test func menuBarOverviewIsEmptyForNotificationsPurgedOnLaunch() throws {
+        let directory = try TemporaryDirectory()
+        let postedAt = try fixtureDate(2030, 1, 2, at: 10, minute: 30, calendar: utcCalendar())
+        let seedingStore = NotificationsStore(
+            documentStore: JSONDocumentStore(directory: directory.url, filename: "notifications.json"),
+            now: { postedAt }
+        )
+        seedingStore.post(source: .todos, type: .information, title: "Stale", body: "Body")
+        let launchDate = postedAt.addingTimeInterval(NotificationsStore.lifetime)
+        let store = NotificationsStore(
+            documentStore: JSONDocumentStore(directory: directory.url, filename: "notifications.json"),
+            now: { launchDate }
+        )
+
+        let overview = MenuBarNotificationsOverview.make(from: store.notifications, now: launchDate)
+        #expect(overview.unreadCount == 0)
+        #expect(overview.unread.isEmpty)
+    }
 }
 
 struct MenuBarNotificationsOverviewTests {
@@ -76,6 +113,16 @@ struct MenuBarNotificationsOverviewTests {
         #expect(overview.unread.map(\.relativeAge) == ["just now", "1m ago", "2m ago", "3m ago", "4m ago"])
     }
 
+    @Test func menuBarRowsKeepNotificationTypeAndNewestFirstOrder() {
+        let olderInformation = notification(title: "Information", minutesAgo: 2, type: .information)
+        let newerAttention = notification(title: "Attention request", minutesAgo: 1, type: .attentionRequest)
+
+        let overview = MenuBarNotificationsOverview.make(from: [olderInformation, newerAttention], now: baseDate)
+
+        #expect(overview.unread.map(\.type) == [.attentionRequest, .information])
+        #expect(overview.unread.map(\.title) == ["Attention request", "Information"])
+    }
+
     @Test func emptyInboxHasNoUnreadRows() {
         let overview = MenuBarNotificationsOverview.make(from: [], now: baseDate)
 
@@ -99,11 +146,16 @@ struct MenuBarNotificationsOverviewTests {
         #expect(NotificationRelativeAge.text(from: postedAt, now: baseDate) == values.expected)
     }
 
-    private func notification(title: String, minutesAgo: Int, isRead: Bool = false) -> InboxNotification {
+    private func notification(
+        title: String,
+        minutesAgo: Int,
+        type: NotificationType = .information,
+        isRead: Bool = false
+    ) -> InboxNotification {
         InboxNotification(
             id: UUID(),
             source: .todos,
-            type: .information,
+            type: type,
             title: title,
             body: "Body",
             postedAt: baseDate.addingTimeInterval(-Double(minutesAgo) * 60),

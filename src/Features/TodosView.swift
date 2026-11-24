@@ -21,11 +21,19 @@ struct TodosView: View {
         }
         .toolbar(id: "Todos") {
             ToolbarItem(id: "manageCategories", placement: .primaryAction) {
-                Button("Manage Categories", systemImage: "square.grid.2x2", action: openCategories)
+                ToolbarActionButton(
+                    title: "Manage Categories",
+                    systemImage: "square.grid.2x2",
+                    action: openCategories
+                )
             }
             ToolbarItem(id: "checkOff", placement: .secondaryAction) {
-                Button("Check Off Selected", systemImage: "checkmark.circle", action: checkOffSelection)
-                    .disabled(selectedTodoIDs.isEmpty)
+                ToolbarActionButton(
+                    title: "Check Off Selected",
+                    systemImage: "checkmark.circle",
+                    action: checkOffSelection
+                )
+                .disabled(selectedTodoIDs.isEmpty)
             }
         }
         .onAppear { store.undoManager = undoManager }
