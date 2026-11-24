@@ -11,6 +11,7 @@ final class TodosDueNotificationCoordinator {
     private let settingsStore: TodosSettingsStore
     private let stateStore: any TodosDueCheckStoring
     private let notificationCenter: any TodoDueNotificationCenter
+    private let notificationPoster: any NotificationPosting
     private let calendar: Calendar
     private let now: @MainActor () -> Date
     private let schedule: @MainActor (TimeInterval, @escaping @MainActor () async -> Void) -> any TodoDueNotificationCancellable
@@ -22,6 +23,7 @@ final class TodosDueNotificationCoordinator {
         settingsStore: TodosSettingsStore,
         stateStore: any TodosDueCheckStoring,
         notificationCenter: any TodoDueNotificationCenter,
+        notificationPoster: any NotificationPosting,
         calendar: Calendar = .current,
         now: @escaping @MainActor () -> Date = { Date() },
         schedule: @escaping @MainActor (TimeInterval, @escaping @MainActor () async -> Void) -> any TodoDueNotificationCancellable
@@ -30,6 +32,7 @@ final class TodosDueNotificationCoordinator {
         self.settingsStore = settingsStore
         self.stateStore = stateStore
         self.notificationCenter = notificationCenter
+        self.notificationPoster = notificationPoster
         self.calendar = calendar
         self.now = now
         self.schedule = schedule
@@ -82,6 +85,8 @@ final class TodosDueNotificationCoordinator {
         stateStore.markReviewed(boundary)
         let due = todosStore.todos.filter { window.contains($0.doOnDate.date) }
         guard !due.isEmpty else { return }
+        let body = due.count == 1 ? "1 todo is ready to work" : "\(due.count) todos are ready to work"
+        notificationPoster.post(source: .todos, type: .information, title: "Time to work", body: body)
         let status = await notificationCenter.authorizationStatus()
         let resolved: TodoNotificationAuthorizationStatus
         if status == .notDetermined {
@@ -90,7 +95,6 @@ final class TodosDueNotificationCoordinator {
             resolved = status
         }
         guard resolved == .authorized else { return }
-        let body = due.count == 1 ? "1 todo is ready to work" : "\(due.count) todos are ready to work"
         let request = TodoDueNotificationRequest(
             identifier: "due-check:\(boundary.timeIntervalSinceReferenceDate)",
             title: "Time to work",

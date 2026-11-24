@@ -1,4 +1,4 @@
-enum MiniApp: String, CaseIterable, Identifiable {
+enum MiniApp: String, Codable, CaseIterable, Identifiable {
     case todos
     case notifications
     case calendar
@@ -21,5 +21,5 @@ enum MiniApp: String, CaseIterable, Identifiable {
         }
     }
 
-    var isAvailable: Bool { self == .todos }
+    var isAvailable: Bool { self != .calendar }
 }
