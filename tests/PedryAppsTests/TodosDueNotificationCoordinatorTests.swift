@@ -176,17 +176,33 @@ struct TodosDueNotificationCoordinatorTests {
         #expect(env.center.requests == [request(count: 1, endingAt: boundary)])
     }
 
-    @Test func inboxPostDoesNotDependOnSystemAuthorization() async throws {
+    @Test(arguments: [
+        SystemAlertAuthorizationStatus.authorized,
+        .denied,
+        .unavailable,
+    ])
+    func todoDueAlertRespectsAuthorizationWithoutChangingInbox(
+        status: SystemAlertAuthorizationStatus
+    ) async throws {
         let now = try fixtureDate(2030, 1, 2, at: 10, minute: 0, calendar: utcCalendar())
         let env = try makeEnvironment(now: now)
-        env.center.authorization = .denied
+        env.center.authorization = status
         env.addTodo("Buy milk", at: try fixtureDate(2030, 1, 2, at: 10, minute: 3, calendar: env.calendar))
         await env.coordinator.start()
 
         await env.scheduler.fire()
 
-        #expect(env.poster.posts.count == 1)
-        #expect(env.center.requests.isEmpty)
+        let boundary = try fixtureDate(2030, 1, 2, at: 10, minute: 5, calendar: env.calendar)
+        let expected = FakeNotificationPoster.Post(
+            source: .todos,
+            type: .information,
+            title: "Time to work",
+            body: "1 todo is ready to work"
+        )
+        #expect(env.poster.posts == [expected])
+        #expect(env.center.requests == (status == .authorized ? [request(count: 1, endingAt: boundary)] : []))
+        #expect(env.center.authorizationRequests == 0)
+        #expect(env.center.addAttempts == (status == .authorized ? 1 : 0))
     }
 
     @Test func multipleTodosInSameWindowProduceOneCountNotification() async throws {
