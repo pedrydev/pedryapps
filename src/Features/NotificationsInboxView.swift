@@ -3,10 +3,21 @@ import SwiftUI
 struct NotificationsInboxView: View {
     let store: NotificationsStore
 
+    @State private var selection: UUID?
+
+    var body: some View {
+        NotificationsInboxContentView(store: store, selection: $selection)
+    }
+}
+
+struct NotificationsInboxContentView: View {
+    let store: NotificationsStore
+    @Binding var selection: UUID?
+
     @State private var now = Date()
 
     var body: some View {
-        List(store.notifications) { notification in
+        List(store.notifications, id: \.id, selection: $selection) { notification in
             VStack(alignment: .leading, spacing: 4) {
                 HStack(alignment: .firstTextBaseline) {
                     Text(notification.title)
@@ -31,6 +42,15 @@ struct NotificationsInboxView: View {
                 now = Date()
             }
         }
+        .onChange(of: selection) { _, identifier in
+            guard let identifier else { return }
+            store.markRead(id: identifier)
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                MarkAllReadButton(store: store)
+            }
+        }
         .frame(minWidth: 420, minHeight: 360)
         .overlay {
             if store.notifications.isEmpty {
@@ -41,5 +61,18 @@ struct NotificationsInboxView: View {
                 }
             }
         }
+    }
+}
+
+struct MarkAllReadButton: View {
+    let store: NotificationsStore
+
+    var body: some View {
+        Button("Mark All Read", action: markAllRead)
+            .buttonStyle(.borderless)
+    }
+
+    private func markAllRead() {
+        store.markAllRead()
     }
 }
