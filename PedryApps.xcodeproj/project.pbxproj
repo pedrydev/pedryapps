@@ -50,6 +50,7 @@
 		A000000000000000000000CC /* MenuBarAppDelegateNotificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000CD /* MenuBarAppDelegateNotificationTests.swift */; };
 		A000000000000000000000DD /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D8 /* Category.swift */; };
 		A000000000000000000000E1 /* TodosDocumentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000DC /* TodosDocumentTests.swift */; };
+		A000000000000000000000E3 /* AddTodoDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000E2 /* AddTodoDialog.swift */; };
 		A000000000000000000000DE /* BoardCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D9 /* BoardCategoryView.swift */; };
 		A000000000000000000000DF /* ManageCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000DA /* ManageCategoriesView.swift */; };
 		A000000000000000000000E0 /* CategoryNameField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000DB /* CategoryNameField.swift */; };
@@ -84,6 +85,7 @@
 		A00000000000000000000082 /* TodosStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosStore.swift; sourceTree = "<group>"; };
 		A00000000000000000000083 /* TodosStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosStoreTests.swift; sourceTree = "<group>"; };
 		A000000000000000000000DC /* TodosDocumentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosDocumentTests.swift; sourceTree = "<group>"; };
+		A000000000000000000000E2 /* AddTodoDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTodoDialog.swift; sourceTree = "<group>"; };
 		A00000000000000000000084 /* TodosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosView.swift; sourceTree = "<group>"; };
 		A00000000000000000000095 /* DoOnDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoOnDate.swift; sourceTree = "<group>"; };
 		A00000000000000000000097 /* AddTodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTodoRow.swift; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 				A000000000000000000000D9 /* BoardCategoryView.swift */,
 				A000000000000000000000DA /* ManageCategoriesView.swift */,
 				A000000000000000000000DB /* CategoryNameField.swift */,
+				A000000000000000000000E2 /* AddTodoDialog.swift */,
 				A00000000000000000000097 /* AddTodoRow.swift */,
 				A00000000000000000000099 /* TodoRow.swift */,
 				A000000000000000000000A6 /* DoOnDatePicker.swift */,
@@ -387,6 +390,7 @@
 				A000000000000000000000DE /* BoardCategoryView.swift in Sources */,
 				A000000000000000000000DF /* ManageCategoriesView.swift in Sources */,
 				A000000000000000000000E0 /* CategoryNameField.swift in Sources */,
+				A000000000000000000000E3 /* AddTodoDialog.swift in Sources */,
 				A00000000000000000000096 /* DoOnDate.swift in Sources */,
 				A00000000000000000000098 /* AddTodoRow.swift in Sources */,
 				A0000000000000000000009A /* TodoRow.swift in Sources */,

@@ -51,9 +51,13 @@ struct TodosView: View {
                         BoardCategoryView(
                             category: category,
                             todos: visibleTodos(in: category),
+                            errorMessage: store.errorMessage,
                             selectedTodoIDs: $selectedTodoIDs,
                             checkOff: checkOff,
-                            setDoOnDate: setDoOnDate
+                            setDoOnDate: setDoOnDate,
+                            addTodo: { title, doOnDate in
+                                store.addTodo(title, in: category, doOnDate: doOnDate)
+                            }
                         )
                     }
                 }

@@ -102,9 +102,18 @@ final class TodosStore {
 
     @discardableResult
     func addTodo(_ title: String, in category: Category, doOnDate: DoOnDate = DoOnDate()) -> Bool {
-        guard Todo.hasText(title), doOnDate.isUpcoming,
-            categories.contains(where: { $0.id == category.id })
-        else { return false }
+        guard Todo.hasText(title) else {
+            errorMessage = "Enter a Todo title."
+            return false
+        }
+        guard doOnDate.isUpcoming else {
+            errorMessage = "Choose a future do-on date."
+            return false
+        }
+        guard categories.contains(where: { $0.id == category.id }) else {
+            errorMessage = "Choose an existing Category."
+            return false
+        }
         return mutate { document in
             var next = document
             next.todos.append(Todo(categoryID: category.id, title: title, doOnDate: doOnDate))
@@ -113,7 +122,10 @@ final class TodosStore {
     }
 
     func setDoOnDate(_ doOnDate: DoOnDate, for todo: Todo) {
-        guard doOnDate.isUpcoming else { return }
+        guard doOnDate.isUpcoming else {
+            errorMessage = "Choose a future do-on date."
+            return
+        }
         mutate { document in
             var next = document
             guard let index = next.todos.firstIndex(where: { $0.id == todo.id }) else { return nil }

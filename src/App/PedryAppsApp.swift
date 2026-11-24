@@ -29,12 +29,6 @@ struct PedryAppsApp: App {
         .windowToolbarStyle(.unified)
         .commands {
             CommandMenu("Todos") {
-                Button("Add Todo") {
-                    NSApp.activate(ignoringOtherApps: true)
-                    NotificationCenter.default.post(name: .focusNewTodo, object: nil)
-                }
-                .keyboardShortcut("t", modifiers: .command)
-
                 Button("Check Off Selected") {
                     NotificationCenter.default.post(name: .checkOffSelectedTodos, object: nil)
                 }
@@ -73,6 +67,5 @@ private struct AppActionRegistrar: View {
 
 extension Notification.Name {
     static let openMainWindow = Notification.Name("openMainWindow")
-    static let focusNewTodo = Notification.Name("focusNewTodo")
     static let checkOffSelectedTodos = Notification.Name("checkOffSelectedTodos")
 }

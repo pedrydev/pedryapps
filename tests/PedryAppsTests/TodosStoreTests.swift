@@ -265,6 +265,7 @@ struct TodosStoreTests {
         store.addTodo("Buy milk", in: work, doOnDate: DoOnDate(Date().addingTimeInterval(-3600)))
 
         #expect(store.todos.isEmpty)
+        #expect(store.errorMessage != nil)
     }
 
     @Test func addingTodoToAMissingCategoryIsRejected() throws {
@@ -286,6 +287,7 @@ struct TodosStoreTests {
         store.setDoOnDate(DoOnDate(Date().addingTimeInterval(-3600)), for: store.todos[0])
 
         #expect(store.todos.first?.doOnDate == original)
+        #expect(store.errorMessage != nil)
     }
 
     @Test func addingWhitespaceOnlyTodoIsRejected() throws {
@@ -297,6 +299,7 @@ struct TodosStoreTests {
         store.addTodo("   \n\t ", in: work)
 
         #expect(store.todos.isEmpty)
+        #expect(store.errorMessage != nil)
     }
 
     @Test func changingDoOnDatePersistsWithoutChangingTitleOrOrder() throws {
@@ -393,6 +396,20 @@ struct TodosStoreTests {
         let ids = [store.todos[0].id, store.todos[2].id]
 
         store.checkOff(ids: Set(ids))
+
+        #expect(store.todos.map(\.title) == ["Call Sam"])
+    }
+
+    @Test func checkingOffSelectedTodosRemovesThemAcrossCategories() throws {
+        let directory = try TemporaryDirectory()
+        let store = makeStore(in: directory.url)
+        let work = try addCategory(to: store, named: "Work")
+        let home = try addCategory(to: store, named: "Home")
+        store.addTodo("Buy milk", in: work)
+        store.addTodo("Call Sam", in: home)
+        store.addTodo("Pay bills", in: home)
+
+        store.checkOff(ids: [store.todos[0].id, store.todos[2].id])
 
         #expect(store.todos.map(\.title) == ["Call Sam"])
     }
