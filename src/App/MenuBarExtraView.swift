@@ -42,6 +42,9 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
         notificationPoster: notificationsStore,
         schedule: TimerTodoDueNotificationScheduler.schedule
     )
+    private lazy var mcpServerController = MCPServerController(
+        posting: MCPNotificationPosting(store: notificationsStore)
+    )
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         UNUserNotificationCenter.current().delegate = self
@@ -70,7 +73,10 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
         ) { [weak self] _ in
             Task { @MainActor in self?.openMainWindow() }
         }
-        Task { @MainActor in await dueNotificationCoordinator.start() }
+        Task { @MainActor in
+            await dueNotificationCoordinator.start()
+            await mcpServerController.start()
+        }
     }
 
     func handleNotificationResponse(actionIdentifier: String) {
@@ -105,6 +111,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
 
     func applicationWillTerminate(_ notification: Notification) {
         stopClock()
+        mcpServerController.stop()
     }
 
     func registerOpenMainWindowHandler(_ handler: @escaping (String) -> Void) {
