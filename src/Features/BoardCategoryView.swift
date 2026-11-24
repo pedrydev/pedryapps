@@ -3,14 +3,19 @@ import SwiftUI
 struct BoardCategoryView: View {
     let category: Category
     let todos: [Todo]
+    let categories: [Category]
     let errorMessage: String?
+    let allowsReordering: Bool
     @Binding var selectedTodoIDs: Set<Todo.ID>
     let checkOff: (Todo) -> Void
     let addTodo: (String, DoOnDate) -> Bool
+    let moveTodo: (Todo, Category) -> Void
+    let dropTodo: (Todo.ID, Category, Int) -> Void
 
     @State private var isAddingTodo = false
     @State private var title = ""
     @State private var doOnDate = DoOnDate()
+    @State private var isEndDropTargeted = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -24,8 +29,38 @@ struct BoardCategoryView: View {
                     .accessibilityLabel("Add Todo")
             }
             List(selection: $selectedTodoIDs) {
-                ForEach(todos) { todo in
-                    TodoRow(todo: todo, checkOff: checkOff)
+                ForEach(Array(todos.enumerated()), id: \.element.id) { index, todo in
+                    TodoRow(
+                        todo: todo,
+                        categories: categories,
+                        index: index,
+                        allowsDrop: allowsReordering,
+                        checkOff: checkOff,
+                        moveToCategory: moveTodo,
+                        dropTodo: { id, insertionIndex in
+                            dropTodo(id, category, insertionIndex)
+                        }
+                    )
+                }
+                if allowsReordering {
+                    Color.clear
+                        .frame(height: 20)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color.accentColor)
+                                .opacity(isEndDropTargeted ? 0.12 : 0)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .strokeBorder(Color.accentColor, lineWidth: isEndDropTargeted ? 2 : 0)
+                                }
+                        }
+                        .dropDestination(for: String.self) { items, _ in
+                            guard let payload = items.first, let id = UUID(uuidString: payload) else { return false }
+                            dropTodo(id, category, todos.count)
+                            return true
+                        } isTargeted: { targeted in
+                            isEndDropTargeted = targeted
+                        }
                 }
             }
             .listStyle(.plain)

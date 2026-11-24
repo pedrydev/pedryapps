@@ -52,12 +52,18 @@ struct TodosView: View {
                             BoardCategoryView(
                                 category: category,
                                 todos: visibleTodos(in: category),
+                                categories: store.categories,
                                 errorMessage: store.errorMessage,
+                                allowsReordering: searchText.isEmpty,
                                 selectedTodoIDs: $selectedTodoIDs,
                                 checkOff: checkOff,
                                 addTodo: { title, doOnDate in
                                     store.addTodo(title, in: category, doOnDate: doOnDate)
-                                }
+                                },
+                                moveTodo: { todo, destination in
+                                    store.moveTodo(todo, to: destination)
+                                },
+                                dropTodo: dropTodo
                             )
                             .frame(width: columnWidth(in: geometry.size.width))
                         }
@@ -101,6 +107,11 @@ struct TodosView: View {
     private func checkOff(_ todo: Todo) {
         store.checkOff(todo)
         selectedTodoIDs.remove(todo.id)
+    }
+
+    private func dropTodo(_ id: Todo.ID, in category: Category, at index: Int) {
+        guard let todo = store.todos.first(where: { $0.id == id }) else { return }
+        store.moveTodo(todo, to: category, at: index)
     }
 
     private func checkOffSelection() {

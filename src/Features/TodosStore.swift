@@ -121,6 +121,52 @@ final class TodosStore {
         }
     }
 
+    @discardableResult
+    func moveTodo(_ todo: Todo, to category: Category, at insertionIndex: Int) -> Bool {
+        mutateWithUndo(actionName: "Move Todo") { document in
+            var next = document
+            guard let sourceIndex = next.todos.firstIndex(where: { $0.id == todo.id }),
+                next.categories.contains(where: { $0.id == category.id })
+            else { return nil }
+
+            let stored = next.todos[sourceIndex]
+            let sourcePosition = next.todos[..<sourceIndex].count(where: { $0.categoryID == category.id })
+            next.todos.remove(at: sourceIndex)
+            let destinationTodos = next.todos.filter { $0.categoryID == category.id }
+            let adjustedIndex =
+                stored.categoryID == category.id && insertionIndex > sourcePosition
+                ? insertionIndex - 1
+                : insertionIndex
+            let target = min(max(0, adjustedIndex), destinationTodos.count)
+            let globalIndex: Int
+            if target < destinationTodos.count {
+                let followingID = destinationTodos[target].id
+                guard let index = next.todos.firstIndex(where: { $0.id == followingID }) else { return nil }
+                globalIndex = index
+            } else if let lastID = destinationTodos.last?.id {
+                guard let index = next.todos.firstIndex(where: { $0.id == lastID }) else { return nil }
+                globalIndex = index + 1
+            } else {
+                globalIndex = next.todos.count
+            }
+            let moved = Todo(
+                id: stored.id,
+                categoryID: category.id,
+                title: stored.title,
+                doOnDate: stored.doOnDate
+            )
+            next.todos.insert(moved, at: globalIndex)
+            guard next.todos != document.todos else { return nil }
+            return next
+        }
+    }
+
+    @discardableResult
+    func moveTodo(_ todo: Todo, to category: Category) -> Bool {
+        let count = todos.count(where: { $0.categoryID == category.id && $0.id != todo.id })
+        return moveTodo(todo, to: category, at: count)
+    }
+
     func setDoOnDate(_ doOnDate: DoOnDate, for todo: Todo) {
         guard doOnDate.isUpcoming else {
             errorMessage = "Choose a future do-on date."

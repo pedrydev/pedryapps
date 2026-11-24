@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+
 @testable import PedryApps
 
 @MainActor
@@ -464,6 +465,128 @@ struct TodosStoreTests {
         reloaded.load()
 
         #expect(reloaded.todos.map(\.title) == ["Call Sam"])
+    }
+
+    @Test(
+        "Reordering a Todo within its Category",
+        arguments: [
+            (source: 2, insertion: 0, expected: ["C", "A", "B"]),
+            (source: 0, insertion: 2, expected: ["B", "A", "C"]),
+            (source: 0, insertion: 3, expected: ["B", "C", "A"]),
+        ]
+    )
+    func reorderingATodoWithinItsCategoryRespectsTheDropPosition(
+        source: Int,
+        insertion: Int,
+        expected: [String]
+    ) throws {
+        let directory = try TemporaryDirectory()
+        let store = makeStore(in: directory.url)
+        let work = try addCategory(to: store, named: "Work")
+        let undoManager = UndoManager()
+        store.undoManager = undoManager
+        store.addTodo("A", in: work)
+        store.addTodo("B", in: work)
+        store.addTodo("C", in: work)
+        let original = store.todos
+
+        #expect(store.moveTodo(original[source], to: work, at: insertion))
+        let reloaded = makeStore(in: directory.url)
+        reloaded.load()
+
+        #expect(store.todos(in: work).map(\.title) == expected)
+        #expect(reloaded.todos(in: work).map(\.title) == expected)
+
+        undoManager.undo()
+        let afterUndo = makeStore(in: directory.url)
+        afterUndo.load()
+        #expect(afterUndo.todos == original)
+    }
+
+    @Test(
+        "Moving a Todo to another Category",
+        arguments: [
+            (appends: false, expected: ["C", "A", "D"]),
+            (appends: true, expected: ["C", "D", "A"]),
+        ]
+    )
+    func movingATodoToAnotherCategoryPlacesItAtTheSelectedPosition(
+        appends: Bool,
+        expected: [String]
+    ) throws {
+        let directory = try TemporaryDirectory()
+        let store = makeStore(in: directory.url)
+        let work = try addCategory(to: store, named: "Work")
+        let home = try addCategory(to: store, named: "Home")
+        store.addTodo("A", in: work)
+        store.addTodo("C", in: home)
+        store.addTodo("D", in: home)
+        store.addTodo("B", in: work)
+        let original = store.todos
+        let updatedDate = DoOnDate(Date().addingTimeInterval(7200))
+        store.setDoOnDate(updatedDate, for: original[0])
+
+        let moved =
+            appends
+            ? store.moveTodo(original[0], to: home)
+            : store.moveTodo(original[0], to: home, at: 1)
+        #expect(moved)
+        let reloaded = makeStore(in: directory.url)
+        reloaded.load()
+
+        #expect(reloaded.todos(in: work).map(\.title) == ["B"])
+        #expect(reloaded.todos(in: home).map(\.title) == expected)
+        let reloadedMoved = try #require(reloaded.todos.first { $0.id == original[0].id })
+        #expect(reloadedMoved.categoryID == home.id)
+        #expect(reloadedMoved.title == original[0].title)
+        #expect(reloadedMoved.doOnDate == updatedDate)
+        #expect(reloadedMoved.doOnDate != original[0].doOnDate)
+    }
+
+    @Test func movingATodoBetweenCategoriesCanBeUndoneAndRedone() throws {
+        let directory = try TemporaryDirectory()
+        let store = makeStore(in: directory.url)
+        let work = try addCategory(to: store, named: "Work")
+        let home = try addCategory(to: store, named: "Home")
+        let undoManager = UndoManager()
+        store.undoManager = undoManager
+        store.addTodo("Buy milk", in: work)
+        store.addTodo("Call Sam", in: home)
+        let original = store.todos
+
+        #expect(store.moveTodo(original[0], to: home, at: 1))
+        undoManager.undo()
+        let afterUndo = makeStore(in: directory.url)
+        afterUndo.load()
+        #expect(afterUndo.todos == original)
+
+        undoManager.redo()
+        let afterRedo = makeStore(in: directory.url)
+        afterRedo.load()
+        #expect(afterRedo.todos(in: work).isEmpty)
+        #expect(afterRedo.todos(in: home).map(\.id) == [original[1].id, original[0].id])
+    }
+
+    @Test func reorderingTodosWithinACategoryCanBeUndoneAndRedone() throws {
+        let directory = try TemporaryDirectory()
+        let store = makeStore(in: directory.url)
+        let work = try addCategory(to: store, named: "Work")
+        let undoManager = UndoManager()
+        store.undoManager = undoManager
+        store.addTodo("Buy milk", in: work)
+        store.addTodo("Call Sam", in: work)
+        let original = store.todos
+
+        #expect(store.moveTodo(original[1], to: work, at: 0))
+        undoManager.undo()
+        let afterUndo = makeStore(in: directory.url)
+        afterUndo.load()
+        #expect(afterUndo.todos == original)
+
+        undoManager.redo()
+        let afterRedo = makeStore(in: directory.url)
+        afterRedo.load()
+        #expect(afterRedo.todos(in: work).map(\.id) == [original[1].id, original[0].id])
     }
 
     private func makeStore(in directory: URL) -> TodosStore {
