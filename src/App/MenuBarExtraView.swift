@@ -7,6 +7,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
     let store = TodosStore()
     let todosSettingsStore = TodosSettingsStore()
     let dueCheckStateStore = TodosDueCheckStateStore()
+    let miniAppSelectionStore = MiniAppSelectionStore()
 
     private static let menuWidth = MenuBarTodoRowView.menuWidth
 
