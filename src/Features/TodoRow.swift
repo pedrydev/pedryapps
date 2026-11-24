@@ -3,30 +3,28 @@ import SwiftUI
 struct TodoRow: View {
     let todo: Todo
     let checkOff: (Todo) -> Void
-    let setDoOnDate: (DoOnDate, Todo) -> Void
 
     @State private var isHovered = false
 
-    private var dateBinding: Binding<Date> {
-        Binding(
-            get: { todo.doOnDate.date },
-            set: { setDoOnDate(DoOnDate($0), todo) }
-        )
-    }
-
     var body: some View {
-        HStack {
-            Button("Check off", systemImage: "circle", action: checkOffTodo)
-                .buttonStyle(.borderless)
-                .labelStyle(.iconOnly)
-                .help("Permanently removes this Todo")
-                .accessibilityHint("Permanently removes this Todo")
-
+        VStack(alignment: .leading, spacing: 8) {
             Text(todo.title)
-            Spacer(minLength: 8)
-            DoOnDatePicker(date: dateBinding)
+                .font(.body.weight(.semibold))
+            HStack {
+                Text(todo.doOnDate.date, format: .dateTime.month(.abbreviated).day().hour().minute())
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button("Delete Todo", systemImage: "trash", action: checkOffTodo)
+                    .buttonStyle(.borderless)
+                    .labelStyle(.iconOnly)
+                    .foregroundStyle(.red)
+                    .help("Permanently removes this Todo")
+                    .accessibilityHint("Permanently removes this Todo")
+            }
         }
-        .padding(.vertical, 4)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 12)
         .background(isHovered ? Color.primary.opacity(0.05) : Color.clear)
         .contentShape(Rectangle())
         .onHover { isHovered = $0 }

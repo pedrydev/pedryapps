@@ -6,7 +6,6 @@ struct BoardCategoryView: View {
     let errorMessage: String?
     @Binding var selectedTodoIDs: Set<Todo.ID>
     let checkOff: (Todo) -> Void
-    let setDoOnDate: (DoOnDate, Todo) -> Void
     let addTodo: (String, DoOnDate) -> Bool
 
     @State private var isAddingTodo = false
@@ -22,7 +21,7 @@ struct BoardCategoryView: View {
                 .buttonStyle(.borderless)
             List(selection: $selectedTodoIDs) {
                 ForEach(todos) { todo in
-                    TodoRow(todo: todo, checkOff: checkOff, setDoOnDate: setDoOnDate)
+                    TodoRow(todo: todo, checkOff: checkOff)
                 }
             }
             .listStyle(.inset)

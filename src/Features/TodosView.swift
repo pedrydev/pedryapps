@@ -54,7 +54,6 @@ struct TodosView: View {
                             errorMessage: store.errorMessage,
                             selectedTodoIDs: $selectedTodoIDs,
                             checkOff: checkOff,
-                            setDoOnDate: setDoOnDate,
                             addTodo: { title, doOnDate in
                                 store.addTodo(title, in: category, doOnDate: doOnDate)
                             }
@@ -98,7 +97,4 @@ struct TodosView: View {
         selectedTodoIDs.removeAll()
     }
 
-    private func setDoOnDate(_ doOnDate: DoOnDate, for todo: Todo) {
-        store.setDoOnDate(doOnDate, for: todo)
-    }
 }
