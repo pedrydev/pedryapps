@@ -10,11 +10,6 @@ struct SettingsView: View {
                     Label("Todos", systemImage: "checkmark.circle")
                 }
 
-            NotConfiguredSettingsView(miniApp: "Notifications")
-                .tabItem {
-                    Label("Notifications", systemImage: "bell")
-                }
-
             NotConfiguredSettingsView(miniApp: "Calendar")
                 .tabItem {
                     Label("Calendar", systemImage: "calendar")
