@@ -14,6 +14,7 @@ nonisolated enum NotificationRelativeAge {
 
 nonisolated struct MenuBarNotificationsOverview {
     struct Row {
+        let type: NotificationType
         let source: String
         let title: String
         let relativeAge: String
@@ -32,6 +33,7 @@ nonisolated struct MenuBarNotificationsOverview {
         }
         let rows = newestFirst.prefix(5).map { entry in
             Row(
+                type: entry.element.type,
                 source: entry.element.source.name,
                 title: entry.element.title,
                 relativeAge: NotificationRelativeAge.text(from: entry.element.postedAt, now: now)

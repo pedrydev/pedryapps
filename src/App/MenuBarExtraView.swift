@@ -315,14 +315,27 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
 
     private func notificationTitle(_ row: MenuBarNotificationsOverview.Row) -> NSAttributedString {
         let fontSize = NSFont.menuFont(ofSize: 0).pointSize
+        let isAttentionRequest = row.type.isEmphasized
         let attributed = NSMutableAttributedString(
             string: row.title,
             attributes: [
-                .font: NSFont.systemFont(ofSize: fontSize, weight: .semibold),
-                .foregroundColor: NSColor.controlTextColor,
+                .font: NSFont.systemFont(ofSize: fontSize, weight: isAttentionRequest ? .bold : .medium),
+                .foregroundColor: isAttentionRequest ? NSColor.systemOrange : NSColor.controlTextColor,
             ]
         )
         attributed.append(NSAttributedString(string: "\n"))
+        attributed.append(
+            NSAttributedString(
+                string: "\(row.type.label)  ·  ",
+                attributes: [
+                    .font: NSFont.systemFont(
+                        ofSize: fontSize - 2,
+                        weight: isAttentionRequest ? .semibold : .regular
+                    ),
+                    .foregroundColor: isAttentionRequest ? NSColor.systemOrange : NSColor.secondaryLabelColor,
+                ]
+            )
+        )
         attributed.append(
             NSAttributedString(
                 string: "\(row.source)  ·  \(row.relativeAge)",
