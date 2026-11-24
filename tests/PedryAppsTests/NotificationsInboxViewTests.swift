@@ -29,19 +29,37 @@ struct NotificationsInboxViewTests {
         #expect(store.unreadCount == 0)
     }
 
-    @Test func markAllReadButtonMarksEveryNotificationRead() async throws {
+    @Test func toolbarActionButtonMarksEveryNotificationReadAndCanBeDisabled() async throws {
         let directory = try TemporaryDirectory()
         let store = NotificationsStore(
             documentStore: JSONDocumentStore(directory: directory.url, filename: "notifications.json")
         )
         store.post(source: .todos, type: .information, title: "Information", body: "Body")
         store.post(source: .todos, type: .attentionRequest, title: "Attention", body: "Body")
-        let (window, rootView) = makeWindow(rootView: MarkAllReadButton(store: store))
+        let (window, rootView) = makeWindow(
+            rootView: VStack {
+                ToolbarActionButton(
+                    title: "Mark All Read",
+                    systemImage: "checkmark.circle",
+                    action: store.markAllRead
+                )
+                .buttonStyle(.borderless)
+                ToolbarActionButton(
+                    title: "Mark All Read",
+                    systemImage: "checkmark.circle",
+                    action: {},
+                    isDisabled: true
+                )
+                .buttonStyle(.borderless)
+            }
+        )
         defer { window.close() }
         rootView.layoutSubtreeIfNeeded()
 
-        let button = try #require(allButtons(in: rootView).first)
-        button.performClick(nil)
+        let buttons = allButtons(in: rootView)
+        #expect(buttons.count == 2)
+        #expect(buttons[1].isEnabled == false)
+        buttons[0].performClick(nil)
         try await Task.sleep(for: .milliseconds(100))
 
         #expect(store.notifications.allSatisfy { $0.isRead })

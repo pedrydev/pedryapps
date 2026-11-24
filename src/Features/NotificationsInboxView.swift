@@ -48,7 +48,12 @@ struct NotificationsInboxContentView: View {
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                MarkAllReadButton(store: store)
+                ToolbarActionButton(
+                    title: "Mark All Read",
+                    systemImage: "checkmark.circle",
+                    action: store.markAllRead,
+                    isDisabled: store.unreadCount == 0
+                )
             }
         }
         .frame(minWidth: 420, minHeight: 360)
@@ -61,18 +66,5 @@ struct NotificationsInboxContentView: View {
                 }
             }
         }
-    }
-}
-
-struct MarkAllReadButton: View {
-    let store: NotificationsStore
-
-    var body: some View {
-        Button("Mark All Read", action: markAllRead)
-            .buttonStyle(.borderless)
-    }
-
-    private func markAllRead() {
-        store.markAllRead()
     }
 }

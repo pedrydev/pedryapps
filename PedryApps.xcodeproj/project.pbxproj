@@ -67,6 +67,7 @@
 		A00000000000000000000101 /* MiniAppSidebarViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000100 /* MiniAppSidebarViewTests.swift */; };
 		A00000000000000000000103 /* MenuBarNotificationsOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000102 /* MenuBarNotificationsOverview.swift */; };
 		A00000000000000000000105 /* NotificationsInboxViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000104 /* NotificationsInboxViewTests.swift */; };
+		A00000000000000000000107 /* ToolbarActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000106 /* ToolbarActionButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -144,6 +145,7 @@
 		A000000000000000000000F8 /* NotificationsInboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsInboxView.swift; sourceTree = "<group>"; };
 		A00000000000000000000102 /* MenuBarNotificationsOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarNotificationsOverview.swift; sourceTree = "<group>"; };
 		A00000000000000000000104 /* NotificationsInboxViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsInboxViewTests.swift; sourceTree = "<group>"; };
+		A00000000000000000000106 /* ToolbarActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarActionButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -264,6 +266,7 @@
 				A000000000000000000000F4 /* NotificationPosting.swift */,
 				A000000000000000000000F6 /* NotificationsStore.swift */,
 				A000000000000000000000F8 /* NotificationsInboxView.swift */,
+				A00000000000000000000106 /* ToolbarActionButton.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -457,6 +460,7 @@
 				A000000000000000000000F5 /* NotificationPosting.swift in Sources */,
 				A000000000000000000000F7 /* NotificationsStore.swift in Sources */,
 				A000000000000000000000F9 /* NotificationsInboxView.swift in Sources */,
+				A00000000000000000000107 /* ToolbarActionButton.swift in Sources */,
 				A00000000000000000000103 /* MenuBarNotificationsOverview.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
