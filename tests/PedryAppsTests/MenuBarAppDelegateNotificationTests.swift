@@ -113,6 +113,16 @@ struct MenuBarNotificationsOverviewTests {
         #expect(overview.unread.map(\.relativeAge) == ["just now", "1m ago", "2m ago", "3m ago", "4m ago"])
     }
 
+    @Test func menuBarRowsKeepNotificationTypeAndNewestFirstOrder() {
+        let olderInformation = notification(title: "Information", minutesAgo: 2, type: .information)
+        let newerAttention = notification(title: "Attention request", minutesAgo: 1, type: .attentionRequest)
+
+        let overview = MenuBarNotificationsOverview.make(from: [olderInformation, newerAttention], now: baseDate)
+
+        #expect(overview.unread.map(\.type) == [.attentionRequest, .information])
+        #expect(overview.unread.map(\.title) == ["Attention request", "Information"])
+    }
+
     @Test func emptyInboxHasNoUnreadRows() {
         let overview = MenuBarNotificationsOverview.make(from: [], now: baseDate)
 
@@ -136,11 +146,16 @@ struct MenuBarNotificationsOverviewTests {
         #expect(NotificationRelativeAge.text(from: postedAt, now: baseDate) == values.expected)
     }
 
-    private func notification(title: String, minutesAgo: Int, isRead: Bool = false) -> InboxNotification {
+    private func notification(
+        title: String,
+        minutesAgo: Int,
+        type: NotificationType = .information,
+        isRead: Bool = false
+    ) -> InboxNotification {
         InboxNotification(
             id: UUID(),
             source: .todos,
-            type: .information,
+            type: type,
             title: title,
             body: "Body",
             postedAt: baseDate.addingTimeInterval(-Double(minutesAgo) * 60),
