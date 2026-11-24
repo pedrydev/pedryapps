@@ -28,11 +28,14 @@ struct BoardCategoryView: View {
                     TodoRow(todo: todo, checkOff: checkOff)
                 }
             }
-            .listStyle(.inset)
+            .listStyle(.plain)
             .frame(height: 360)
         }
         .padding(12)
-        .background(.quaternary, in: RoundedRectangle(cornerRadius: 10))
+        .overlay {
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color(nsColor: .separatorColor), lineWidth: 1)
+        }
         .sheet(isPresented: $isAddingTodo) {
             AddTodoDialog(
                 category: category,

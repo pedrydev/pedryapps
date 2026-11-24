@@ -47,7 +47,7 @@ struct TodosView: View {
         } else {
             GeometryReader { geometry in
                 ScrollView(.horizontal) {
-                    LazyHStack(alignment: .top, spacing: 16) {
+                    LazyHStack(alignment: .top, spacing: 24) {
                         ForEach(store.categories) { category in
                             BoardCategoryView(
                                 category: category,
@@ -82,7 +82,7 @@ struct TodosView: View {
 
     private func columnWidth(in containerWidth: CGFloat) -> CGFloat {
         let visibleCount = min(5, max(1, store.categories.count))
-        let spacing: CGFloat = 16
+        let spacing: CGFloat = 24
         let padding: CGFloat = 32
         let available = containerWidth - padding - spacing * CGFloat(visibleCount - 1)
         return min(520, max(240, available / CGFloat(visibleCount)))
