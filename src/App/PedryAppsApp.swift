@@ -17,6 +17,7 @@ struct PedryAppsApp: App {
         WindowGroup(id: "main") {
             ContentView(
                 todosStore: appDelegate.store,
+                notificationsStore: appDelegate.notificationsStore,
                 selectionStore: appDelegate.miniAppSelectionStore,
                 shouldEnterFullScreen: appDelegate.consumeFullScreenRequest
             )

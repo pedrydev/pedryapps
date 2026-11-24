@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     let todosStore: TodosStore
+    let notificationsStore: NotificationsStore
     let selectionStore: MiniAppSelectionStore
     let shouldEnterFullScreen: @MainActor () -> Bool
 
@@ -27,7 +28,9 @@ struct ContentView: View {
         switch selectionStore.selected {
         case .todos:
             TodosView(store: todosStore)
-        case .notifications, .calendar:
+        case .notifications:
+            NotificationsInboxView(store: notificationsStore)
+        case .calendar:
             EmptyView()
         }
     }
