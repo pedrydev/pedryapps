@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A00000000000000000000060 /* PedryAppsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000010 /* PedryAppsApp.swift */; };
 		A00000000000000000000061 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000011 /* ContentView.swift */; };
+		A000000000000000000000D7 /* EnterFullScreenOnOpen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D6 /* EnterFullScreenOnOpen.swift */; };
 		A00000000000000000000062 /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000012 /* HotkeyManager.swift */; };
 		A00000000000000000000063 /* JSONDocumentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000013 /* JSONDocumentStore.swift */; };
 		A00000000000000000000064 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000014 /* Assets.xcassets */; };
@@ -64,6 +65,7 @@
 		A00000000000000000000007 /* PedryAppsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PedryAppsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A00000000000000000000010 /* PedryAppsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PedryAppsApp.swift; sourceTree = "<group>"; };
 		A00000000000000000000011 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A000000000000000000000D6 /* EnterFullScreenOnOpen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterFullScreenOnOpen.swift; sourceTree = "<group>"; };
 		A00000000000000000000012 /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
 		A00000000000000000000013 /* JSONDocumentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDocumentStore.swift; sourceTree = "<group>"; };
 		A00000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 			children = (
 				A00000000000000000000010 /* PedryAppsApp.swift */,
 				A00000000000000000000011 /* ContentView.swift */,
+				A000000000000000000000D6 /* EnterFullScreenOnOpen.swift */,
 				A00000000000000000000012 /* HotkeyManager.swift */,
 				A000000000000000000000A0 /* MenuBarExtraView.swift */,
 				A000000000000000000000AC /* TimeLeftLabel.swift */,
@@ -355,6 +358,7 @@
 			files = (
 				A00000000000000000000060 /* PedryAppsApp.swift in Sources */,
 				A00000000000000000000061 /* ContentView.swift in Sources */,
+				A000000000000000000000D7 /* EnterFullScreenOnOpen.swift in Sources */,
 				A00000000000000000000062 /* HotkeyManager.swift in Sources */,
 				A000000000000000000000A1 /* MenuBarExtraView.swift in Sources */,
 				A000000000000000000000AD /* TimeLeftLabel.swift in Sources */,

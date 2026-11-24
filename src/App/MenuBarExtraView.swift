@@ -12,11 +12,11 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
 
     private var statusItem: NSStatusItem?
     private var menu: NSMenu?
-    private var openWindow: OpenWindowAction?
     private var openMainWindowHandler: ((String) -> Void)?
     private var openSettings: OpenSettingsAction?
     private var clockTimer: Timer?
     private var openWindowObserver: NSObjectProtocol?
+    private var shouldEnterFullScreenOnNextOpen = true
     private var currentItems: [Todo] = []
     private var currentAdditionalCount = 0
     private lazy var dueNotificationCoordinator = TodosDueNotificationCoordinator(
@@ -88,17 +88,17 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
         stopClock()
     }
 
-    func registerOpenWindow(_ action: OpenWindowAction) {
-        openWindow = action
-        openMainWindowHandler = { action(id: $0) }
-    }
-
     func registerOpenMainWindowHandler(_ handler: @escaping (String) -> Void) {
         openMainWindowHandler = handler
     }
 
     func registerOpenSettings(_ action: OpenSettingsAction) {
         openSettings = action
+    }
+
+    func consumeFullScreenRequest() -> Bool {
+        defer { shouldEnterFullScreenOnNextOpen = false }
+        return shouldEnterFullScreenOnNextOpen
     }
 
     func menuNeedsUpdate(_ menu: NSMenu) {
@@ -134,11 +134,10 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
 
     private func openMainWindow() {
         NSApp.activate(ignoringOtherApps: true)
-        if let openMainWindowHandler {
-            openMainWindowHandler("main")
-        } else {
-            openWindow?(id: "main")
+        if !NSApp.windows.contains(where: { $0.identifier == .mainWindow }) {
+            shouldEnterFullScreenOnNextOpen = true
         }
+        openMainWindowHandler?("main")
     }
 
     private func rebuildMenu(_ menu: NSMenu) {

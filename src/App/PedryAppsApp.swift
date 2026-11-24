@@ -15,13 +15,16 @@ struct PedryAppsApp: App {
 
     var body: some Scene {
         WindowGroup(id: "main") {
-            ContentView(store: appDelegate.store)
-                .background {
-                    AppActionRegistrar(
-                        registerWindow: appDelegate.registerOpenWindow,
-                        registerSettings: appDelegate.registerOpenSettings
-                    )
-                }
+            ContentView(
+                store: appDelegate.store,
+                shouldEnterFullScreen: appDelegate.consumeFullScreenRequest
+            )
+            .background {
+                AppActionRegistrar(
+                    registerWindow: appDelegate.registerOpenMainWindowHandler,
+                    registerSettings: appDelegate.registerOpenSettings
+                )
+            }
         }
         .windowToolbarStyle(.unified)
         .commands {
@@ -49,14 +52,20 @@ private struct AppActionRegistrar: View {
     @Environment(\.openWindow) private var openWindow
     @Environment(\.openSettings) private var openSettings
 
-    let registerWindow: (OpenWindowAction) -> Void
+    let registerWindow: (@escaping (String) -> Void) -> Void
     let registerSettings: (OpenSettingsAction) -> Void
 
     var body: some View {
         Color.clear
             .frame(width: 0, height: 0)
             .onAppear {
-                registerWindow(openWindow)
+                registerWindow { id in
+                    if let mainWindow = NSApp.windows.first(where: { $0.identifier == .mainWindow }) {
+                        mainWindow.makeKeyAndOrderFront(nil)
+                    } else {
+                        openWindow(id: id)
+                    }
+                }
                 registerSettings(openSettings)
             }
     }
