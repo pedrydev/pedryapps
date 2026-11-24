@@ -7,6 +7,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
     let store = TodosStore()
     let todosSettingsStore = TodosSettingsStore()
     let dueCheckStateStore = TodosDueCheckStateStore()
+    let notificationsStore = NotificationsStore()
     let miniAppSelectionStore = MiniAppSelectionStore()
 
     private static let menuWidth = MenuBarTodoRowView.menuWidth
@@ -25,6 +26,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
         settingsStore: todosSettingsStore,
         stateStore: dueCheckStateStore,
         notificationCenter: SystemTodoDueNotificationCenter(),
+        notificationPoster: notificationsStore,
         schedule: TimerTodoDueNotificationScheduler.schedule
     )
 
