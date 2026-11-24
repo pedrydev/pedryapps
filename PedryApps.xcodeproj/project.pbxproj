@@ -37,14 +37,11 @@
 		A000000000000000000000B9 /* TodosSettingsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000B8 /* TodosSettingsStoreTests.swift */; };
 		A000000000000000000000BB /* TodosSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000BA /* TodosSettings.swift */; };
 		A000000000000000000000BD /* TodosSettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000BC /* TodosSettingsStore.swift */; };
-		A000000000000000000000BE /* TodoDueNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000BF /* TodoDueNotification.swift */; };
-		A000000000000000000000C0 /* TodoDueNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000C1 /* TodoDueNotificationCenter.swift */; };
 		A000000000000000000000C2 /* TodosDueNotificationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000C3 /* TodosDueNotificationCoordinator.swift */; };
 		A000000000000000000000D1 /* TodosDueCheckState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D0 /* TodosDueCheckState.swift */; };
 		A000000000000000000000D3 /* TodosDueCheckStateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D2 /* TodosDueCheckStateStore.swift */; };
 		A000000000000000000000D5 /* DueCheckWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D4 /* DueCheckWindow.swift */; };
 		A000000000000000000000C4 /* TodosDueNotificationCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000C5 /* TodosDueNotificationCoordinatorTests.swift */; };
-		A000000000000000000000C6 /* SystemTodoDueNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000C7 /* SystemTodoDueNotificationCenter.swift */; };
 		A000000000000000000000C8 /* TimerDueNotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000C9 /* TimerDueNotificationScheduler.swift */; };
 		A000000000000000000000CC /* MenuBarAppDelegateNotificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000CD /* MenuBarAppDelegateNotificationTests.swift */; };
 		A000000000000000000000DD /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D8 /* Category.swift */; };
@@ -73,6 +70,9 @@
 		A0000000000000000000010F /* LoopbackHTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000010E /* LoopbackHTTPServer.swift */; };
 		A00000000000000000000111 /* MCPServerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000110 /* MCPServerController.swift */; };
 		A00000000000000000000115 /* MCPAgentServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000114 /* MCPAgentServerTests.swift */; };
+		A00000000000000000000118 /* FakeSystemAlertCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000117 /* FakeSystemAlertCenter.swift */; };
+		A0000000000000000000011A /* SystemAlertCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000119 /* SystemAlertCenter.swift */; };
+		A0000000000000000000011C /* FakeSystemAlertPosting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000011B /* FakeSystemAlertPosting.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,11 +126,8 @@
 		A000000000000000000000BC /* TodosSettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosSettingsStore.swift; sourceTree = "<group>"; };
 		A00000000000000000000070 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		A00000000000000000000071 /* SwiftUICore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUICore.framework; path = System/Library/Frameworks/SwiftUICore.framework; sourceTree = SDKROOT; };
-		A000000000000000000000BF /* TodoDueNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoDueNotification.swift; sourceTree = "<group>"; };
-		A000000000000000000000C1 /* TodoDueNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoDueNotificationCenter.swift; sourceTree = "<group>"; };
 		A000000000000000000000C3 /* TodosDueNotificationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosDueNotificationCoordinator.swift; sourceTree = "<group>"; };
 		A000000000000000000000C5 /* TodosDueNotificationCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosDueNotificationCoordinatorTests.swift; sourceTree = "<group>"; };
-		A000000000000000000000C7 /* SystemTodoDueNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemTodoDueNotificationCenter.swift; sourceTree = "<group>"; };
 		A000000000000000000000C9 /* TimerDueNotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerDueNotificationScheduler.swift; sourceTree = "<group>"; };
 		A000000000000000000000CD /* MenuBarAppDelegateNotificationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarAppDelegateNotificationTests.swift; sourceTree = "<group>"; };
 		A000000000000000000000D0 /* TodosDueCheckState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosDueCheckState.swift; sourceTree = "<group>"; };
@@ -154,6 +151,9 @@
 		A0000000000000000000010E /* LoopbackHTTPServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoopbackHTTPServer.swift; sourceTree = "<group>"; };
 		A00000000000000000000110 /* MCPServerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPServerController.swift; sourceTree = "<group>"; };
 		A00000000000000000000114 /* MCPAgentServerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPAgentServerTests.swift; sourceTree = "<group>"; };
+		A00000000000000000000117 /* FakeSystemAlertCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeSystemAlertCenter.swift; sourceTree = "<group>"; };
+		A00000000000000000000119 /* SystemAlertCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAlertCenter.swift; sourceTree = "<group>"; };
+		A0000000000000000000011B /* FakeSystemAlertPosting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeSystemAlertPosting.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -264,10 +264,7 @@
 				A000000000000000000000B2 /* TodosSettingsView.swift */,
 				A000000000000000000000BC /* TodosSettingsStore.swift */,
 			
-				A000000000000000000000BF /* TodoDueNotification.swift */,
-				A000000000000000000000C1 /* TodoDueNotificationCenter.swift */,
 				A000000000000000000000C3 /* TodosDueNotificationCoordinator.swift */,
-				A000000000000000000000C7 /* SystemTodoDueNotificationCenter.swift */,
 				A000000000000000000000C9 /* TimerDueNotificationScheduler.swift */,
 				A000000000000000000000D2 /* TodosDueCheckStateStore.swift */,
 				A000000000000000000000E6 /* MiniAppSelectionStore.swift */,
@@ -276,6 +273,7 @@
 				A000000000000000000000F6 /* NotificationsStore.swift */,
 				A000000000000000000000F8 /* NotificationsInboxView.swift */,
 				A00000000000000000000106 /* ToolbarActionButton.swift */,
+				A00000000000000000000119 /* SystemAlertCenter.swift */,
 				A00000000000000000000116 /* MCP */,
 			);
 			path = Features;
@@ -326,7 +324,9 @@
 				A000000000000000000000FA /* NotificationsStoreTests.swift */,
 				A00000000000000000000100 /* MiniAppSidebarViewTests.swift */,
 				A00000000000000000000104 /* NotificationsInboxViewTests.swift */,
-				A00000000000000000000114 /* MCPAgentServerTests.swift */,);
+				A00000000000000000000114 /* MCPAgentServerTests.swift */,
+				A00000000000000000000117 /* FakeSystemAlertCenter.swift */,
+				A0000000000000000000011B /* FakeSystemAlertPosting.swift */,);
 			path = PedryAppsTests;
 			sourceTree = "<group>";
 		};
@@ -473,13 +473,10 @@
 				A000000000000000000000BB /* TodosSettings.swift in Sources */,
 				A000000000000000000000BD /* TodosSettingsStore.swift in Sources */,
 			
-				A000000000000000000000BE /* TodoDueNotification.swift in Sources */,
-				A000000000000000000000C0 /* TodoDueNotificationCenter.swift in Sources */,
 				A000000000000000000000C2 /* TodosDueNotificationCoordinator.swift in Sources */,
 				A000000000000000000000D1 /* TodosDueCheckState.swift in Sources */,
 				A000000000000000000000D3 /* TodosDueCheckStateStore.swift in Sources */,
 				A000000000000000000000D5 /* DueCheckWindow.swift in Sources */,
-				A000000000000000000000C6 /* SystemTodoDueNotificationCenter.swift in Sources */,
 				A000000000000000000000C8 /* TimerDueNotificationScheduler.swift in Sources */,
 				A000000000000000000000E5 /* MiniApp.swift in Sources */,
 				A000000000000000000000E7 /* MiniAppSelectionStore.swift in Sources */,
@@ -493,7 +490,8 @@
 				A00000000000000000000103 /* MenuBarNotificationsOverview.swift in Sources */,
 				A0000000000000000000010D /* MCPAgentServer.swift in Sources */,
 				A0000000000000000000010F /* LoopbackHTTPServer.swift in Sources */,
-				A00000000000000000000111 /* MCPServerController.swift in Sources */,);
+				A00000000000000000000111 /* MCPServerController.swift in Sources */,
+				A0000000000000000000011A /* SystemAlertCenter.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A00000000000000000000033 /* Sources */ = {
@@ -516,7 +514,9 @@
 				A000000000000000000000FB /* NotificationsStoreTests.swift in Sources */,
 				A00000000000000000000101 /* MiniAppSidebarViewTests.swift in Sources */,
 				A00000000000000000000105 /* NotificationsInboxViewTests.swift in Sources */,
-				A00000000000000000000115 /* MCPAgentServerTests.swift in Sources */,);
+				A00000000000000000000115 /* MCPAgentServerTests.swift in Sources */,
+				A00000000000000000000118 /* FakeSystemAlertCenter.swift in Sources */,
+				A0000000000000000000011C /* FakeSystemAlertPosting.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */

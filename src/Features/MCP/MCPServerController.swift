@@ -57,18 +57,24 @@ final class MCPServerController {
     }
 }
 
-struct MCPNotificationPosting: AgentNotificationPosting {
-    private let post: @MainActor @Sendable (MiniApp, NotificationType, String, String) -> Void
+@MainActor
+final class MCPNotificationPosting: AgentNotificationPosting {
+    private let store: NotificationsStore
+    private let alertPoster: any SystemAlertPosting
 
-    init(store: NotificationsStore) {
-        post = { source, type, title, body in
-            store.post(source: source, type: type, title: title, body: body)
-        }
+    init(store: NotificationsStore, alertPoster: any SystemAlertPosting) {
+        self.store = store
+        self.alertPoster = alertPoster
     }
 
     func post(source: MiniApp, type: NotificationType, title: String, body: String) async {
-        await MainActor.run {
-            post(source, type, title, body)
-        }
+        store.post(source: source, type: type, title: title, body: body)
+        await alertPoster.post(
+            SystemAlertRequest(
+                identifier: "agent-notification:\(UUID().uuidString)",
+                title: title,
+                body: body
+            )
+        )
     }
 }
