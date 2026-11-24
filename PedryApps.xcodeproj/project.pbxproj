@@ -50,6 +50,10 @@
 		A000000000000000000000CC /* MenuBarAppDelegateNotificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000CD /* MenuBarAppDelegateNotificationTests.swift */; };
 		A000000000000000000000DD /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D8 /* Category.swift */; };
 		A000000000000000000000E1 /* TodosDocumentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000DC /* TodosDocumentTests.swift */; };
+		A000000000000000000000EB /* MiniAppSelectionStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000EA /* MiniAppSelectionStoreTests.swift */; };
+		A000000000000000000000E5 /* MiniApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000E4 /* MiniApp.swift */; };
+		A000000000000000000000E7 /* MiniAppSelectionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000E6 /* MiniAppSelectionStore.swift */; };
+		A000000000000000000000E9 /* MiniAppSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000E8 /* MiniAppSidebarView.swift */; };
 		A000000000000000000000E3 /* AddTodoDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000E2 /* AddTodoDialog.swift */; };
 		A000000000000000000000DE /* BoardCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D9 /* BoardCategoryView.swift */; };
 		A000000000000000000000DF /* ManageCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000DA /* ManageCategoriesView.swift */; };
@@ -118,6 +122,10 @@
 		A000000000000000000000D0 /* TodosDueCheckState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosDueCheckState.swift; sourceTree = "<group>"; };
 		A000000000000000000000D2 /* TodosDueCheckStateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosDueCheckStateStore.swift; sourceTree = "<group>"; };
 		A000000000000000000000D4 /* DueCheckWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DueCheckWindow.swift; sourceTree = "<group>"; };
+		A000000000000000000000EA /* MiniAppSelectionStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppSelectionStoreTests.swift; sourceTree = "<group>"; };
+		A000000000000000000000E4 /* MiniApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniApp.swift; sourceTree = "<group>"; };
+		A000000000000000000000E6 /* MiniAppSelectionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppSelectionStore.swift; sourceTree = "<group>"; };
+		A000000000000000000000E8 /* MiniAppSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppSidebarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,6 +203,7 @@
 				A000000000000000000000BA /* TodosSettings.swift */,
 				A000000000000000000000D0 /* TodosDueCheckState.swift */,
 				A000000000000000000000D4 /* DueCheckWindow.swift */,
+				A000000000000000000000E4 /* MiniApp.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -229,6 +238,8 @@
 				A000000000000000000000C7 /* SystemTodoDueNotificationCenter.swift */,
 				A000000000000000000000C9 /* TimerDueNotificationScheduler.swift */,
 				A000000000000000000000D2 /* TodosDueCheckStateStore.swift */,
+				A000000000000000000000E6 /* MiniAppSelectionStore.swift */,
+				A000000000000000000000E8 /* MiniAppSidebarView.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -263,7 +274,8 @@
 				A000000000000000000000B8 /* TodosSettingsStoreTests.swift */,
 			
 				A000000000000000000000C5 /* TodosDueNotificationCoordinatorTests.swift */,
-				A000000000000000000000CD /* MenuBarAppDelegateNotificationTests.swift */,);
+				A000000000000000000000CD /* MenuBarAppDelegateNotificationTests.swift */,
+				A000000000000000000000EA /* MiniAppSelectionStoreTests.swift */,);
 			path = PedryAppsTests;
 			sourceTree = "<group>";
 		};
@@ -409,7 +421,10 @@
 				A000000000000000000000D3 /* TodosDueCheckStateStore.swift in Sources */,
 				A000000000000000000000D5 /* DueCheckWindow.swift in Sources */,
 				A000000000000000000000C6 /* SystemTodoDueNotificationCenter.swift in Sources */,
-				A000000000000000000000C8 /* TimerDueNotificationScheduler.swift in Sources */,);
+				A000000000000000000000C8 /* TimerDueNotificationScheduler.swift in Sources */,
+				A000000000000000000000E5 /* MiniApp.swift in Sources */,
+				A000000000000000000000E7 /* MiniAppSelectionStore.swift in Sources */,
+				A000000000000000000000E9 /* MiniAppSidebarView.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A00000000000000000000033 /* Sources */ = {
@@ -427,7 +442,8 @@
 				A000000000000000000000B9 /* TodosSettingsStoreTests.swift in Sources */,
 			
 				A000000000000000000000C4 /* TodosDueNotificationCoordinatorTests.swift in Sources */,
-				A000000000000000000000CC /* MenuBarAppDelegateNotificationTests.swift in Sources */,);
+				A000000000000000000000CC /* MenuBarAppDelegateNotificationTests.swift in Sources */,
+				A000000000000000000000EB /* MiniAppSelectionStoreTests.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */

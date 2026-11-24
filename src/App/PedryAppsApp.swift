@@ -16,7 +16,8 @@ struct PedryAppsApp: App {
     var body: some Scene {
         WindowGroup(id: "main") {
             ContentView(
-                store: appDelegate.store,
+                todosStore: appDelegate.store,
+                selectionStore: appDelegate.miniAppSelectionStore,
                 shouldEnterFullScreen: appDelegate.consumeFullScreenRequest
             )
             .background {
