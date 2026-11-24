@@ -271,10 +271,24 @@ struct TodosDueNotificationCoordinatorTests {
         #expect(env.center.addAttempts == 1)
     }
 
+    @Test func dueAlertUsesTheSharedSystemAlertPoster() async throws {
+        let now = try fixtureDate(2030, 1, 2, at: 10, minute: 0, calendar: utcCalendar())
+        let alertPoster = FakeSystemAlertPosting()
+        let env = try makeEnvironment(now: now, alertPoster: alertPoster)
+        env.addTodo("Buy milk", at: try fixtureDate(2030, 1, 2, at: 10, minute: 3, calendar: env.calendar))
+        await env.coordinator.start()
+
+        await env.scheduler.fire()
+
+        let boundary = try fixtureDate(2030, 1, 2, at: 10, minute: 5, calendar: env.calendar)
+        #expect(alertPoster.posts == [request(count: 1, endingAt: boundary)])
+    }
+
     private func makeEnvironment(
         intervalSeconds: Int = 300,
         now: Date,
-        stateStore: any TodosDueCheckStoring = FakeDueCheckStateStore()
+        stateStore: any TodosDueCheckStoring = FakeDueCheckStateStore(),
+        alertPoster: (any SystemAlertPosting)? = nil
     ) throws -> Environment {
         let directory = try TemporaryDirectory()
         let calendar = utcCalendar()
@@ -282,7 +296,7 @@ struct TodosDueNotificationCoordinatorTests {
         let settingsDocument = JSONDocumentStore<TodosSettings>(directory: directory.url, filename: "todos-settings.json")
         try settingsDocument.save(TodosSettings(dueCheckIntervalSeconds: intervalSeconds))
         let settingsStore = TodosSettingsStore(documentStore: settingsDocument)
-        let center = FakeTodoNotificationCenter()
+        let center = FakeSystemAlertCenter()
         let poster = FakeNotificationPoster()
         let clock = MutableClock(now: now)
         let scheduler = Scheduler()
@@ -290,7 +304,7 @@ struct TodosDueNotificationCoordinatorTests {
             todosStore: todosStore,
             settingsStore: settingsStore,
             stateStore: stateStore,
-            notificationCenter: center,
+            alertPoster: alertPoster ?? SystemAlertPoster(center: center),
             notificationPoster: poster,
             calendar: calendar,
             now: { clock.now },
@@ -310,8 +324,8 @@ struct TodosDueNotificationCoordinatorTests {
         )
     }
 
-    private func request(count: Int, endingAt boundary: Date) -> TodoDueNotificationRequest {
-        TodoDueNotificationRequest(
+    private func request(count: Int, endingAt boundary: Date) -> SystemAlertRequest {
+        SystemAlertRequest(
             identifier: "due-check:\(boundary.timeIntervalSinceReferenceDate)",
             title: "Time to work",
             body: count == 1 ? "1 todo is ready to work" : "\(count) todos are ready to work"
@@ -369,7 +383,7 @@ private final class Environment {
     let todosDirectory: URL
     let todosStore: TodosStore
     let settingsStore: TodosSettingsStore
-    let center: FakeTodoNotificationCenter
+    let center: FakeSystemAlertCenter
     let poster: FakeNotificationPoster
     let clock: MutableClock
     let scheduler: Scheduler
@@ -381,7 +395,7 @@ private final class Environment {
         todosDirectory: URL,
         todosStore: TodosStore,
         settingsStore: TodosSettingsStore,
-        center: FakeTodoNotificationCenter,
+        center: FakeSystemAlertCenter,
         poster: FakeNotificationPoster,
         clock: MutableClock,
         scheduler: Scheduler,
@@ -407,30 +421,6 @@ private final class Environment {
         }
         guard let category = todosStore.categories.first else { return }
         todosStore.addTodo(title, in: category, doOnDate: DoOnDate(date))
-    }
-}
-
-@MainActor
-private final class FakeTodoNotificationCenter: TodoDueNotificationCenter {
-    var authorization: TodoNotificationAuthorizationStatus = .authorized
-    var authorizationAfterRequest: TodoNotificationAuthorizationStatus = .authorized
-    var authorizationRequests = 0
-    var requests: [TodoDueNotificationRequest] = []
-    var addAttempts = 0
-    var addError: Error?
-
-    func authorizationStatus() async -> TodoNotificationAuthorizationStatus { authorization }
-
-    func requestAuthorization() async -> TodoNotificationAuthorizationStatus {
-        authorizationRequests += 1
-        authorization = authorizationAfterRequest
-        return authorization
-    }
-
-    func add(_ request: TodoDueNotificationRequest) async throws {
-        addAttempts += 1
-        if let addError { throw addError }
-        requests.append(request)
     }
 }
 

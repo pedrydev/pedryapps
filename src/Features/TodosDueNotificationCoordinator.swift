@@ -10,7 +10,7 @@ final class TodosDueNotificationCoordinator {
     private let todosStore: TodosStore
     private let settingsStore: TodosSettingsStore
     private let stateStore: any TodosDueCheckStoring
-    private let notificationCenter: any TodoDueNotificationCenter
+    private let alertPoster: any SystemAlertPosting
     private let notificationPoster: any NotificationPosting
     private let calendar: Calendar
     private let now: @MainActor () -> Date
@@ -22,7 +22,7 @@ final class TodosDueNotificationCoordinator {
         todosStore: TodosStore,
         settingsStore: TodosSettingsStore,
         stateStore: any TodosDueCheckStoring,
-        notificationCenter: any TodoDueNotificationCenter,
+        alertPoster: any SystemAlertPosting,
         notificationPoster: any NotificationPosting,
         calendar: Calendar = .current,
         now: @escaping @MainActor () -> Date = { Date() },
@@ -31,7 +31,7 @@ final class TodosDueNotificationCoordinator {
         self.todosStore = todosStore
         self.settingsStore = settingsStore
         self.stateStore = stateStore
-        self.notificationCenter = notificationCenter
+        self.alertPoster = alertPoster
         self.notificationPoster = notificationPoster
         self.calendar = calendar
         self.now = now
@@ -87,19 +87,12 @@ final class TodosDueNotificationCoordinator {
         guard !due.isEmpty else { return }
         let body = due.count == 1 ? "1 todo is ready to work" : "\(due.count) todos are ready to work"
         notificationPoster.post(source: .todos, type: .information, title: "Time to work", body: body)
-        let status = await notificationCenter.authorizationStatus()
-        let resolved: TodoNotificationAuthorizationStatus
-        if status == .notDetermined {
-            resolved = await notificationCenter.requestAuthorization()
-        } else {
-            resolved = status
-        }
-        guard resolved == .authorized else { return }
-        let request = TodoDueNotificationRequest(
-            identifier: "due-check:\(boundary.timeIntervalSinceReferenceDate)",
-            title: "Time to work",
-            body: body
+        await alertPoster.post(
+            SystemAlertRequest(
+                identifier: "due-check:\(boundary.timeIntervalSinceReferenceDate)",
+                title: "Time to work",
+                body: body
+            )
         )
-        try? await notificationCenter.add(request)
     }
 }

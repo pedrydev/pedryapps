@@ -70,9 +70,11 @@ final class MCPNotificationPosting: AgentNotificationPosting {
     func post(source: MiniApp, type: NotificationType, title: String, body: String) async {
         store.post(source: source, type: type, title: title, body: body)
         await alertPoster.post(
-            identifier: "agent-notification:\(UUID().uuidString)",
-            title: title,
-            body: body
+            SystemAlertRequest(
+                identifier: "agent-notification:\(UUID().uuidString)",
+                title: title,
+                body: body
+            )
         )
     }
 }

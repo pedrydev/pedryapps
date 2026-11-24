@@ -38,7 +38,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
         todosStore: store,
         settingsStore: todosSettingsStore,
         stateStore: dueCheckStateStore,
-        notificationCenter: SystemTodoDueNotificationCenter(),
+        alertPoster: systemAlertPoster,
         notificationPoster: notificationsStore,
         schedule: TimerTodoDueNotificationScheduler.schedule
     )

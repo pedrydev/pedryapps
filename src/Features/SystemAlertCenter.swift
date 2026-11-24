@@ -71,7 +71,7 @@ final class SystemUserNotificationCenter: SystemAlertCenter {
 
 @MainActor
 protocol SystemAlertPosting: AnyObject {
-    func post(identifier: String, title: String, body: String) async
+    func post(_ request: SystemAlertRequest) async
 }
 
 @MainActor
@@ -82,7 +82,7 @@ final class SystemAlertPoster: SystemAlertPosting {
         self.center = center
     }
 
-    func post(identifier: String, title: String, body: String) async {
+    func post(_ request: SystemAlertRequest) async {
         let status = await center.authorizationStatus()
         let resolved: SystemAlertAuthorizationStatus
         if status == .notDetermined {
@@ -91,7 +91,6 @@ final class SystemAlertPoster: SystemAlertPosting {
             resolved = status
         }
         guard resolved == .authorized else { return }
-        let request = SystemAlertRequest(identifier: identifier, title: title, body: body)
         try? await center.add(request)
     }
 }
