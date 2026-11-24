@@ -67,6 +67,12 @@
 		A00000000000000000000103 /* MenuBarNotificationsOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000102 /* MenuBarNotificationsOverview.swift */; };
 		A00000000000000000000105 /* NotificationsInboxViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000104 /* NotificationsInboxViewTests.swift */; };
 		A00000000000000000000107 /* ToolbarActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000106 /* ToolbarActionButton.swift */; };
+		A0000000000000000000010A /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000109 /* MCP */; };
+		A0000000000000000000010B /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000109 /* MCP */; };
+		A0000000000000000000010D /* MCPAgentServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000010C /* MCPAgentServer.swift */; };
+		A0000000000000000000010F /* LoopbackHTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000010E /* LoopbackHTTPServer.swift */; };
+		A00000000000000000000111 /* MCPServerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000110 /* MCPServerController.swift */; };
+		A00000000000000000000115 /* MCPAgentServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000114 /* MCPAgentServerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -144,6 +150,10 @@
 		A00000000000000000000102 /* MenuBarNotificationsOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarNotificationsOverview.swift; sourceTree = "<group>"; };
 		A00000000000000000000104 /* NotificationsInboxViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsInboxViewTests.swift; sourceTree = "<group>"; };
 		A00000000000000000000106 /* ToolbarActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarActionButton.swift; sourceTree = "<group>"; };
+		A0000000000000000000010C /* MCPAgentServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPAgentServer.swift; sourceTree = "<group>"; };
+		A0000000000000000000010E /* LoopbackHTTPServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoopbackHTTPServer.swift; sourceTree = "<group>"; };
+		A00000000000000000000110 /* MCPServerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPServerController.swift; sourceTree = "<group>"; };
+		A00000000000000000000114 /* MCPAgentServerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPAgentServerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +161,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0000000000000000000010A /* MCP in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +169,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0000000000000000000010B /* MCP in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,8 +276,19 @@
 				A000000000000000000000F6 /* NotificationsStore.swift */,
 				A000000000000000000000F8 /* NotificationsInboxView.swift */,
 				A00000000000000000000106 /* ToolbarActionButton.swift */,
+				A00000000000000000000116 /* MCP */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000116 /* MCP */ = {
+			isa = PBXGroup;
+			children = (
+				A0000000000000000000010C /* MCPAgentServer.swift */,
+				A0000000000000000000010E /* LoopbackHTTPServer.swift */,
+				A00000000000000000000110 /* MCPServerController.swift */,
+			);
+			path = MCP;
 			sourceTree = "<group>";
 		};
 		A00000000000000000000025 /* Resources */ = {
@@ -302,7 +325,8 @@
 				A000000000000000000000EA /* MiniAppSelectionStoreTests.swift */,
 				A000000000000000000000FA /* NotificationsStoreTests.swift */,
 				A00000000000000000000100 /* MiniAppSidebarViewTests.swift */,
-				A00000000000000000000104 /* NotificationsInboxViewTests.swift */,);
+				A00000000000000000000104 /* NotificationsInboxViewTests.swift */,
+				A00000000000000000000114 /* MCPAgentServerTests.swift */,);
 			path = PedryAppsTests;
 			sourceTree = "<group>";
 		};
@@ -330,6 +354,9 @@
 			);
 			dependencies = (
 			);
+			packageProductDependencies = (
+				A00000000000000000000109 /* MCP */,
+			);
 			name = PedryApps;
 			productName = PedryApps;
 			productReference = A00000000000000000000006 /* PedryApps.app */;
@@ -347,6 +374,9 @@
 			);
 			dependencies = (
 				A00000000000000000000050 /* PBXTargetDependency */,
+			);
+			packageProductDependencies = (
+				A00000000000000000000109 /* MCP */,
 			);
 			name = PedryAppsTests;
 			productName = PedryAppsTests;
@@ -380,6 +410,9 @@
 				Base,
 			);
 			mainGroup = A00000000000000000000002;
+			packageReferences = (
+				A00000000000000000000108 /* XCRemoteSwiftPackageReference "swift-sdk" */,
+			);
 			productRefGroup = A00000000000000000000003 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -457,7 +490,10 @@
 				A000000000000000000000F7 /* NotificationsStore.swift in Sources */,
 				A000000000000000000000F9 /* NotificationsInboxView.swift in Sources */,
 				A00000000000000000000107 /* ToolbarActionButton.swift in Sources */,
-				A00000000000000000000103 /* MenuBarNotificationsOverview.swift in Sources */,);
+				A00000000000000000000103 /* MenuBarNotificationsOverview.swift in Sources */,
+				A0000000000000000000010D /* MCPAgentServer.swift in Sources */,
+				A0000000000000000000010F /* LoopbackHTTPServer.swift in Sources */,
+				A00000000000000000000111 /* MCPServerController.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A00000000000000000000033 /* Sources */ = {
@@ -479,7 +515,8 @@
 				A000000000000000000000EB /* MiniAppSelectionStoreTests.swift in Sources */,
 				A000000000000000000000FB /* NotificationsStoreTests.swift in Sources */,
 				A00000000000000000000101 /* MiniAppSidebarViewTests.swift in Sources */,
-				A00000000000000000000105 /* NotificationsInboxViewTests.swift in Sources */,);
+				A00000000000000000000105 /* NotificationsInboxViewTests.swift in Sources */,
+				A00000000000000000000115 /* MCPAgentServerTests.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
@@ -491,6 +528,25 @@
 			targetProxy = A00000000000000000000051 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A00000000000000000000108 /* XCRemoteSwiftPackageReference "swift-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/modelcontextprotocol/swift-sdk.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.12.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A00000000000000000000109 /* MCP */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A00000000000000000000108 /* XCRemoteSwiftPackageReference "swift-sdk" */;
+			productName = MCP;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCBuildConfiguration section */
 		A00000000000000000000040 /* Debug */ = {
