@@ -16,23 +16,28 @@ struct DiagnosticsViewTests {
         ]
     )
     func panelRendersInjectedState(state: HealthState, expectedLabel: String) {
-        let probedComponent = ProbedComponent(id: "todos", name: "Todos", healthState: state)
+        let probedComponent = ProbedComponent(
+            id: "todos",
+            name: "Todos",
+            healthState: state,
+            probeResults: []
+        )
 
         let actual = imageData(
             renderedImage(
-                of: DiagnosticsView(probedComponent: probedComponent)
+                of: DiagnosticsView(probedComponent: probedComponent, isExpanded: .constant(false))
                     .frame(width: 320, height: 100)
             )
         )
         let expected = imageData(
             renderedImage(
-                of: referenceView(label: expectedLabel)
+                of: referenceCollapsedView(label: expectedLabel)
                     .frame(width: 320, height: 100)
             )
         )
         let different = imageData(
             renderedImage(
-                of: referenceView(label: "Other")
+                of: referenceCollapsedView(label: "Other")
                     .frame(width: 320, height: 100)
             )
         )
@@ -41,12 +46,113 @@ struct DiagnosticsViewTests {
         #expect(actual != different)
     }
 
-    private func referenceView(label: String) -> some View {
+    @Test func expandedRowShowsProbeResults() {
+        let checkedAt = Date(timeIntervalSince1970: 1_704_067_200)
+        let probedComponent = ProbedComponent(
+            id: "todos",
+            name: "Todos",
+            healthState: .degraded,
+            probeResults: [
+                ProbeResult(
+                    kind: .startup,
+                    outcome: .success,
+                    checkedAt: checkedAt,
+                    errorText: nil
+                ),
+                ProbeResult(
+                    kind: .liveness,
+                    outcome: .failure,
+                    checkedAt: checkedAt,
+                    errorText: "Store error"
+                ),
+                ProbeResult(
+                    kind: .readiness,
+                    outcome: .unknown,
+                    checkedAt: nil,
+                    errorText: "Board not loaded"
+                ),
+            ]
+        )
+        let timeText = checkedAt.formatted(date: .abbreviated, time: .shortened)
+
+        let actual = imageData(
+            renderedImage(
+                of: DiagnosticsView(probedComponent: probedComponent, isExpanded: .constant(true))
+                    .frame(width: 400, height: 400)
+            )
+        )
+        let expected = imageData(
+            renderedImage(
+                of: referenceExpandedView(timeText: timeText)
+                    .frame(width: 400, height: 400)
+            )
+        )
+        let differentTime = imageData(
+            renderedImage(
+                of: referenceExpandedView(timeText: "Wrong")
+                    .frame(width: 400, height: 400)
+            )
+        )
+
+        #expect(actual == expected)
+        #expect(actual != differentTime)
+    }
+
+    private func referenceCollapsedView(label: String) -> some View {
         Form {
-            LabeledContent {
-                Text(verbatim: label)
+            DisclosureGroup(isExpanded: .constant(false)) {
+                EmptyView()
             } label: {
-                Text(verbatim: "Todos")
+                LabeledContent {
+                    Text(verbatim: label)
+                } label: {
+                    Text(verbatim: "Todos")
+                }
+            }
+        }
+    }
+
+    private func referenceExpandedView(timeText: String) -> some View {
+        Form {
+            DisclosureGroup(isExpanded: .constant(true)) {
+                VStack(alignment: .leading, spacing: 4) {
+                    LabeledContent {
+                        Text(verbatim: "Success")
+                    } label: {
+                        Text(verbatim: "Startup")
+                    }
+                    LabeledContent("Last check") {
+                        Text(verbatim: timeText)
+                    }
+                }
+                VStack(alignment: .leading, spacing: 4) {
+                    LabeledContent {
+                        Text(verbatim: "Failure")
+                    } label: {
+                        Text(verbatim: "Liveness")
+                    }
+                    LabeledContent("Last check") {
+                        Text(verbatim: timeText)
+                    }
+                    Text(verbatim: "Store error")
+                }
+                VStack(alignment: .leading, spacing: 4) {
+                    LabeledContent {
+                        Text(verbatim: "Unknown")
+                    } label: {
+                        Text(verbatim: "Readiness")
+                    }
+                    LabeledContent("Last check") {
+                        Text(verbatim: "Not checked")
+                    }
+                    Text(verbatim: "Board not loaded")
+                }
+            } label: {
+                LabeledContent {
+                    Text(verbatim: "Degraded")
+                } label: {
+                    Text(verbatim: "Todos")
+                }
             }
         }
     }

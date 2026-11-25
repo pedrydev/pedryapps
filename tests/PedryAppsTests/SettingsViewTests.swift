@@ -22,7 +22,8 @@ struct SettingsViewTests {
                 probedComponent: ProbedComponent(
                     id: "todos",
                     name: "Todos",
-                    healthState: .starting
+                    healthState: .starting,
+                    probeResults: []
                 )
             )
         )

@@ -85,6 +85,10 @@
 		A0000000000000000000013A /* TodosProbedComponentAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000139 /* TodosProbedComponentAdapter.swift */; };
 		A0000000000000000000013E /* TodosProbedComponentAdapterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000013D /* TodosProbedComponentAdapterTests.swift */; };
 		A00000000000000000000140 /* DiagnosticsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000013F /* DiagnosticsViewTests.swift */; };
+		A00000000000000000000142 /* ProbeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000141 /* ProbeResult.swift */; };
+		A00000000000000000000144 /* ProbeResultRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000143 /* ProbeResultRowView.swift */; };
+		A00000000000000000000146 /* ProbeKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000145 /* ProbeKind.swift */; };
+		A00000000000000000000148 /* ProbeOutcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000147 /* ProbeOutcome.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -178,6 +182,10 @@
 		A00000000000000000000139 /* TodosProbedComponentAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosProbedComponentAdapter.swift; sourceTree = "<group>"; };
 		A0000000000000000000013D /* TodosProbedComponentAdapterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosProbedComponentAdapterTests.swift; sourceTree = "<group>"; };
 		A0000000000000000000013F /* DiagnosticsViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsViewTests.swift; sourceTree = "<group>"; };
+		A00000000000000000000141 /* ProbeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeResult.swift; sourceTree = "<group>"; };
+		A00000000000000000000143 /* ProbeResultRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeResultRowView.swift; sourceTree = "<group>"; };
+		A00000000000000000000145 /* ProbeKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeKind.swift; sourceTree = "<group>"; };
+		A00000000000000000000147 /* ProbeOutcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeOutcome.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -262,6 +270,9 @@
 				A0000000000000000000011D /* MCPSettings.swift */,
 				A00000000000000000000131 /* HealthState.swift */,
 				A00000000000000000000137 /* ProbedComponent.swift */,
+				A00000000000000000000141 /* ProbeResult.swift */,
+				A00000000000000000000145 /* ProbeKind.swift */,
+				A00000000000000000000147 /* ProbeOutcome.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -305,6 +316,7 @@
 				A0000000000000000000011F /* MCPSettingsStore.swift */,
 				A00000000000000000000121 /* MCPSettingsView.swift */,
 				A00000000000000000000129 /* DiagnosticsView.swift */,
+				A00000000000000000000143 /* ProbeResultRowView.swift */,
 				A00000000000000000000139 /* TodosProbedComponentAdapter.swift */,
 			);
 			path = Features;
@@ -534,6 +546,10 @@
 				A0000000000000000000012A /* DiagnosticsView.swift in Sources */,
 				A00000000000000000000132 /* HealthState.swift in Sources */,
 				A00000000000000000000138 /* ProbedComponent.swift in Sources */,
+				A00000000000000000000142 /* ProbeResult.swift in Sources */,
+				A00000000000000000000146 /* ProbeKind.swift in Sources */,
+				A00000000000000000000148 /* ProbeOutcome.swift in Sources */,
+				A00000000000000000000144 /* ProbeResultRowView.swift in Sources */,
 				A0000000000000000000013A /* TodosProbedComponentAdapter.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
