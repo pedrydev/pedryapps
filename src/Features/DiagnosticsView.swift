@@ -3,6 +3,7 @@ import SwiftUI
 struct DiagnosticsView: View {
     let probedComponent: ProbedComponent
     @Binding var isExpanded: Bool
+    let onRefresh: () -> Void
 
     var body: some View {
         Form {
@@ -17,6 +18,8 @@ struct DiagnosticsView: View {
                     Text(verbatim: probedComponent.name)
                 }
             }
+            Button("Refresh", action: onRefresh)
+                .buttonStyle(.borderless)
         }
     }
 }

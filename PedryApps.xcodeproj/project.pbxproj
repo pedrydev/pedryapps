@@ -85,6 +85,8 @@
 		A0000000000000000000013A /* TodosProbedComponentAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000139 /* TodosProbedComponentAdapter.swift */; };
 		A0000000000000000000013E /* TodosProbedComponentAdapterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000013D /* TodosProbedComponentAdapterTests.swift */; };
 		A00000000000000000000140 /* DiagnosticsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000013F /* DiagnosticsViewTests.swift */; };
+		A0000000000000000000014E /* DiagnosticsProbeStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000014D /* DiagnosticsProbeStoreTests.swift */; };
+		A00000000000000000000150 /* DiagnosticsProbeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000014F /* DiagnosticsProbeStore.swift */; };
 		A00000000000000000000142 /* ProbeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000141 /* ProbeResult.swift */; };
 		A00000000000000000000144 /* ProbeResultRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000143 /* ProbeResultRowView.swift */; };
 		A00000000000000000000146 /* ProbeKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000145 /* ProbeKind.swift */; };
@@ -182,6 +184,8 @@
 		A00000000000000000000139 /* TodosProbedComponentAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosProbedComponentAdapter.swift; sourceTree = "<group>"; };
 		A0000000000000000000013D /* TodosProbedComponentAdapterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosProbedComponentAdapterTests.swift; sourceTree = "<group>"; };
 		A0000000000000000000013F /* DiagnosticsViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsViewTests.swift; sourceTree = "<group>"; };
+		A0000000000000000000014D /* DiagnosticsProbeStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsProbeStoreTests.swift; sourceTree = "<group>"; };
+		A0000000000000000000014F /* DiagnosticsProbeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsProbeStore.swift; sourceTree = "<group>"; };
 		A00000000000000000000141 /* ProbeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeResult.swift; sourceTree = "<group>"; };
 		A00000000000000000000143 /* ProbeResultRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeResultRowView.swift; sourceTree = "<group>"; };
 		A00000000000000000000145 /* ProbeKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeKind.swift; sourceTree = "<group>"; };
@@ -318,6 +322,7 @@
 				A00000000000000000000129 /* DiagnosticsView.swift */,
 				A00000000000000000000143 /* ProbeResultRowView.swift */,
 				A00000000000000000000139 /* TodosProbedComponentAdapter.swift */,
+				A0000000000000000000014F /* DiagnosticsProbeStore.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -374,7 +379,8 @@
 				A00000000000000000000127 /* MCPSettingsViewTests.swift */,
 				A0000000000000000000012B /* SettingsViewTests.swift */,
 				A0000000000000000000013D /* TodosProbedComponentAdapterTests.swift */,
-				A0000000000000000000013F /* DiagnosticsViewTests.swift */,);
+				A0000000000000000000013F /* DiagnosticsViewTests.swift */,
+				A0000000000000000000014D /* DiagnosticsProbeStoreTests.swift */,);
 			path = PedryAppsTests;
 			sourceTree = "<group>";
 		};
@@ -550,7 +556,8 @@
 				A00000000000000000000146 /* ProbeKind.swift in Sources */,
 				A00000000000000000000148 /* ProbeOutcome.swift in Sources */,
 				A00000000000000000000144 /* ProbeResultRowView.swift in Sources */,
-				A0000000000000000000013A /* TodosProbedComponentAdapter.swift in Sources */,);
+				A0000000000000000000013A /* TodosProbedComponentAdapter.swift in Sources */,
+				A00000000000000000000150 /* DiagnosticsProbeStore.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A00000000000000000000033 /* Sources */ = {
@@ -580,7 +587,8 @@
 				A00000000000000000000128 /* MCPSettingsViewTests.swift in Sources */,
 				A0000000000000000000012C /* SettingsViewTests.swift in Sources */,
 				A0000000000000000000013E /* TodosProbedComponentAdapterTests.swift in Sources */,
-				A00000000000000000000140 /* DiagnosticsViewTests.swift in Sources */,);
+				A00000000000000000000140 /* DiagnosticsViewTests.swift in Sources */,
+				A0000000000000000000014E /* DiagnosticsProbeStoreTests.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */

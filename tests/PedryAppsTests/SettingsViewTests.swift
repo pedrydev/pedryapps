@@ -1,6 +1,7 @@
 import AppKit
 import SwiftUI
 import Testing
+
 @testable import PedryApps
 
 @Suite(.serialized)
@@ -19,12 +20,14 @@ struct SettingsViewTests {
             rootView: SettingsView(
                 todosSettingsStore: todosStore,
                 mcpSettingsStore: mcpStore,
-                probedComponent: ProbedComponent(
-                    id: "todos",
-                    name: "Todos",
-                    healthState: .starting,
-                    probeResults: []
-                )
+                probeStore: DiagnosticsProbeStore {
+                    ProbedComponent(
+                        id: "todos",
+                        name: "Todos",
+                        healthState: .starting,
+                        probeResults: []
+                    )
+                }
             )
         )
         rootView.layoutSubtreeIfNeeded()

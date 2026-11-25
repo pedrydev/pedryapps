@@ -1,5 +1,7 @@
+import AppKit
 import SwiftUI
 import Testing
+
 @testable import PedryApps
 
 @Suite(.serialized)
@@ -25,8 +27,12 @@ struct DiagnosticsViewTests {
 
         let actual = imageData(
             renderedImage(
-                of: DiagnosticsView(probedComponent: probedComponent, isExpanded: .constant(false))
-                    .frame(width: 320, height: 100)
+                of: DiagnosticsView(
+                    probedComponent: probedComponent,
+                    isExpanded: .constant(false),
+                    onRefresh: {}
+                )
+                .frame(width: 320, height: 100)
             )
         )
         let expected = imageData(
@@ -77,8 +83,12 @@ struct DiagnosticsViewTests {
 
         let actual = imageData(
             renderedImage(
-                of: DiagnosticsView(probedComponent: probedComponent, isExpanded: .constant(true))
-                    .frame(width: 400, height: 400)
+                of: DiagnosticsView(
+                    probedComponent: probedComponent,
+                    isExpanded: .constant(true),
+                    onRefresh: {}
+                )
+                .frame(width: 400, height: 400)
             )
         )
         let expected = imageData(
@@ -98,6 +108,34 @@ struct DiagnosticsViewTests {
         #expect(actual != differentTime)
     }
 
+    @Test func refreshButtonInvokesRefresh() throws {
+        var refreshCount = 0
+        let rootView = NSHostingView(
+            rootView: DiagnosticsView(
+                probedComponent: ProbedComponent(
+                    id: "todos",
+                    name: "Todos",
+                    healthState: .healthy,
+                    probeResults: []
+                ),
+                isExpanded: .constant(false),
+                onRefresh: { refreshCount += 1 }
+            )
+        )
+        rootView.frame = NSRect(x: 0, y: 0, width: 400, height: 300)
+        rootView.layoutSubtreeIfNeeded()
+
+        let refreshButton = try #require(allButtons(in: rootView).first)
+        refreshButton.performClick(nil)
+
+        #expect(refreshCount == 1)
+    }
+
+    private func allButtons(in view: NSView) -> [NSButton] {
+        let direct = (view as? NSButton).map { [$0] } ?? []
+        return direct + view.subviews.flatMap { allButtons(in: $0) }
+    }
+
     private func referenceCollapsedView(label: String) -> some View {
         Form {
             DisclosureGroup(isExpanded: .constant(false)) {
@@ -109,6 +147,8 @@ struct DiagnosticsViewTests {
                     Text(verbatim: "Todos")
                 }
             }
+            Button("Refresh") {}
+                .buttonStyle(.borderless)
         }
     }
 
@@ -154,6 +194,8 @@ struct DiagnosticsViewTests {
                     Text(verbatim: "Todos")
                 }
             }
+            Button("Refresh") {}
+                .buttonStyle(.borderless)
         }
     }
 

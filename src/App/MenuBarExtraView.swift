@@ -12,6 +12,10 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
     let notificationsStore: NotificationsStore
     let miniAppSelectionStore: MiniAppSelectionStore
 
+    lazy var diagnosticsProbeStore = DiagnosticsProbeStore { [store] in
+        TodosProbedComponentAdapter(store: store).probedComponent
+    }
+
     private static let menuWidth = MenuBarTodoRowView.menuWidth
 
     private let injectedMCPServerController: (any MCPServerControlling)?
