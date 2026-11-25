@@ -7,6 +7,9 @@ final class TodosStore {
     private(set) var categories: [Category] = []
     private(set) var todos: [Todo] = []
     private(set) var errorMessage: String?
+    private(set) var storeErrorMessage: String?
+    private(set) var isBoardLoaded = false
+    private(set) var saveFailurePending = false
     var undoManager: UndoManager?
 
     private let documentStore: JSONDocumentStore<TodosDocument>?
@@ -23,7 +26,9 @@ final class TodosStore {
                 setupError = error.localizedDescription
             }
         }
-        errorMessage = setupError
+        if let setupError {
+            setStoreError(setupError)
+        }
         load()
     }
 
@@ -33,9 +38,12 @@ final class TodosStore {
             let document = try documentStore.load() ?? TodosDocument()
             categories = document.categories
             todos = document.todos
-            errorMessage = nil
+            isBoardLoaded = true
+            if !saveFailurePending {
+                clearStoreErrorState()
+            }
         } catch {
-            errorMessage = error.localizedDescription
+            setStoreError(error.localizedDescription)
         }
     }
 
@@ -245,12 +253,24 @@ final class TodosStore {
         guard let documentStore else { return false }
         do {
             try documentStore.save(document)
-            errorMessage = nil
+            clearStoreErrorState()
             return true
         } catch {
-            errorMessage = error.localizedDescription
+            setStoreError(error.localizedDescription)
+            saveFailurePending = true
             return false
         }
+    }
+
+    private func setStoreError(_ message: String) {
+        errorMessage = message
+        storeErrorMessage = message
+    }
+
+    private func clearStoreErrorState() {
+        errorMessage = nil
+        storeErrorMessage = nil
+        saveFailurePending = false
     }
 
     private func registerUndo(actionName: String, _ handler: @escaping (TodosStore) -> Void) {
