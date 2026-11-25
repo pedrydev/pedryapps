@@ -406,6 +406,50 @@ struct TodosStoreTests {
         #expect(store.addCategory("Work") == nil)
         #expect(store.categories.isEmpty)
         #expect(store.errorMessage != nil)
+        #expect(store.saveFailurePending)
+        #expect(store.storeErrorMessage != nil)
+    }
+
+    @Test func freshLoadMarksBoardLoadedWithoutError() throws {
+        let directory = try TemporaryDirectory()
+        let store = makeStore(in: directory.url)
+
+        #expect(store.isBoardLoaded)
+        #expect(store.errorMessage == nil)
+        #expect(store.storeErrorMessage == nil)
+        #expect(store.saveFailurePending == false)
+    }
+
+    @Test func loadFailureMarksBoardNotLoadedAndSurfacesStoreError() throws {
+        let directory = try TemporaryDirectory()
+        let documentURL = directory.url.appendingPathComponent("board.json")
+        try Data("not json".utf8).write(to: documentURL)
+        let store = makeStore(in: directory.url)
+
+        #expect(store.isBoardLoaded == false)
+        #expect(store.errorMessage != nil)
+        #expect(store.storeErrorMessage != nil)
+        #expect(store.saveFailurePending == false)
+
+        try JSONEncoder().encode(TodosDocument()).write(to: documentURL)
+        store.load()
+
+        #expect(store.isBoardLoaded)
+        #expect(store.errorMessage == nil)
+        #expect(store.storeErrorMessage == nil)
+    }
+
+    @Test func validationErrorDoesNotMarkStoreFailure() throws {
+        let directory = try TemporaryDirectory()
+        let store = makeStore(in: directory.url)
+        let work = try addCategory(to: store, named: "Work")
+
+        #expect(store.addTodo("   ", in: work) == false)
+
+        #expect(store.errorMessage == "Enter a Todo title.")
+        #expect(store.isBoardLoaded)
+        #expect(store.storeErrorMessage == nil)
+        #expect(store.saveFailurePending == false)
     }
 
     @Test func checkingOffRemovesOnlyTheCheckedOffTodo() throws {
