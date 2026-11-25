@@ -29,6 +29,36 @@ struct DiagnosticsProbeStoreTests {
         #expect(store.todos.healthState == .unhealthy)
     }
 
+    @Test func refreshingUnhealthyProbesDoesNotMutateTodosStore() throws {
+        let directory = try TemporaryDirectory()
+        try Data("not json".utf8).write(
+            to: directory.url.appendingPathComponent("board.json")
+        )
+        let store = TodosStore(
+            documentStore: JSONDocumentStore(directory: directory.url, filename: "board.json")
+        )
+        let probeStore = DiagnosticsProbeStore {
+            TodosProbedComponentAdapter(store: store).probedComponent
+        }
+        let categories = store.categories
+        let todos = store.todos
+        let errorMessage = store.errorMessage
+        let storeErrorMessage = store.storeErrorMessage
+        let isBoardLoaded = store.isBoardLoaded
+        let saveFailurePending = store.saveFailurePending
+
+        probeStore.refresh()
+        probeStore.refresh()
+
+        #expect(probeStore.todos.healthState == .unhealthy)
+        #expect(store.categories == categories)
+        #expect(store.todos == todos)
+        #expect(store.errorMessage == errorMessage)
+        #expect(store.storeErrorMessage == storeErrorMessage)
+        #expect(store.isBoardLoaded == isBoardLoaded)
+        #expect(store.saveFailurePending == saveFailurePending)
+    }
+
     @Test func refreshUsesTheLatestProbeResults() {
         let checkedAt = Date(timeIntervalSince1970: 1_704_067_200)
         var evaluations = [

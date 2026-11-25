@@ -131,6 +131,37 @@ struct DiagnosticsViewTests {
         #expect(refreshCount == 1)
     }
 
+    @Test func diagnosticsPanelExposesOnlyRefreshAction() throws {
+        var refreshCount = 0
+        let rootView = NSHostingView(
+            rootView: DiagnosticsView(
+                probedComponent: ProbedComponent(
+                    id: "todos",
+                    name: "Todos",
+                    healthState: .unhealthy,
+                    probeResults: [
+                        ProbeResult(
+                            kind: .liveness,
+                            outcome: .failure,
+                            checkedAt: Date(timeIntervalSince1970: 1_704_067_200),
+                            errorText: "Store error"
+                        )
+                    ]
+                ),
+                isExpanded: .constant(true),
+                onRefresh: { refreshCount += 1 }
+            )
+        )
+        rootView.frame = NSRect(x: 0, y: 0, width: 400, height: 400)
+        rootView.layoutSubtreeIfNeeded()
+
+        let buttons = allButtons(in: rootView)
+        #expect(buttons.count == 1)
+        let refreshButton = try #require(buttons.first)
+        refreshButton.performClick(nil)
+        #expect(refreshCount == 1)
+    }
+
     private func allButtons(in view: NSView) -> [NSButton] {
         let direct = (view as? NSButton).map { [$0] } ?? []
         return direct + view.subviews.flatMap { allButtons(in: $0) }
