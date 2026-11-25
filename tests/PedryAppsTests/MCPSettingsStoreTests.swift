@@ -53,9 +53,93 @@ struct MCPSettingsStoreTests {
         #expect(store.settings.port == 6174)
     }
 
+    @Test func portChangeRestartsMCPServer() async throws {
+        let environment = try makePortChangeEnvironment()
+        defer { environment.cleanup() }
+        environment.delegate.installMCPPortChangeHandler()
+
+        await confirmation { confirm in
+            environment.controller.onRestart = { port in
+                #expect(port == 7000)
+                confirm()
+            }
+            #expect(environment.store.setPort(7000))
+            try? await Task.sleep(for: .milliseconds(10))
+        }
+        #expect(environment.controller.events == ["restart:7000"])
+    }
+
+    @Test func unchangedPortDoesNotRestartMCPServer() throws {
+        let environment = try makePortChangeEnvironment()
+        defer { environment.cleanup() }
+        environment.delegate.installMCPPortChangeHandler()
+
+        #expect(environment.store.setPort(6174))
+        #expect(environment.controller.events.isEmpty)
+    }
+
+    @Test func invalidPortDoesNotRestartMCPServer() throws {
+        let environment = try makePortChangeEnvironment()
+        defer { environment.cleanup() }
+        environment.delegate.installMCPPortChangeHandler()
+
+        #expect(!environment.store.setPort(80))
+        #expect(environment.controller.events.isEmpty)
+    }
+
     private func makeStore(in directory: URL) -> MCPSettingsStore {
         MCPSettingsStore(
             documentStore: JSONDocumentStore(directory: directory, filename: "mcp-settings.json")
         )
+    }
+
+    private func makePortChangeEnvironment() throws -> (
+        store: MCPSettingsStore,
+        controller: RecordingMCPServerController,
+        delegate: MenuBarAppDelegate,
+        directory: TemporaryDirectory,
+        cleanup: () -> Void
+    ) {
+        let suiteName = "MCPSettings.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suiteName))
+        let directory = try TemporaryDirectory()
+        let store = makeStore(in: directory.url)
+        let controller = RecordingMCPServerController()
+        let delegate = MenuBarAppDelegate(
+            selectionStore: MiniAppSelectionStore(userDefaults: defaults),
+            notificationsStore: NotificationsStore(
+                documentStore: JSONDocumentStore(directory: directory.url, filename: "notifications.json")
+            ),
+            mcpSettingsStore: store,
+            mcpServerController: controller
+        )
+        return (
+            store,
+            controller,
+            delegate,
+            directory,
+            {
+                defaults.removePersistentDomain(forName: suiteName)
+            }
+        )
+    }
+}
+
+@MainActor
+private final class RecordingMCPServerController: MCPServerControlling {
+    private(set) var events: [String] = []
+    var onRestart: ((Int) -> Void)?
+
+    func start(port: Int) async {
+        events.append("start:\(port)")
+    }
+
+    func restart(port: Int) async {
+        events.append("restart:\(port)")
+        onRestart?(port)
+    }
+
+    func stop() {
+        events.append("stop")
     }
 }
