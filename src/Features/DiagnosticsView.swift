@@ -1,9 +1,15 @@
 import SwiftUI
 
 struct DiagnosticsView: View {
+    let probedComponent: ProbedComponent
+
     var body: some View {
-        Text("Diagnostics")
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .padding()
+        Form {
+            LabeledContent {
+                Text(verbatim: probedComponent.healthState.label)
+            } label: {
+                Text(verbatim: probedComponent.name)
+            }
+        }
     }
 }

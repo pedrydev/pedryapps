@@ -3,6 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     let todosSettingsStore: TodosSettingsStore
     let mcpSettingsStore: MCPSettingsStore
+    let probedComponent: ProbedComponent
 
     var body: some View {
         TabView {
@@ -14,7 +15,7 @@ struct SettingsView: View {
                 .tabItem {
                     Label("MCP", systemImage: "network")
                 }
-            DiagnosticsView()
+            DiagnosticsView(probedComponent: probedComponent)
                 .tabItem {
                     Label("Diagnostics", systemImage: "heart.text.square")
                 }

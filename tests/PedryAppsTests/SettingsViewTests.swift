@@ -16,7 +16,15 @@ struct SettingsViewTests {
         )
 
         let rootView = NSHostingView(
-            rootView: SettingsView(todosSettingsStore: todosStore, mcpSettingsStore: mcpStore)
+            rootView: SettingsView(
+                todosSettingsStore: todosStore,
+                mcpSettingsStore: mcpStore,
+                probedComponent: ProbedComponent(
+                    id: "todos",
+                    name: "Todos",
+                    healthState: .starting
+                )
+            )
         )
         rootView.layoutSubtreeIfNeeded()
 

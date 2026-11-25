@@ -7,6 +7,9 @@ struct PedryAppsApp: App {
 
     private var todosSettingsStore: TodosSettingsStore { appDelegate.todosSettingsStore }
     private var mcpSettingsStore: MCPSettingsStore { appDelegate.mcpSettingsStore }
+    private var todosProbedComponent: ProbedComponent {
+        TodosProbedComponentAdapter(store: appDelegate.store).probedComponent
+    }
 
     init() {
         HotkeyManager.shared.register(.showWindow) {
@@ -40,7 +43,11 @@ struct PedryAppsApp: App {
         }
 
         Settings {
-            SettingsView(todosSettingsStore: todosSettingsStore, mcpSettingsStore: mcpSettingsStore)
+            SettingsView(
+                todosSettingsStore: todosSettingsStore,
+                mcpSettingsStore: mcpSettingsStore,
+                probedComponent: todosProbedComponent
+            )
         }
     }
 }
