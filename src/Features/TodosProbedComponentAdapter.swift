@@ -11,56 +11,32 @@ struct TodosProbedComponentAdapter {
 
     var probedComponent: ProbedComponent {
         let errorText = store.storeErrorMessage
-        let startupFailed = !store.isBoardLoaded
-        let livenessFailed = errorText != nil
-        let readinessFailed = !store.isBoardLoaded || store.saveFailurePending
         let results = [
-            result(
+            ProbeEvaluator.result(
                 kind: .startup,
-                outcome: startupFailed ? .failure : .success,
-                errorText: startupFailed ? errorText : nil
+                isConditionMet: store.isBoardLoaded,
+                checkedAt: checkedAt,
+                errorText: errorText
             ),
-            result(
+            ProbeEvaluator.result(
                 kind: .liveness,
-                outcome: livenessFailed ? .failure : .success,
-                errorText: livenessFailed ? errorText : nil
+                isConditionMet: errorText == nil,
+                checkedAt: checkedAt,
+                errorText: errorText
             ),
-            result(
+            ProbeEvaluator.result(
                 kind: .readiness,
-                outcome: readinessFailed ? .failure : .success,
-                errorText: readinessFailed ? errorText : nil
+                isConditionMet: store.isBoardLoaded && !store.saveFailurePending,
+                checkedAt: checkedAt,
+                errorText: errorText
             ),
         ]
-
-        let livenessOutcome = results.first(where: { $0.kind == .liveness })?.outcome
-        let readinessOutcome = results.first(where: { $0.kind == .readiness })?.outcome
-        let healthState: HealthState
-        if livenessOutcome == .failure {
-            healthState = .unhealthy
-        } else if readinessOutcome == .failure {
-            healthState = .degraded
-        } else {
-            healthState = .healthy
-        }
 
         return ProbedComponent(
             id: "todos",
             name: "Todos",
-            healthState: healthState,
+            healthState: ProbeEvaluator.healthState(from: results),
             probeResults: results
-        )
-    }
-
-    private func result(
-        kind: ProbeKind,
-        outcome: ProbeOutcome,
-        errorText: String?
-    ) -> ProbeResult {
-        ProbeResult(
-            kind: kind,
-            outcome: outcome,
-            checkedAt: checkedAt,
-            errorText: errorText
         )
     }
 }

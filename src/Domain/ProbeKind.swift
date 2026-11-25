@@ -1,4 +1,4 @@
-enum ProbeKind: String, Sendable {
+enum ProbeKind: String, CaseIterable, Sendable {
     case startup
     case liveness
     case readiness
