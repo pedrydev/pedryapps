@@ -19,3 +19,27 @@ _Avoid_: Notification center, Alerts feature
 **AI agent**:
 An external program acting on the user's behalf that calls actions the app exposes over MCP.
 _Avoid_: Bot, automation, script
+
+**Agent surface**:
+The part of the app through which an AI agent calls app actions.
+_Avoid_: MCP server, agent integration
+
+**Probed component**:
+A mini-app or the agent surface whose probes are reported in the diagnostics panel.
+_Avoid_: Service, target, monitored component
+
+**Probe**:
+A check that reports whether a probed component has started (startup), remains operational (liveness), and can be used (readiness).
+_Avoid_: Health check, heartbeat
+
+**Probe result**:
+The outcome of one probe: `success`, `failure`, or `unknown`.
+_Avoid_: Health status, probe state
+
+**Health state**:
+A probed component's overall condition, derived from its probe results: `starting`, `healthy`, `degraded`, `unhealthy`, or `unknown`.
+_Avoid_: Status, readiness state, service state
+
+**Diagnostics panel**:
+The app-level surface that shows each probed component's health state and probe results.
+_Avoid_: Debug view, health dashboard
