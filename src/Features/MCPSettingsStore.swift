@@ -23,6 +23,7 @@ final class MCPSettingsStore {
     }
 
     func setPort(_ port: Int) -> Bool {
+        guard MCPSettings.isValidPort(port) else { return false }
         let previous = settings
         settings = MCPSettings(port: port)
         guard persist() else {
