@@ -52,6 +52,41 @@ struct DiagnosticsViewTests {
         #expect(actual != different)
     }
 
+    @Test func panelRendersInjectedComponentName() {
+        let probedComponent = ProbedComponent(
+            id: "agent",
+            name: "Agent surface",
+            healthState: .unknown,
+            probeResults: []
+        )
+
+        let actual = imageData(
+            renderedImage(
+                of: DiagnosticsView(
+                    probedComponent: probedComponent,
+                    isExpanded: .constant(false),
+                    onRefresh: {}
+                )
+                .frame(width: 320, height: 100)
+            )
+        )
+        let expected = imageData(
+            renderedImage(
+                of: referenceCollapsedView(label: "Unknown", name: "Agent surface")
+                    .frame(width: 320, height: 100)
+            )
+        )
+        let different = imageData(
+            renderedImage(
+                of: referenceCollapsedView(label: "Unknown", name: "Todos")
+                    .frame(width: 320, height: 100)
+            )
+        )
+
+        #expect(actual == expected)
+        #expect(actual != different)
+    }
+
     @Test func expandedRowShowsProbeResults() {
         let checkedAt = Date(timeIntervalSince1970: 1_704_067_200)
         let probedComponent = ProbedComponent(
@@ -167,7 +202,7 @@ struct DiagnosticsViewTests {
         return direct + view.subviews.flatMap { allButtons(in: $0) }
     }
 
-    private func referenceCollapsedView(label: String) -> some View {
+    private func referenceCollapsedView(label: String, name: String = "Todos") -> some View {
         Form {
             DisclosureGroup(isExpanded: .constant(false)) {
                 EmptyView()
@@ -175,7 +210,7 @@ struct DiagnosticsViewTests {
                 LabeledContent {
                     Text(verbatim: label)
                 } label: {
-                    Text(verbatim: "Todos")
+                    Text(verbatim: name)
                 }
             }
             Button("Refresh") {}
