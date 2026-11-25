@@ -3,9 +3,14 @@ import MCP
 import OSLog
 
 @MainActor
-final class MCPServerController {
-    static let defaultPort = 6174
+protocol MCPServerControlling: AnyObject {
+    func start(port: Int) async
+    func restart(port: Int) async
+    func stop()
+}
 
+@MainActor
+final class MCPServerController: MCPServerControlling {
     private let posting: any AgentNotificationPosting
     private let logger = Logger(subsystem: "dev.pedry.PedryApps", category: "MCP")
     private var server: Server?
@@ -15,9 +20,8 @@ final class MCPServerController {
         self.posting = posting
     }
 
-    func start() async {
+    func start(port: Int) async {
         stop()
-        let port = Self.defaultPort
         let transport = makeMCPHTTPTransport(port: port)
         let server = await makeAgentMCPServer(posting: posting)
 
@@ -45,6 +49,11 @@ final class MCPServerController {
 
         self.server = server
         self.httpServer = httpServer
+    }
+
+    func restart(port: Int) async {
+        stop()
+        await start(port: port)
     }
 
     func stop() {

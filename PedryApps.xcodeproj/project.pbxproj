@@ -73,6 +73,11 @@
 		A00000000000000000000118 /* FakeSystemAlertCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000117 /* FakeSystemAlertCenter.swift */; };
 		A0000000000000000000011A /* SystemAlertCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000119 /* SystemAlertCenter.swift */; };
 		A0000000000000000000011C /* FakeSystemAlertPosting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000011B /* FakeSystemAlertPosting.swift */; };
+		A00000000000000000000126 /* MCPSettingsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000125 /* MCPSettingsStoreTests.swift */; };
+		A0000000000000000000011E /* MCPSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000011D /* MCPSettings.swift */; };
+		A00000000000000000000120 /* MCPSettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000011F /* MCPSettingsStore.swift */; };
+		A00000000000000000000128 /* MCPSettingsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000127 /* MCPSettingsViewTests.swift */; };
+		A00000000000000000000122 /* MCPSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000121 /* MCPSettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -154,6 +159,11 @@
 		A00000000000000000000117 /* FakeSystemAlertCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeSystemAlertCenter.swift; sourceTree = "<group>"; };
 		A00000000000000000000119 /* SystemAlertCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAlertCenter.swift; sourceTree = "<group>"; };
 		A0000000000000000000011B /* FakeSystemAlertPosting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeSystemAlertPosting.swift; sourceTree = "<group>"; };
+		A00000000000000000000125 /* MCPSettingsStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPSettingsStoreTests.swift; sourceTree = "<group>"; };
+		A0000000000000000000011D /* MCPSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPSettings.swift; sourceTree = "<group>"; };
+		A0000000000000000000011F /* MCPSettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPSettingsStore.swift; sourceTree = "<group>"; };
+		A00000000000000000000127 /* MCPSettingsViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPSettingsViewTests.swift; sourceTree = "<group>"; };
+		A00000000000000000000121 /* MCPSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPSettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,6 +245,7 @@
 				A000000000000000000000E4 /* MiniApp.swift */,
 				A000000000000000000000F0 /* InboxNotification.swift */,
 				A00000000000000000000102 /* MenuBarNotificationsOverview.swift */,
+				A0000000000000000000011D /* MCPSettings.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -275,6 +286,8 @@
 				A00000000000000000000106 /* ToolbarActionButton.swift */,
 				A00000000000000000000119 /* SystemAlertCenter.swift */,
 				A00000000000000000000116 /* MCP */,
+				A0000000000000000000011F /* MCPSettingsStore.swift */,
+				A00000000000000000000121 /* MCPSettingsView.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -326,7 +339,9 @@
 				A00000000000000000000104 /* NotificationsInboxViewTests.swift */,
 				A00000000000000000000114 /* MCPAgentServerTests.swift */,
 				A00000000000000000000117 /* FakeSystemAlertCenter.swift */,
-				A0000000000000000000011B /* FakeSystemAlertPosting.swift */,);
+				A0000000000000000000011B /* FakeSystemAlertPosting.swift */,
+				A00000000000000000000125 /* MCPSettingsStoreTests.swift */,
+				A00000000000000000000127 /* MCPSettingsViewTests.swift */,);
 			path = PedryAppsTests;
 			sourceTree = "<group>";
 		};
@@ -491,7 +506,10 @@
 				A0000000000000000000010D /* MCPAgentServer.swift in Sources */,
 				A0000000000000000000010F /* LoopbackHTTPServer.swift in Sources */,
 				A00000000000000000000111 /* MCPServerController.swift in Sources */,
-				A0000000000000000000011A /* SystemAlertCenter.swift in Sources */,);
+				A0000000000000000000011A /* SystemAlertCenter.swift in Sources */,
+				A0000000000000000000011E /* MCPSettings.swift in Sources */,
+				A00000000000000000000120 /* MCPSettingsStore.swift in Sources */,
+				A00000000000000000000122 /* MCPSettingsView.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A00000000000000000000033 /* Sources */ = {
@@ -516,7 +534,9 @@
 				A00000000000000000000105 /* NotificationsInboxViewTests.swift in Sources */,
 				A00000000000000000000115 /* MCPAgentServerTests.swift in Sources */,
 				A00000000000000000000118 /* FakeSystemAlertCenter.swift in Sources */,
-				A0000000000000000000011C /* FakeSystemAlertPosting.swift in Sources */,);
+				A0000000000000000000011C /* FakeSystemAlertPosting.swift in Sources */,
+				A00000000000000000000126 /* MCPSettingsStoreTests.swift in Sources */,
+				A00000000000000000000128 /* MCPSettingsViewTests.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
