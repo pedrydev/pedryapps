@@ -7,6 +7,7 @@ import UserNotifications
 final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUserNotificationCenterDelegate {
     let store = TodosStore()
     let todosSettingsStore = TodosSettingsStore()
+    let mcpSettingsStore = MCPSettingsStore()
     let dueCheckStateStore = TodosDueCheckStateStore()
     let notificationsStore: NotificationsStore
     let miniAppSelectionStore: MiniAppSelectionStore

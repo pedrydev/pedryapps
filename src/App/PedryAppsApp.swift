@@ -6,6 +6,7 @@ struct PedryAppsApp: App {
     @NSApplicationDelegateAdaptor(MenuBarAppDelegate.self) private var appDelegate
 
     private var todosSettingsStore: TodosSettingsStore { appDelegate.todosSettingsStore }
+    private var mcpSettingsStore: MCPSettingsStore { appDelegate.mcpSettingsStore }
 
     init() {
         HotkeyManager.shared.register(.showWindow) {
@@ -39,7 +40,7 @@ struct PedryAppsApp: App {
         }
 
         Settings {
-            SettingsView(todosSettingsStore: todosSettingsStore)
+            SettingsView(todosSettingsStore: todosSettingsStore, mcpSettingsStore: mcpSettingsStore)
         }
     }
 }
