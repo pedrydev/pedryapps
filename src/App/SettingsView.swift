@@ -14,6 +14,10 @@ struct SettingsView: View {
                 .tabItem {
                     Label("MCP", systemImage: "network")
                 }
+            DiagnosticsView()
+                .tabItem {
+                    Label("Diagnostics", systemImage: "heart.text.square")
+                }
         }
         .frame(minWidth: 380, minHeight: 220)
     }
