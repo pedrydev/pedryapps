@@ -5,6 +5,7 @@ import Observation
 @Observable
 final class MCPSettingsStore {
     private(set) var settings: MCPSettings = .default
+    var onPortChange: ((Int) -> Void)?
 
     private let documentStore: JSONDocumentStore<MCPSettings>?
 
@@ -24,12 +25,14 @@ final class MCPSettingsStore {
 
     func setPort(_ port: Int) -> Bool {
         guard MCPSettings.isValidPort(port) else { return false }
+        guard port != settings.port else { return true }
         let previous = settings
         settings = MCPSettings(port: port)
         guard persist() else {
             settings = previous
             return false
         }
+        onPortChange?(port)
         return true
     }
 

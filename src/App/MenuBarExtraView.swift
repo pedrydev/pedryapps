@@ -7,22 +7,33 @@ import UserNotifications
 final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUserNotificationCenterDelegate {
     let store = TodosStore()
     let todosSettingsStore = TodosSettingsStore()
-    let mcpSettingsStore = MCPSettingsStore()
+    let mcpSettingsStore: MCPSettingsStore
     let dueCheckStateStore = TodosDueCheckStateStore()
     let notificationsStore: NotificationsStore
     let miniAppSelectionStore: MiniAppSelectionStore
 
     private static let menuWidth = MenuBarTodoRowView.menuWidth
 
+    private let injectedMCPServerController: (any MCPServerControlling)?
+
     override init() {
+        mcpSettingsStore = MCPSettingsStore()
+        injectedMCPServerController = nil
         notificationsStore = NotificationsStore()
         miniAppSelectionStore = MiniAppSelectionStore()
         super.init()
     }
 
-    init(selectionStore: MiniAppSelectionStore, notificationsStore: NotificationsStore) {
+    init(
+        selectionStore: MiniAppSelectionStore,
+        notificationsStore: NotificationsStore,
+        mcpSettingsStore: MCPSettingsStore = MCPSettingsStore(),
+        mcpServerController: (any MCPServerControlling)? = nil
+    ) {
         self.notificationsStore = notificationsStore
         self.miniAppSelectionStore = selectionStore
+        self.mcpSettingsStore = mcpSettingsStore
+        injectedMCPServerController = mcpServerController
         super.init()
     }
 
@@ -45,9 +56,12 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
     )
     private lazy var systemAlertCenter = SystemUserNotificationCenter()
     private lazy var systemAlertPoster = SystemAlertPoster(center: systemAlertCenter)
-    private lazy var mcpServerController = MCPServerController(
+    private lazy var defaultMCPServerController = MCPServerController(
         posting: MCPNotificationPosting(store: notificationsStore, alertPoster: systemAlertPoster)
     )
+    private var mcpServerController: any MCPServerControlling {
+        injectedMCPServerController ?? defaultMCPServerController
+    }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         UNUserNotificationCenter.current().delegate = self
@@ -68,6 +82,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
         notificationsStore.startExpiryScheduling()
         rebuildMenu(menu)
         observeNotificationsStore()
+        installMCPPortChangeHandler()
 
         openWindowObserver = NotificationCenter.default.addObserver(
             forName: .openMainWindow,
@@ -78,7 +93,7 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
         }
         Task { @MainActor in
             await dueNotificationCoordinator.start()
-            await mcpServerController.start()
+            await mcpServerController.start(port: mcpSettingsStore.settings.port)
         }
     }
 
@@ -307,6 +322,15 @@ final class MenuBarAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate,
         button.setAccessibilityLabel(
             unreadCount > 0 ? "PedryApps, \(unreadCount) unread notifications" : "PedryApps"
         )
+    }
+
+    func installMCPPortChangeHandler() {
+        mcpSettingsStore.onPortChange = { [weak self] port in
+            guard let self else { return }
+            Task { @MainActor in
+                await self.mcpServerController.restart(port: port)
+            }
+        }
     }
 
     private func observeNotificationsStore() {
